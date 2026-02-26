@@ -55,7 +55,7 @@ Add the next `RewriteCond` and `RewriteRule` into existing `.htaccess` file to r
     
     RewriteCond "%{QUERY_STRING}" "_escaped_fragment_" [NC]
 
-    RewriteRule ^(.*)$ "https://render.ostr.io/render/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1" [P, END]
+    RewriteRule ^(.*)$ "https://render.ostr.io/render/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1" [P,END]
   </IfModule>
 </IfModule>
 ```

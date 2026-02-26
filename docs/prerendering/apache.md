@@ -65,7 +65,7 @@ Add/update rules in your site `.htaccess`:
 
     RewriteCond "%{QUERY_STRING}" "_escaped_fragment_" [NC]
 
-    RewriteRule ^(.*)$ "https://render.ostr.io/render/https://%{HTTP_HOST}/$1" [P,END]
+    RewriteRule ^(.*)$ "https://render.ostr.io/render/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1" [P,END]
   </IfModule>
 </IfModule>
 ```

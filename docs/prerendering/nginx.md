@@ -2,23 +2,23 @@
 
 ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engines and modern AI crawlers, improving index coverage and discoverability while reducing origin load. The Nginx integration redirects bot's traffic to ostr.io pre-rendering engine.
 
-- Learn more - [what is Pre-rendering and why you need it](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/README.md)
-- [Nginx config examples](https://github.com/veliovgroup/ostrio/tree/master/docs/prerendering/examples/nginx)
+- Learn more - [what is Pre-rendering and why you need it](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md)
+- [Nginx config examples](https://github.com/ostr-io/ostrio-docs/tree/master/docs/prerendering/examples/nginx)
 
 ## ToC:
 
-- [Installation](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#installation)
-- [Update HTML Markup](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#update-html-markup)
-- [Nginx integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#nginx-integration-1)
-    1. Prerequisite: [Map Variables](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#map-module)
-    2. Prerequisite: [Static files](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#serve-static-files)
-    3. Prerequisite: [Create pre-rendering directive](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#pre-rendering-directive-location)
-- [Nginx: Examples](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#nginx-examples)
-    - [Nginx: Basic integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#basic-integration)
-    - [Nginx: Phusion Passenger integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
-    - [Nginx: Basic upstream integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
-    - [Nginx: FastCGI integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#fastcgi-integration)
-    - [Nginx: PHP integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md#php-integration)
+- [Installation](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#installation)
+- [Update HTML Markup](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#update-html-markup)
+- [Nginx integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#nginx-integration-1)
+    1. Prerequisite: [Map Variables](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#map-module)
+    2. Prerequisite: [Static files](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#serve-static-files)
+    3. Prerequisite: [Create pre-rendering directive](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#pre-rendering-directive-location)
+- [Nginx: Examples](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#nginx-examples)
+    - [Nginx: Basic integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-integration)
+    - [Nginx: Phusion Passenger integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
+    - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
+    - [Nginx: FastCGI integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#fastcgi-integration)
+    - [Nginx: PHP integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#php-integration)
 
 ## Installation
 
@@ -59,7 +59,7 @@ Use `map` module to check if request coming from bot and if request has `_escape
 # that were active for at least 5 past years
 map $http_user_agent $is_webbot {
   default 0;
-  "~*(?:\.net crawler|360spider|50\.nu|8bo crawler bot|aboundex|accoona|adldxbot|ahrefsbot|altavista|appengine-google|applebot|archiver|arielisbot|ask jeeves|auskunftbot|baidumobaider|baiduspider|becomebot|bingbot|bingpreview|bitbot|bitlybot|blitzbot|blogbridge|boardreader|botseer|catchbot|catchpoint bot|charlotte|checklinks|cliqzbot|clumboot|coccocbot|converacrawler|crawl-e|crawlconvera|dataparksearch|daum|deusu|discordbot|dotbot|duckduckbot|elefent|embedly|evernote|exabot|facebookbot|facebookexternalhit|meta-external|fatbot|fdse robot|feed seeker bot|feedfetcher|femtosearchbot|findlinks|flamingo_searchengine|flipboard|followsite bot|furlbot|fyberspider|gaisbot|galaxybot|geniebot|genieo|gigablast|gigabot|girafabot|gomezagent|gonzo1|googlebot|google sketchup|adsbot-google|google-structured-data-testing-tool|google-extended|developers\.google\.com/+/web/snippet|haosouspider|heritrix|holmes|hoowwwer|htdig|ia_archiver|idbot|infuzapp|innovazion crawler|instagram|internetarchive|iqdb|iskanie|istellabot|izsearch\.com|kaloogabot|kaz\.kz_bot|kd bot|konqueror|kraken|kurzor|larbin|leia|lesnikbot|linguee bot|linkaider|linkapediabot|linkedinbot|lite bot|llaut|lookseek|lycos|mail\.ru_bot|masidani_bot|masscan|mediapartners-google|metajobbot|mj12bot|mnogosearch|mogimogi|mojeekbot|motominerbot|mozdex|msiecrawler|msnbot|msrbot|netpursual|netresearch|netvibes|newsgator|ng-search|nicebot|nutchcvs|nuzzel|nymesis|objectssearch|odklbot|omgili|oovoo|oozbot|openfosbot|orangebot|orbiter|org_bot|outbrain|pagepeeker|pagesinventory|parsijoobot|paxleframework|peeplo screenshot bot|pinterest|plantynet_webrobot|plukkie|pompos|psbot|quora link preview|qwantify|read%20later|reaper|redcarpet|redditbot|retreiver|riddler|rival iq|rogerbot|saucenao|scooter|scrapy|scrubby|searchie|searchsight|seekbot|semanticdiscovery|seznambot|showyoubot|simplepie|simpy|sitelockspider|skypeuripreview|slackbot|slack-imgproxy|slurp|snappy|sogou|solofield|speedyspider|speedy spider|sputnikbot|stackrambler|teeraidbot|teoma|theusefulbot|thumbshots\.ru|thumbshotsbot|tineye|toweya\.com|toweyabot|tumblr|tweetedtimes|tweetmemebot|twitterbot|url2png|vagabondo|vebidoobot|viber|visionutils|vkshare|voilabot|vortex|votay bot|voyager|w3c_validator|wasalive\.bot|web-sniffer|websquash\.com|webthumb|whatsapp|whatweb|wire|wotbox|yacybot|yahoo|yandex|yeti|yisouspider|yodaobot|yooglifetchagent|yoozbot|yottaamonitor|yowedo|zao-crawler|zebot_www\.ze\.bz|zooshot|zyborgi|ai2bot|amazonbot|anthropic\.com|bard|bytespider|ccbot|chatgpt-user|claude-web|claudebot|cohere-ai|deepseek|diffbot|duckassistbot|gemini|gptbot|grok|mistralai|oai-searchbot|omgili|openai\.com|perplexity\.ai|perplexitybot|xai|youbot)" 1;
+  "~*(?:\.net crawler|360spider|50\.nu|8bo crawler bot|aboundex|accoona|adldxbot|ahrefsbot|altavista|appengine-google|applebot|archiver|arielisbot|ask jeeves|auskunftbot|baidumobaider|baiduspider|becomebot|bingbot|bingpreview|bitbot|bitlybot|blitzbot|blogbridge|boardreader|botseer|catchbot|catchpoint bot|charlotte|checklinks|cliqzbot|clumboot|coccocbot|converacrawler|crawl-e|crawlconvera|dataparksearch|daum|deusu|discordbot|dotbot|duckduckbot|elefent|embedly|evernote|exabot|facebookbot|facebookexternalhit|meta-external|fatbot|fdse robot|feed seeker bot|feedfetcher|femtosearchbot|findlinks|flamingo_searchengine|flipboard|followsite bot|furlbot|fyberspider|gaisbot|galaxybot|geniebot|genieo|gigablast|gigabot|girafabot|gomezagent|gonzo1|googlebot|google sketchup|adsbot-google|google-structured-data-testing-tool|google-extended|developers\.google\.com/+/web/snippet|haosouspider|heritrix|holmes|hoowwwer|htdig|ia_archiver|idbot|infuzapp|innovazion crawler|instagram|internetarchive|iqdb|iskanie|istellabot|izsearch\.com|kaloogabot|kaz\.kz_bot|kd bot|konqueror|kraken|kurzor|larbin|leia|lesnikbot|linguee bot|linkaider|linkapediabot|linkedinbot|lite bot|llaut|lookseek|lycos|mail\.ru_bot|masidani_bot|masscan|mediapartners-google|metajobbot|mj12bot|mnogosearch|mogimogi|mojeekbot|motominerbot|mozdex|msiecrawler|msnbot|msrbot|netpursual|netresearch|netvibes|newsgator|ng-search|nicebot|nutchcvs|nuzzel|nymesis|objectssearch|odklbot|omgili|oovoo|oozbot|openfosbot|orangebot|orbiter|org_bot|outbrain|pagepeeker|pagesinventory|parsijoobot|paxleframework|peeplo screenshot bot|pinterest|plantynet_webrobot|plukkie|pompos|psbot|quora link preview|qwantify|read%20later|reaper|redcarpet|redditbot|retreiver|riddler|rival iq|rogerbot|saucenao|scooter|scrapy|scrubby|searchie|searchsight|seekbot|semanticdiscovery|seznambot|showyoubot|simplepie|simpy|sitelockspider|skypeuripreview|petalbot|slackbot|slack-imgproxy|slurp|snappy|sogou|solofield|speedyspider|speedy spider|sputnikbot|stackrambler|teeraidbot|teoma|theusefulbot|thumbshots\.ru|thumbshotsbot|tineye|tiktokspider|toweya\.com|toweyabot|tumblr|tweetedtimes|tweetmemebot|twitterbot|url2png|vagabondo|vebidoobot|viber|visionutils|vkshare|voilabot|vortex|votay bot|voyager|w3c_validator|wasalive\.bot|web-sniffer|websquash\.com|webthumb|whatsapp|whatweb|wire|wotbox|yacybot|yahoo|yandex|yeti|yisouspider|yodaobot|yooglifetchagent|yoozbot|yottaamonitor|yowedo|zao-crawler|zebot_www\.ze\.bz|zooshot|zyborgi|ai2bot|amazonbot|anthropic\.com|bard|bytespider|ccbot|chatgpt-user|claude-web|claudebot|cohere-ai|deepseek|diffbot|duckassistbot|gemini|gptbot|grok|mistralai|oai-searchbot|omgili|openai\.com|perplexity\.ai|perplexitybot|xai|youbot)" 1;
 }
 
 # CHECK AND SET ESCAPED FRAGMENT
@@ -104,7 +104,7 @@ Define the next __internal__ `@prerendering` location directive inside `server` 
 location @prerendering {
   internal;
   # SET RENDERING ENDPOINT
-  # read more at: https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/rendering-endpoints.md
+  # read more at: https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md
   set $renderer_domain "render.ostr.io";
   set $orig_uri $request_uri;
 
@@ -143,6 +143,9 @@ location @prerendering {
   # Disable keepalive support, it's not needed for Pre-rendering
   # For more info read: http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_http_version
   proxy_http_version 1.0;
+
+  # ENABLE FOR SNI + SSL SETUP
+  proxy_ssl_server_name on;
 
   # You can change resolver to local DNS server
   # And resolver can be moved to nginx.conf
@@ -198,7 +201,7 @@ server {
 
 ### Phusion Passenger integration
 
-Pre-rendering integration for Nginx built with Phusion Passenger. See [full nginx config file for Phusion Passenger here](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/nginx/phusion-passenger.conf)
+Pre-rendering integration for Nginx built with Phusion Passenger. See [full nginx config file for Phusion Passenger here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/phusion-passenger.conf)
 
 ```nginx
 server {
@@ -219,7 +222,7 @@ server {
   location @prerendering {
     internal;
     # SET RENDERING ENDPOINT
-    # read more at: https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/rendering-endpoints.md
+    # read more at: https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md
     set $renderer_domain "render.ostr.io";
     set $orig_uri $request_uri;
 
@@ -260,7 +263,7 @@ server {
 
 ### Basic upstream integration
 
-Suitable for apps that run locally in single or multi-instance mode, like Node.js, Django, Go, Ruby on Rails, and similar. Use `@application` location directive for internal redirects and custom `450` and `454` codes; Handle `404` code with app logic. See [full nginx config file for Server + Upstream setup here](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/nginx/upstream.conf)
+Suitable for apps that run locally in single or multi-instance mode, like Node.js, Django, Go, Ruby on Rails, and similar. Use `@application` location directive for internal redirects and custom `450` and `454` codes; Handle `404` code with app logic. See [full nginx config file for Server + Upstream setup here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/upstream.conf)
 
 ```nginx
 upstream app {
@@ -312,7 +315,7 @@ server {
 
 ### FastCGI integration
 
-Pre-rendering integration to Nginx with PHP app that runs by FastCGI protocol. See [full nginx config file for CGI FPM here](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/nginx/php-fpm.conf)
+Pre-rendering integration to Nginx with PHP app that runs by FastCGI protocol. See [full nginx config file for CGI FPM here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/php-fpm.conf)
 
 ```nginx
 server {

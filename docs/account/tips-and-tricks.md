@@ -19,7 +19,7 @@ ostr.io usage tips and tricks
 ## 🤖 Pre-rendering Tips
 
 - Pass `/sitemap.xml` to <kbd>Pre-Render</kbd> (*Pre-render a website*) in __Pre-rendering Panel__ to instantly render whole website;
-- Use [alternative *rendering endpoint*](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/rendering-endpoints.md) to reach best performance results.
+- Use [alternative *rendering endpoint*](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md) to reach best performance results.
 
 ### Running pre-rendering integration tests:
 

@@ -71,4 +71,4 @@ chmod +x /etc/network/if-up.d/firewall
 
 ## Further reading:
 
-- [Basic firewall with `iptables`](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/iptables-firewall.md)
+- [Basic firewall with `iptables`](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/iptables-firewall.md)

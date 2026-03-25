@@ -6,11 +6,11 @@
 
 ## Integration Options
 
-- 👨‍💻 [Manually Creating `middleware.ts`](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/next.js/middleware.ts) in root of the project or `/src/` directory
+- 👨‍💻 [Manually Creating `middleware.ts`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/next.js/middleware.ts) in root of the project or `/src/` directory
 - 📦 [Using `seo-middleware-nextjs` NPM package](https://github.com/veliovgroup/seo-middleware-nextjs?tab=readme-ov-file#seo-middleware-for-nextjs)
-- 👷‍♂️ [Via Nginx](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md) without changes in codebase
-- 🌤️ [Via CloudFlare](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/cloudflare-worker.md) without changes in codebase nor server environment
-- ✨ [Via Netlify](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/netlify-prerendering.md) enable in the settings without changes in codebase nor server environment
+- 👷‍♂️ [Via Nginx](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md) without changes in codebase
+- 🌤️ [Via CloudFlare](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cloudflare-worker.md) without changes in codebase nor server environment
+- ✨ [Via Netlify](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/netlify-prerendering.md) enable in the settings without changes in codebase nor server environment
 - ▲ Via Vercel (*coming soon*)
 - 🥞 Via Supabase (*coming soon*)
 

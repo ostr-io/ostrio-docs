@@ -2,7 +2,7 @@ Let's Encrypt / Validation via DNS
 ======
 
 ### Alternative:
- - [Validation via HTTP](https://github.com/veliovgroup/ostrio/blob/master/tutorials/ssl/ssl-letsencrypt.md)
+ - [Validation via HTTP](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/ssl/ssl-letsencrypt.md)
 
 In order to make World Wide Web safer and faster, we strongly recommend to use HTTPS protocol for your website, and add H2 protocol support to your web-server.
 

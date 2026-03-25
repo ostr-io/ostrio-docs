@@ -1,7 +1,7 @@
 SSL/TLS/HTTPS Encrypted connection
 ======
 
-Assuming you have SSL/TLS certificate and private key, if not [read how to generate one for free](https://github.com/veliovgroup/ostrio/blob/master/tutorials/ssl/ssl-letsencrypt.md). All examples below for case when certificate, chain and private key at `/etc/nginx/ssl/` directory.
+Assuming you have SSL/TLS certificate and private key, if not [read how to generate one for free](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/ssl/ssl-letsencrypt.md). All examples below for case when certificate, chain and private key at `/etc/nginx/ssl/` directory.
 
 ### 1. Get Root Certificate
 Get one [from here](https://www.identrust.com/certificates/trustid/root-download-x3.html), or copy-paste from below to `/etc/nginx/ssl/ca.crt`:

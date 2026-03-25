@@ -67,4 +67,4 @@ chmod +x /etc/network/if-up.d/firewall
 
 ## Further reading:
 
-- [Basic ipv6 firewall with `ip6tables`](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/iptables-firewall-ipv6.md)
+- [Basic ipv6 firewall with `ip6tables`](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/iptables-firewall-ipv6.md)

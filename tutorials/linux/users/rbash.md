@@ -99,6 +99,6 @@ chown -R ruser:ruser /home/ruser
 
 ### Further reading:
 
-- [Change default SSH port](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/change-ssh-port.md)
-- [Disable root login via SSH](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/disable-ssh-root.md)
-- [Use SSH keys to login](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/use-ssh-keys.md)
+- [Change default SSH port](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/change-ssh-port.md)
+- [Disable root login via SSH](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/disable-ssh-root.md)
+- [Use SSH keys to login](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/use-ssh-keys.md)

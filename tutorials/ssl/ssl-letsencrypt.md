@@ -2,7 +2,7 @@
 
 In this tutorial we use HTTP for domain ownership validation, as alternative see:
 
-- [Validation via DNS](https://github.com/veliovgroup/ostrio/blob/master/tutorials/ssl/ssl-letsencrypt-dns-validation.md)
+- [Validation via DNS](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/ssl/ssl-letsencrypt-dns-validation.md)
 
 In order to make World Wide Web safer and faster, we strongly recommend to use HTTPS protocol for your website, and add H2 protocol support to your web-server.
 

@@ -58,4 +58,4 @@ Use __any__ standard or custom status codes:
 
 ## Result:
 
-![Return Genuine Status Code Screenshot](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/prerendering-genuine-status-code.png?raw=true)
+![Return Genuine Status Code Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-genuine-status-code.png?raw=true)

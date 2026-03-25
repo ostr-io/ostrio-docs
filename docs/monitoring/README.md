@@ -18,14 +18,14 @@ Learn about Monitoring Service features.
 
 ### HTTP and SNMP monitoring
 
-- [Basic HTTP(S) Monitoring](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/basics.md)
-- [HTTP(S) Monitoring with web-authentication](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/with-auth.md)
-- Advanced: [SNMP (CPU, RAM, HDD, SSD, Bandwidth, Processes, SSH Sessions, Server Reboot) monitoring](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/snmp.md)
+- [Basic HTTP(S) Monitoring](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/basics.md)
+- [HTTP(S) Monitoring with web-authentication](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/with-auth.md)
+- Advanced: [SNMP (CPU, RAM, HDD, SSD, Bandwidth, Processes, SSH Sessions, Server Reboot) monitoring](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/snmp.md)
 
 ### Tutorials and how to's
 
-- [Nginx stats and usage Monitoring](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/nginx-stats.md)
-- [Build "uncacheable" path to endpoint, prevent cached results](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/custom-path.md)
+- [Nginx stats and usage Monitoring](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/nginx-stats.md)
+- [Build "uncacheable" path to endpoint, prevent cached results](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/custom-path.md)
 
 > [!TIP]
 > Use `{{rand}}` placeholder (*including curly brackets*) in endpoint URL to generate unique random URI for every checking request. Note: `{{rand}}` can be used multiple times in a single URL, example: `/path/{{rand}}/part?nc={{rand}}`

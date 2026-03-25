@@ -6,7 +6,7 @@ For more info see [original article](https://veliovgroup.com/article/2qsjtNf8NSB
 ### Before you go:
  - Read [what is OpLog](http://www.briancarpio.com/2012/04/21/mongodb-the-oplog-explain/)
  - Read [official MongoDB reference](https://docs.mongodb.com/manual/core/replica-set-oplog/)
- - Existing ReplicaSet is required for OpLog, read how to create one: [on single server](https://github.com/veliovgroup/ostrio/blob/master/tutorials/mongodb/single-server-replica-set.md) or [multiple (cluster) servers](https://github.com/veliovgroup/ostrio/blob/master/tutorials/mongodb/multiple-server-replica-set.md)
+ - Existing ReplicaSet is required for OpLog, read how to create one: [on single server](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/mongodb/single-server-replica-set.md) or [multiple (cluster) servers](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/mongodb/multiple-server-replica-set.md)
 
 ### Definitions:
  - `oplogger` user - User with `read` access to `local` database, where is OpLog is stored

@@ -50,6 +50,6 @@ Read more detailed setup at [Digital Ocean article](https://www.digitalocean.com
 
 ## Further reading:
 
-- [Use Lynis for security audit](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/lynis-security-audit.md)
-- [Basic firewall with `iptables`](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/iptables-firewall.md)
+- [Use Lynis for security audit](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/lynis-security-audit.md)
+- [Basic firewall with `iptables`](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/iptables-firewall.md)
 - [Digital Ocean article](https://www.digitalocean.com/community/tutorials/how-to-use-rkhunter-to-guard-against-rootkits-on-an-ubuntu-vps)

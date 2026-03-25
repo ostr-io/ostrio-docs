@@ -7,7 +7,7 @@ __Description by Pinterest:__
 >
 > Rich Pins work by displaying metadata from marked up pages on your website. Once you've applied for Rich Pins, any content on your site with metadata will turn into a Rich Pin when a user saves it.
 
-Needs to be mentioned: ["Structured Data"](https://github.com/veliovgroup/ostrio/blob/master/tutorials/website/social-networking/structured-data-basics.md) and [Open Graph](https://github.com/veliovgroup/ostrio/blob/master/tutorials/website/social-networking/open-graph-basics.md) is supported by Pinterest too, basically Pinterest Rich Pins is based on combination of Open Graph and "Structured Data" with some extra tags extension `article:`.
+Needs to be mentioned: ["Structured Data"](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/website/social-networking/structured-data-basics.md) and [Open Graph](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/website/social-networking/open-graph-basics.md) is supported by Pinterest too, basically Pinterest Rich Pins is based on combination of Open Graph and "Structured Data" with some extra tags extension `article:`.
 
 ## Basic structure:
 

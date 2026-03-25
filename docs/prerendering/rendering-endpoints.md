@@ -7,4 +7,4 @@ Rendering Endpoints
 
 To change default endpoint, grab [integration examples code](https://github.com/veliovgroup/spiderable-middleware/tree/master/examples) and replace `render.ostr.io`, with endpoint of your choice. For NPM/Meteor integration change value of [`serviceURL`](https://github.com/veliovgroup/spiderable-middleware#basic-usage) option.
 
-__Note:__ Described differences in caching behavior is only about intermediate proxy caching, `Cache-Control` header will be always set to the value defined in "Cache TTL". Cached results at the "Prerendering Engine" end can be [purged at any time](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/cache-purge.md).
+__Note:__ Described differences in caching behavior is only about intermediate proxy caching, `Cache-Control` header will be always set to the value defined in "Cache TTL". Cached results at the "Prerendering Engine" end can be [purged at any time](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cache-purge.md).

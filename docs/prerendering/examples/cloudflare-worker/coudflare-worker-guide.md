@@ -37,7 +37,7 @@ Create a new account if you don't have one yet. Then add and verify your domain 
 3. At __Workers & Pages__ page click on <kbd>Create</kbd> > Then select "Start with Hello World!" (*see [UI screenshot](#create-new-worker-from-hello-world-template-from-step-3)*)
 4. __New Worker Form__: Enter memorable name (ex.: `examplecom-seo-worker`) > click on <kbd>Deploy</kbd> (*see [UI screenshot](#create-new-worker-deploy-hello-world-worker-from-step-4)*)
 5. After __new Worker__ created > click on <kbd>Edit Code</kbd> (*see [UI screenshot](#create-new-worker-edit-hello-world-worker-from-step-5)*)
-6. At __Worker Editor__ > Remove default "Hello World" worker code and replace with [CF Worker Code](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
+6. At __Worker Editor__ > Remove default "Hello World" worker code and replace with [CF Worker Code](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
 7. After Worker's code placed into __Worker Editor__ > click on <kbd>Deploy</kbd> (*see [UI screenshot](#create-new-worker-paste-and-deploy-workers-code-from-step-7)*)
 8. __Pass API key to CloudFlare Worker via environment variable__ (*see [UI screenshots](#add-api-key-from-step-8)*)
     - Go to "Workers & Pages" > Open Newly Created Worker > Settings > Variables and Secrets > Click on <kbd>Add</kbd> button:
@@ -87,7 +87,7 @@ Click on <kbd>Edit code</kbd> to start editing default "Hello World!" worker's c
 
 #### Create new Worker: Paste and deploy worker's code (*from step 7*)
 
-In editor paste [pre-rendering worker's code](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) and click on <kbd>Deploy</kbd> then click on the name of the worker to go back
+In editor paste [pre-rendering worker's code](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) and click on <kbd>Deploy</kbd> then click on the name of the worker to go back
 <img width="1557" height="858" alt="create-worker-step-5" src="https://github.com/user-attachments/assets/3b19c1d5-be24-4fb9-85b2-6e027f6bfd87" />
 
 #### Add API Key (*from step 8*)
@@ -138,6 +138,6 @@ Check that `X-Prerender-Id` exists in response headers
 
 ## Further reading
 
-- 🏎️ [Speed-up rendering](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/optimization.md#speed-up-rendering)
-- 🤖 [Detect requests from pre-rendering](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/detect-prerendering.md)
-- 📔 [Detailed Pre-rendering service documentation](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/README.md)
+- 🏎️ [Speed-up rendering](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/optimization.md#speed-up-rendering)
+- 🤖 [Detect requests from pre-rendering](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)
+- 📔 [Detailed Pre-rendering service documentation](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md)

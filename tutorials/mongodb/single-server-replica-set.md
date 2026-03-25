@@ -189,4 +189,4 @@ mongodb://appUser:<password>@127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/app
 ```
 
 ### Further reading:
- - [Use and configure OpLog](https://github.com/veliovgroup/ostrio/blob/master/tutorials/mongodb/enable-oplog.md)
+ - [Use and configure OpLog](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/mongodb/enable-oplog.md)

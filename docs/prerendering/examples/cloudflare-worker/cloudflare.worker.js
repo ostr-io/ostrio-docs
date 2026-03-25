@@ -40,7 +40,7 @@ const DICT = {
     origin: 'ostr.io',
     originTld: '.ostr.io',
     testAuth: 'Basic dGVzdDp0ZXN0',
-    renderBase: 'https://render.ostr.io/?url=', // @see https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/rendering-endpoints.md
+    renderBase: 'https://render.ostr.io/?url=', // @see https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md
   },
   headers: {
     ua: 'User-Agent',

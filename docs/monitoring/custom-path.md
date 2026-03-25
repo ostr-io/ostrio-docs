@@ -6,4 +6,4 @@ Example: `/path/?noCahe={{rand}}`.
 
 Where `{{rand}}` will be replaced with random *String*.
 
-![Monitoring with Custom Path Screenshot](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/custom-path.png?raw=true)
+![Monitoring with Custom Path Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/custom-path.png?raw=true)

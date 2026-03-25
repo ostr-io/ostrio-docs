@@ -5,7 +5,7 @@ For more info see [original article](https://veliovgroup.com/article/2qsjtNf8NSB
 ## Before you go:
 
 - Replica Set requires __at least 3__ servers (virtual or dedicated, if more than 3 servers - number of servers must be odd (e.g. 3, 5, 7, 9...))
-- Read how to [use SSL certificates with MongoDB](https://github.com/veliovgroup/ostrio/blob/master/tutorials/mongodb/use-ssl-http-encryption.md)
+- Read how to [use SSL certificates with MongoDB](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/mongodb/use-ssl-http-encryption.md)
 - Make sure MongoDB port is open and accessible for other members of replica set, usually done with `iptables`. At least make sure all servers can ping each other
 
 We will use `wiredTiger` as database engine, you can read [its release notes](https://www.mongodb.com/blog/post/whats-new-mongodb-30-part-3-performance-efficiency-gains-new-storage-architecture) to find out more about its benefits.
@@ -95,7 +95,7 @@ systemctl --now enable mongod
 Create/edit `/etc/mongod.conf` file. Before authentication enable use `transitionToAuth` option
 
 1. Change `[PORT, DEFAULT: 27017]` to port of your choice
-2. Change `[IP ADDRESS, OR DOMAIN NAME]` to public IP address, VLAN/LAN IP Address, or domain name (can be comma separated, like: mongo.example.com,127.0.0.1,A.B.C.D). Domain name is required if SSL is set to `requireSSL` ([more info](https://github.com/veliovgroup/ostrio/blob/master/tutorials/mongodb/use-ssl-http-encryption.md))
+2. Change `[IP ADDRESS, OR DOMAIN NAME]` to public IP address, VLAN/LAN IP Address, or domain name (can be comma separated, like: mongo.example.com,127.0.0.1,A.B.C.D). Domain name is required if SSL is set to `requireSSL` ([more info](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/mongodb/use-ssl-http-encryption.md))
 
 ```yaml
 processManagement:
@@ -249,4 +249,4 @@ mongodb://appUser:<password>@<IP_OR_DOMAIN_1>:<PORT>,<IP_OR_DOMAIN_2>:<PORT>,<IP
 
 ## Further reading:
 
-- [Use and configure OpLog](https://github.com/veliovgroup/ostrio/blob/master/tutorials/mongodb/enable-oplog.md)
+- [Use and configure OpLog](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/mongodb/enable-oplog.md)

@@ -398,13 +398,24 @@ server {
   listen [::]:80;
   server_name example.com;
 
-  # DEFINE ROOT AND INDEX
-  root /path/to/public;
+  # DEFINE DOCUMENT ROOT AND FRONT CONTROLLER
+  # Use the public web root, never the project repository root.
+  root /srv/example.com/current/public;
   index index.php index.html;
 
   recursive_error_pages on;
   # CUSTOM 454 CODE FOR INTERNAL REDIRECT TO @prerendering
   error_page 454 = @prerendering;
+
+  # DENY HIDDEN FILES, EXCEPT ACME/LETSENCRYPT CHALLENGES
+  location ~ /\.(?!well-known) {
+    deny all;
+  }
+
+  # DO NOT EXECUTE PHP FROM COMMON USER-WRITABLE DIRECTORIES
+  location ~* ^/(?:uploads|files|media|storage|cache|tmp)/.*\.php$ {
+    deny all;
+  }
 
   location / {
     # IF REQUEST RECEIVED FROM BOT OR
@@ -416,8 +427,8 @@ server {
       return 454;
     }
 
-    # TRY STATIC FILE, THEN PASS TO THE APPLICATION
-    try_files $uri $uri/ /index.php?$args;
+    # TRY STATIC FILES FIRST, THEN PASS TO THE PHP FRONT CONTROLLER
+    try_files $uri $uri/ /index.php$is_args$args;
   }
 
   location ~ \.php$ {
@@ -430,10 +441,18 @@ server {
       return 454;
     }
 
+    # EXECUTE ONLY PHP FILES THAT EXIST UNDER THE DOCUMENT ROOT
+    try_files $fastcgi_script_name =404;
+
     include /etc/nginx/fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
     fastcgi_param DOCUMENT_ROOT $realpath_root;
-    fastcgi_pass unix:/var/run/example.com.sock;
+    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+    fastcgi_param QUERY_STRING $query_string;
+    fastcgi_param HTTPS $https if_not_empty;
+
+    # Adjust the socket path for your distribution and PHP-FPM pool.
+    fastcgi_pass unix:/run/php/php-fpm.sock;
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
@@ -442,12 +461,19 @@ server {
 
 ### PHP integration
 
-Pre-rendering integration for PHP apps like Laravel, WordPress, and similar. That runs using `php -S`, `artisan`, Apache, Docker, or alike on a specific port;
+Pre-rendering integration for generic PHP websites served by an HTTP PHP process behind Nginx, for example `php -S`, Laravel Octane, RoadRunner, Swoole, FrankenPHP, Apache, or Docker. Use TCP upstreams or HTTP over Unix sockets for the PHP process. For PHP-FPM/FastCGI, use the [FastCGI integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#fastcgi-integration) instead. See [full nginx config file for a generic PHP website here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/php.conf)
 
 ```nginx
-upstream app {
-  keepalive 500;
-  server 127.0.0.1:8000;
+upstream php_app {
+  # PHP application that serves HTTP, for example:
+  # php -S 127.0.0.1:8000 -t public
+  # Laravel Octane, RoadRunner, Swoole, FrankenPHP, Apache, or Docker
+  server 127.0.0.1:8000 fail_timeout=0;
+
+  # HTTP over Unix socket is also supported:
+  # server unix:/run/example.com/php-app.sock fail_timeout=0;
+
+  keepalive 64;
 }
 
 server {
@@ -455,13 +481,28 @@ server {
   listen [::]:80;
   server_name example.com;
 
-  # DEFINE ROOT AND INDEX
-  root /path/to/public;
-  index index.php index.html;
+  # DEFINE PUBLIC DOCUMENT ROOT
+  # Use the public web root, never the project repository root.
+  root /srv/example.com/current/public;
+  index index.html;
+
+  client_max_body_size 20m;
 
   recursive_error_pages on;
-  # custom 454 code for internal redirect to @prerendering
+  # CUSTOM 454 CODE FOR INTERNAL REDIRECT TO @prerendering
   error_page 454 = @prerendering;
+  # CUSTOM 450 CODE FOR INTERNAL REDIRECT TO @application
+  error_page 450 = @application;
+
+  # DENY HIDDEN FILES, EXCEPT ACME/LETSENCRYPT CHALLENGES
+  location ~ /\.(?!well-known) {
+    deny all;
+  }
+
+  # DO NOT EXECUTE PHP FROM COMMON USER-WRITABLE DIRECTORIES
+  location ~* ^/(?:uploads|files|media|storage|cache|tmp)/.*\.php$ {
+    deny all;
+  }
 
   location / {
     # IF REQUEST RECEIVED FROM BOT OR
@@ -473,11 +514,11 @@ server {
       return 454;
     }
 
-    # TRY STATIC FILE, THEN PASS TO THE APPLICATION
-    try_files $uri $uri/ /index.php?$args;
+    # TRY STATIC FILES FIRST, THEN PASS TO THE PHP HTTP APPLICATION
+    try_files $uri @application;
   }
 
-  location ~ \.php$ {
+  location ~ \.php(?:/|$) {
     # IF REQUEST RECEIVED FROM BOT OR
     # WITH "FRAGMENT" REDIRECT TO @prerendering
     if ($is_webbot = 1) {
@@ -487,16 +528,27 @@ server {
       return 454;
     }
 
-    proxy_http_version  1.1;
-    proxy_set_header   Host               $host;
-    proxy_set_header   X-Real-IP          $remote_addr;
-    proxy_set_header   X-Forwarded-For    $proxy_add_x_forwarded_for;
-    proxy_set_header   X-Forwarded-Proto  $scheme;
-    proxy_connect_timeout 30s;
-    proxy_send_timeout    60s;
-    proxy_read_timeout    60s;
+    # PHP SOURCE FILES MUST BE HANDLED BY THE HTTP APPLICATION, NOT NGINX
+    return 450;
+  }
 
-    proxy_pass http://app;
+  location @application {
+    internal;
+    sendfile off;
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Connection "";
+
+    proxy_connect_timeout 10s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+    proxy_redirect off;
+    proxy_pass http://php_app;
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...

@@ -18,6 +18,7 @@ ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engi
     - [Nginx: Phusion Passenger integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
     - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
     - [Nginx: Django integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#django-integration)
+    - [Nginx: Laravel integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#laravel-integration)
     - [Nginx: FastCGI integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#fastcgi-integration)
     - [Nginx: WordPress integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#wordpress-integration)
     - [Nginx: PHP integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#php-integration)
@@ -386,6 +387,100 @@ server {
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
+}
+```
+
+### Laravel integration
+
+Pre-rendering integration for Laravel websites served by Nginx and PHP-FPM. Use Laravel's `public` directory as Nginx root, execute only the `index.php` front controller, keep API, admin, auth, health, sitemap, feed, and system endpoints on the origin, and redirect only safe `GET` and `HEAD` page requests from bots or `_escaped_fragment_` traffic to ostr.io pre-rendering. For Laravel Octane, RoadRunner, Swoole, FrankenPHP, or another HTTP PHP process, use the [PHP integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#php-integration). See [full nginx config file for Laravel here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/laravel.conf)
+
+```nginx
+# PRE-RENDER ONLY SAFE, CACHEABLE REQUEST METHODS
+map $request_method $is_prerender_method {
+  default 0;
+  GET 1;
+  HEAD 1;
+}
+
+# DO NOT PRE-RENDER WEBSOCKET OR OTHER UPGRADE REQUESTS
+map $http_upgrade $is_upgrade_request {
+  default 1;
+  "" 0;
+}
+
+# KEEP LARAVEL API, ADMIN, AUTH, HEALTH, SITEMAP, AND SYSTEM ENDPOINTS ON ORIGIN
+map $uri $is_laravel_prerender_uri {
+  default 1;
+  ~^/(?:api|admin|nova|horizon|telescope|pulse|sanctum|broadcasting)(?:/|$) 0;
+  ~^/(?:login|logout|register|forgot-password|reset-password|email/verify)(?:/|$) 0;
+  ~^/(?:up|health|status)(?:/|$) 0;
+  ~^/(?:robots\.txt|favicon\.ico)$ 0;
+  ~^/(?:sitemap(?:_index)?|sitemap).*\.xml$ 0;
+  ~^/[^/]+-sitemap[0-9]*\.xml$ 0;
+  ~^/(?:feed|rss)(?:/|$) 0;
+}
+
+map "$is_webbot:$is_prerender_method:$is_laravel_prerender_uri:$is_upgrade_request" $laravel_prerender_webbot {
+  default 0;
+  "1:1:1:0" 1;
+}
+
+map "$args:$is_prerender_method:$is_laravel_prerender_uri:$is_upgrade_request" $laravel_prerender_fragment {
+  default 0;
+  ~(^|.*&)_escaped_fragment_=[^&]*(?:&.*)?:1:1:0$ 1;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+
+  # DEFINE LARAVEL PUBLIC DOCUMENT ROOT
+  # Use the public web root, never the project repository root.
+  root /srv/example.com/current/public;
+  index index.php;
+
+  recursive_error_pages on;
+  # CUSTOM 454 CODE FOR INTERNAL REDIRECT TO @prerendering
+  error_page 454 = @prerendering;
+
+  location / {
+    # IF REQUEST RECEIVED FROM BOT OR
+    # WITH "FRAGMENT" REDIRECT TO @prerendering
+    if ($laravel_prerender_webbot = 1) {
+      return 454;
+    }
+    if ($laravel_prerender_fragment = 1) {
+      return 454;
+    }
+
+    # LARAVEL FRONT CONTROLLER
+    try_files $uri $uri/ /index.php$is_args$args;
+  }
+
+  # EXECUTE ONLY LARAVEL FRONT CONTROLLER
+  location ~ ^/index\.php(?:/|$) {
+    fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+    try_files $fastcgi_script_name =404;
+
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+    fastcgi_param DOCUMENT_ROOT $realpath_root;
+    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param QUERY_STRING $query_string;
+    fastcgi_param HTTPS $https if_not_empty;
+    fastcgi_param HTTP_PROXY "";
+
+    fastcgi_pass unix:/run/php/php-fpm.sock;
+  }
+
+  # BLOCK DIRECT ACCESS TO OTHER PHP FILES
+  location ~ \.php(?:/|$) {
+    return 404;
+  }
+
+  # ...THE REST OF THE CONFIG INCLUDING STATIC FILES AND @prerendering LOCATION...
 }
 ```
 

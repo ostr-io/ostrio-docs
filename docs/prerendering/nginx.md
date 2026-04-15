@@ -17,6 +17,7 @@ ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engi
     - [Nginx: Basic integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-integration)
     - [Nginx: Phusion Passenger integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
     - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
+    - [Nginx: Django integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#django-integration)
     - [Nginx: FastCGI integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#fastcgi-integration)
     - [Nginx: PHP integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#php-integration)
 
@@ -307,6 +308,80 @@ server {
     sendfile off;
     proxy_http_version  1.1;
     proxy_pass http://app;
+  }
+
+  # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
+}
+```
+
+### Django integration
+
+Pre-rendering integration for Django apps served by Gunicorn or Uvicorn behind Nginx. Serve Django `STATIC_ROOT` and `MEDIA_ROOT` directly from Nginx, proxy all dynamic requests to Django, and redirect bot or `_escaped_fragment_` traffic to ostr.io pre-rendering. Match `alias` paths to your `collectstatic` output and public media storage. If Nginx terminates TLS, configure Django to trust `X-Forwarded-Proto`. See [full nginx config file for Django here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/django.conf)
+
+```nginx
+upstream django_app {
+  # Gunicorn/Uvicorn can also listen on a Unix socket, for example:
+  # server unix:/run/gunicorn/example.com.sock fail_timeout=0;
+  server 127.0.0.1:8000 fail_timeout=0;
+  keepalive 64;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com;
+
+  client_max_body_size 20m;
+
+  recursive_error_pages on;
+  # CUSTOM 454 CODE FOR INTERNAL REDIRECT TO @prerendering
+  error_page 454 = @prerendering;
+  # CUSTOM 450 CODE FOR INTERNAL REDIRECT TO @application
+  error_page 450 = @application;
+
+  location /static/ {
+    alias /srv/example.com/current/staticfiles/;
+    access_log off;
+    log_not_found off;
+    expires 30d;
+    add_header Cache-Control "public, max-age=2592000, immutable";
+    try_files $uri =404;
+  }
+
+  location /media/ {
+    alias /srv/example.com/current/media/;
+    access_log off;
+    log_not_found off;
+    expires 7d;
+    add_header Cache-Control "public, max-age=604800";
+    try_files $uri =404;
+  }
+
+  location / {
+    # IF REQUEST RECEIVED FROM BOT OR
+    # WITH "FRAGMENT" REDIRECT TO @prerendering
+    if ($is_webbot = 1) {
+      return 454;
+    }
+    if ($args ~ _escaped_fragment_) {
+      return 454;
+    }
+
+    return 450;
+  }
+
+  location @application {
+    internal;
+    sendfile off;
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_redirect off;
+    proxy_pass http://django_app;
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...

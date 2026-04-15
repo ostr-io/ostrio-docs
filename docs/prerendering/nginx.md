@@ -19,6 +19,7 @@ ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engi
     - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
     - [Nginx: Django integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#django-integration)
     - [Nginx: FastCGI integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#fastcgi-integration)
+    - [Nginx: WordPress integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#wordpress-integration)
     - [Nginx: PHP integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#php-integration)
 
 ## Installation
@@ -456,6 +457,114 @@ server {
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
+}
+```
+
+### WordPress integration
+
+Pre-rendering integration for WordPress websites served by Nginx and PHP-FPM. Keep WordPress admin, REST API, XML-RPC, cron, comments, feeds, robots.txt, and sitemap XML on the origin; redirect only safe `GET` and `HEAD` page requests from bots or `_escaped_fragment_` traffic to ostr.io pre-rendering. See [full nginx config file for WordPress here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/wordpress.conf)
+
+```nginx
+# PRE-RENDER ONLY SAFE, CACHEABLE REQUEST METHODS
+map $request_method $is_prerender_method {
+  default 0;
+  GET 1;
+  HEAD 1;
+}
+
+# KEEP WORDPRESS ADMIN, API, SITEMAPS, FEEDS, AND SYSTEM ENDPOINTS ON ORIGIN
+map $uri $is_wordpress_prerender_uri {
+  default 1;
+  ~^/wp-admin(?:/|$) 0;
+  ~^/wp-login\.php$ 0;
+  ~^/wp-json(?:/|$) 0;
+  ~^/wp-cron\.php$ 0;
+  ~^/wp-comments-post\.php$ 0;
+  ~^/xmlrpc\.php$ 0;
+  ~^/robots\.txt$ 0;
+  ~^/favicon\.ico$ 0;
+  ~^/(?:sitemap(?:_index)?|wp-sitemap).*\.xml$ 0;
+  ~^/[^/]+-sitemap[0-9]*\.xml$ 0;
+  ~^/(?:feed|comments/feed)/?$ 0;
+  ~^/.+/feed/?$ 0;
+}
+
+map "$is_webbot:$is_prerender_method:$is_wordpress_prerender_uri" $wordpress_prerender_webbot {
+  default 0;
+  "1:1:1" 1;
+}
+
+map "$args:$is_prerender_method:$is_wordpress_prerender_uri" $wordpress_prerender_fragment {
+  default 0;
+  ~(^|.*&)_escaped_fragment_=[^&]*(?:&.*)?:1:1$ 1;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+
+  # DEFINE WORDPRESS DOCUMENT ROOT
+  root /srv/example.com/current;
+  index index.php index.html;
+
+  recursive_error_pages on;
+  # CUSTOM 454 CODE FOR INTERNAL REDIRECT TO @prerendering
+  error_page 454 = @prerendering;
+
+  # WORDPRESS VIRTUAL FILES MUST REACH WORDPRESS, NOT STATIC-FILE 404s
+  location = /robots.txt {
+    access_log off;
+    log_not_found off;
+    try_files $uri /index.php$is_args$args;
+  }
+
+  location ~* ^/(?:sitemap(?:_index)?|wp-sitemap).*\.xml$ {
+    access_log off;
+    log_not_found off;
+    try_files $uri /index.php$is_args$args;
+  }
+
+  location / {
+    # IF REQUEST RECEIVED FROM BOT OR
+    # WITH "FRAGMENT" REDIRECT TO @prerendering
+    if ($wordpress_prerender_webbot = 1) {
+      return 454;
+    }
+    if ($wordpress_prerender_fragment = 1) {
+      return 454;
+    }
+
+    # WORDPRESS PRETTY PERMALINKS FRONT CONTROLLER
+    try_files $uri $uri/ /index.php$is_args$args;
+  }
+
+  location ~ \.php(?:/|$) {
+    # IF REQUEST RECEIVED FROM BOT OR
+    # WITH "FRAGMENT" REDIRECT TO @prerendering
+    if ($wordpress_prerender_webbot = 1) {
+      return 454;
+    }
+    if ($wordpress_prerender_fragment = 1) {
+      return 454;
+    }
+
+    fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+    try_files $fastcgi_script_name =404;
+
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+    fastcgi_param DOCUMENT_ROOT $realpath_root;
+    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param QUERY_STRING $query_string;
+    fastcgi_param HTTPS $https if_not_empty;
+    fastcgi_param HTTP_PROXY "";
+
+    fastcgi_pass unix:/run/php/php-fpm.sock;
+  }
+
+  # ...THE REST OF THE CONFIG INCLUDING STATIC FILES AND @prerendering LOCATION...
 }
 ```
 

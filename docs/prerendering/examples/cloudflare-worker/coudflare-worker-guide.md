@@ -1,36 +1,38 @@
 # CloudFlare Worker Integration
 
-Step-by-step integration instructions for ostr.io pre-rendering SEO Middleware via CloudFlare Workers
+Step-by-step guide: connect ostr.io pre-rendering to your website via CloudFlare Worker
 
 ## ToC
 
-- 🌤️ [Setup domain name at CloudFlare](#setup-domain-name-at-cloudflare)
-- ▲ [Setup domain name at ostr.io](#setup-domain-name-at-ostrio)
-- 🔌 [Create CloudFlare Worker and Connect to Domain](#create-cloudflare-worker-and-connect-to-domain)
-- 🔧 [Check that setup is correctly configured and working](#check-that-setup-is-correctly-configured-and-working)
-  - 🖥️ [Check via Browser](#via-browser)
-  - 👨‍💻 [Check in Terminal/Console using `curl`](#via-terminalconsole-using-curl)
+1. [Add domain to CloudFlare](#1-add-domain-to-cloudflare)
+2. [Add domain to ostr.io](#2-add-domain-to-ostrio)
+3. [Create Worker](#3-create-worker)
+4. [Add pre-rendering code](#4-add-pre-rendering-code)
+5. [Add API key](#5-add-api-key)
+6. [Connect Worker to domain](#6-connect-worker-to-domain)
+7. [Purge cache](#7-purge-cache)
+8. [Check the result](#8-check-the-result)
 
-### Setup domain name at CloudFlare
+---
 
-To begin pre-rendering SEO Middleware integration via CloudFlare ensure you have an active account and connected domain name.
+## 1. Add domain to CloudFlare
 
-1. [Sign up](https://dash.cloudflare.com/sign-up) or [Login](https://dash.cloudflare.com/login) to CloudFlare
-2. __Add domain:__ "Account Home" > click on <kbd>Onboard a domain</kbd>
-3. Go through on-boarding steps, under "__Block AI training bots__" section select "__Do not block (off)__" option
+1. Open [CloudFlare Sign Up](https://dash.cloudflare.com/sign-up) or [Login](https://dash.cloudflare.com/login)
+2. Click __"Account Home"__ in the sidebar > click <kbd>Onboard a domain</kbd>
+3. Follow the onboarding steps. At __"Block AI training bots"__ step — select __"Do not block (off)"__
 
-### Setup domain name at ostr.io
+---
 
-Create a new account if you don't have one yet. Then add and verify your domain ownership.
+## 2. Add domain to ostr.io
 
-1. [Sign up](https://ostr.io/signup) or [Login](https://ostr.io/login) to ostr.io
-2. Add server/domain following on-boarding guidance
-3. Verify domain ownership using `DNS TXT` record adding via CloudFlare interface
-4. Inside server's panel under "Available Services" section click on <kbd>add</kbd> next to "Pre-rendering"
-5. Inside server's pre-rendering panel scroll down to <kbd>integration guide</kbd>
-6. In the <kbd>CLOUDFLARE</kbd> tab — grab `env.OSTR_AUTH` value for CloudFlare's Worker environment variable
+1. Open [ostr.io Sign Up](https://ostr.io/signup) or [Login](https://ostr.io/login)
+2. Add your domain following the onboarding steps
+3. Verify domain ownership — add `DNS TXT` record via CloudFlare DNS settings
+4. In the server panel find __"Available Services"__ > click <kbd>add</kbd> next to __"Pre-rendering"__
+5. In the pre-rendering panel scroll down and click <kbd>integration guide</kbd>
+6. Open the __CLOUDFLARE__ tab > copy the `OSTR_AUTH` value (starts with `Basic ...`) — you will need it in [step 5](#5-add-api-key)
 
-### Create CloudFlare Worker and Connect to Domain
+<img width="640" alt="ostr.io integration guide — CLOUDFLARE tab" src="images/ostrio-cf-acc.png" />
 
 1. Go to "Account Home" in the sidebar
 2. __In the sidebar:__ Compute (Workers) > Workers & Pages (*see [UI screenshot](#create-new-worker-from-step-2)*)
@@ -59,82 +61,135 @@ Create a new account if you don't have one yet. Then add and verify your domain 
     - Go to "Account Home" in the sidebar menu
     - (*click on your domain name*) > Caching > Configuration > <kbd>Purge Everything</kbd>
 
-#### Example
+## 3. Create Worker
 
-Example of configured and connected CloudFlare Worker setting for pre-rendering SEO Middleware
+1. In CloudFlare sidebar go to __Compute & AI__ > __Workers & Pages__
 
-![pre-rendrering-cloudflare-worker-example](https://github.com/user-attachments/assets/b082fe5c-199f-4565-8789-2e09c700a563)
+<img width="300" alt="CloudFlare sidebar — Workers & Pages" src="images/ostrio-cf-1.png" />
 
-#### Create new Worker (*from step 2*)
+2. Click <kbd>Create application</kbd>
 
-Open "Workers & Pages" and click on <kbd>Create</kbd> button to initiate new CloudFlare worker
-<img width="1557" height="858" alt="create-worker-step-1" src="https://github.com/user-attachments/assets/a380746a-41d3-47bb-b70e-709ff20f97c1" />
+<img width="640" alt="Workers & Pages — Create application" src="images/ostrio-cf-2.png" />
 
-#### Create new Worker from "Hello World" template (*from step 3*)
+3. Select __"Start with Hello World!"__
 
-Choose "Start with Hello World!" and click <kbd>Get Started</kbd>
-<img width="1557" height="858" alt="create-worker-step-2" src="https://github.com/user-attachments/assets/cb46cc34-b404-481a-8504-3ad42ef63157" />
+<img width="640" alt="Choose Hello World template" src="images/ostrio-cf-3.png" />
 
-#### Create new Worker: Deploy "Hello World" worker (*from step 4*)
+4. Enter a name for the worker (example: `seo-middleware`) > click <kbd>Deploy</kbd>
 
-Enter Worker's name and click on <kbd>Deploy</kbd>
-<img width="1513" height="814" alt="create-worker-step-3" src="https://github.com/user-attachments/assets/81fb66a5-dc76-4b20-9fff-72b4a7e4e5cb" />
+<img width="640" alt="Enter worker name and deploy" src="images/ostrio-cf-4.png" />
 
-#### Create new Worker: Edit "Hello World" worker (*from step 5*)
+---
 
-Click on <kbd>Edit code</kbd> to start editing default "Hello World!" worker's code
-<img width="1513" height="814" alt="create-worker-step-4" src="https://github.com/user-attachments/assets/d4f693cb-ef7e-49fa-93a1-7454619a87c3" />
+## 4. Add pre-rendering code
 
-#### Create new Worker: Paste and deploy worker's code (*from step 7*)
+1. After deploying the worker click <kbd>Edit Code</kbd>
 
 In editor paste [pre-rendering worker's code](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) and click on <kbd>Deploy</kbd> then click on the name of the worker to go back
 <img width="1557" height="858" alt="create-worker-step-5" src="https://github.com/user-attachments/assets/3b19c1d5-be24-4fb9-85b2-6e027f6bfd87" />
 
-#### Add API Key (*from step 8*)
+2. Select all code in the editor and delete it
 
-Go back to "Workers & Pages" > Open recently created Worker > Settings > Variables and Secrets > Click on <kbd>Add</kbd>
-<img width="1557" height="858" alt="create-worker_add-api-key_1" src="https://github.com/user-attachments/assets/0bad5669-0613-4220-ab94-46c0cea255c8" />
+3. Open the [pre-rendering worker script](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) > copy its full contents > paste into the editor
 
-Create `OSTR_AUTH` variable, paste API key that starts with `Basic xxx...` (*as found in ["integration guide" at ostr.io](#setup-domain-name-at-ostrio)*)
-<img width="1557" height="858" alt="create-worker_add-api-key_2" src="https://github.com/user-attachments/assets/14d335eb-895c-47eb-8ad0-ee0107c1c1eb" />
+4. Click <kbd>Deploy</kbd> (top-right corner)
 
-#### Connect Worker to a website (*from step 9*)
+5. Click the __worker name__ at the top of the page to go back to the worker overview
 
-Go back to "Account Home" > Domains > Open domain name
-<img width="1557" height="858" alt="create-worker-step-6" src="https://github.com/user-attachments/assets/47eed9af-3173-4033-bd98-30c62d0d071d" />
+<img width="640" alt="Paste pre-rendering code and deploy" src="images/ostrio-cf-6.png" />
 
-Open "Workers Routes" in sidebar > Click on <kbd>Add Route</kbd>
-<img width="1557" height="858" alt="create-worker-step-7" src="https://github.com/user-attachments/assets/a7246c95-281c-42c5-bd60-f6590d6d2872" />
+---
 
-Add route entering domain name (*see step 8 above for more details*)
-<img width="1557" height="858" alt="create-worker-step-8" src="https://github.com/user-attachments/assets/5fb62ff6-4af3-41b0-8198-10b9faf3dea0" />
+## 5. Add API key
 
-#### Purge website's cache (*from step 10*)
+1. Open your worker: __Workers & Pages__ > click the worker name
+2. Go to __Settings__ > __Variables and Secrets__
 
-Go back to "Account Home" > Open domain name > Caching > Configuration > <kbd>Purge Everything</kbd>
-<img width="1557" height="858" alt="create-worker-step-9" src="https://github.com/user-attachments/assets/141cc154-49ca-4350-9ca0-36cba5160922" />
+<img width="640" alt="Worker Settings — Variables and Secrets" src="images/ostrio-cf-7.png" />
 
-### Check that setup is correctly configured and working
+3. Click <kbd>Add</kbd> and enter:
+    - __Type:__ `Text`
+    - __Variable Name:__ `OSTR_AUTH`
+    - __Value:__ paste the value copied in [step 2.6](#2-add-domain-to-ostrio) (starts with `Basic ...`)
 
-Check that `X-Prerender-Id` exists in response headers
+<img width="640" alt="Add OSTR_AUTH environment variable" src="images/ostrio-cf-8.png" />
 
-#### Via Browser
+4. Click <kbd>Deploy</kbd>
 
-1. Open DevTools
-    - Windows: <kbd>F12</kbd> or <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd>
-    - MacOS: <kbd>Option</kbd> + <kbd>⌘</kbd> + <kbd>I</kbd>
-2. __In DevTools:__ Open "Network" tab and check "Disable Cache" checkbox
-3. Open website URL adding `?_escaped_fragment_=` query at the end. Ex.: `https://example.com/?_escaped_fragment_=/`
-4. Ensure `X-Prerender-Id` header returned with response
-5. Check ostr.io: Rendering statistics will appear in real-time
+---
 
-<img width="2056" height="906" alt="create-worker-step-10_check-browser" src="https://github.com/user-attachments/assets/7fb06a95-7f4c-4afb-bb51-8a8789c3940d" />
+## 6. Connect Worker to domain
 
-#### Via Terminal/Console using CURL
+1. In the sidebar click __"Account Home"__ > __Domains__ > click your domain name
+2. In the sidebar open __Workers Routes__ > __HTTP Routes__
+3. Click <kbd>Add Route</kbd>
 
-1. Request using cURL: `curl --head -A GoogleBot "https://example.com/"`
-2. Ensure `X-Prerender-Id` header returned with response
-3. Check ostr.io: Rendering statistics will appear in real-time
+<img width="640" alt="Domain — Workers Routes — Add Route" src="images/ostrio-cf-9.png" />
+
+4. In the __Route__ field enter your domain with `/*` at the end:
+
+    | Example | When to use |
+    |---|---|
+    | `https://example.com/*` | Standard setup (recommended) |
+    | `https://www.example.com/*` | If your site uses `www.` |
+
+    > __Replace `example.com` with your actual domain name. Always end the route with `/*`__
+
+5. In the __Worker__ dropdown — select the worker created in [step 3](#3-create-worker)
+
+<img width="640" alt="Add Route — select Worker" src="images/ostrio-cf-10.png" />
+
+6. Click <kbd>Save</kbd>
+
+---
+
+## 7. Purge cache
+
+1. Go to __Account Home__ > click your domain name
+2. Open __Caching__ > __Configuration__
+3. Click <kbd>Purge Everything</kbd> > confirm
+
+<img width="640" alt="Caching — Purge Everything" src="images/ostrio-cf-11.png" />
+
+Setup is complete, congratulations! 🎉
+
+---
+
+## 8. Check the result
+
+Open your website in a browser and verify that pre-rendering is working.
+
+### Via Browser
+
+1. Open DevTools:
+    - Windows: <kbd>F12</kbd>
+    - macOS: <kbd>Option</kbd> + <kbd>⌘</kbd> + <kbd>I</kbd>
+
+2. Open the __Network__ tab > check __"Disable Cache"__
+
+3. In the address bar add `?_escaped_fragment_=` to your URL and press <kbd>Enter</kbd>:
+
+    ```
+    https://example.com/?_escaped_fragment_=/
+    ```
+
+4. Click the first request in the Network tab > find `X-Prerender-Id` in __Response Headers__
+
+<img width="640" alt="DevTools — X-Prerender-Id in Response Headers" src="images/ostrio-cf-12.png" />
+
+> If `X-Prerender-Id` is present — pre-rendering is working
+
+### Via Terminal
+
+Run this command (replace `example.com` with your domain):
+
+```bash
+curl --head -A GoogleBot "https://example.com/"
+```
+
+Look for `X-Prerender-Id` in the response. If present — everything works.
+
+---
 
 ## Further reading
 

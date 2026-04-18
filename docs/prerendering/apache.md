@@ -1,46 +1,56 @@
-# Pre-rendering via Apache htaccess
+# Apache + ostr.io prerender integration
 
-Apache web server is efficient point to redirect requests from crawlers and bots to pre-rendering engine before it will reach the origin server
+This guide explains how to route crawler traffic from Apache to `render.ostr.io` in a production-safe way.
 
-## Prerequisites
+## 1) Required modules
 
-Enable required modules via `.htaccess` file or `CLI` commands
+Enable and verify these Apache modules:
 
-### Enable required modules via htaccess
+- `mod_headers`
+- `mod_proxy`
+- `mod_proxy_http`
+- `mod_ssl`
+- `mod_rewrite`
 
-Add the next lines into `.htaccess` file:
-
-```apacheconf
-LoadModule headers_module libexec/apache2/mod_headers.so
-LoadModule proxy_module libexec/apache2/mod_proxy.so
-LoadModule proxy_http_module libexec/apache2/mod_proxy_http.so
-LoadModule ssl_module libexec/apache2/mod_ssl.so
-LoadModule rewrite_module libexec/apache2/mod_rewrite.so
-```
-
-### Enable required modules via CLI
-
-Run the next commands in CLI/terminal/shell:
+Verification:
 
 ```bash
-sudo a2enmod headers
-sudo a2enmod proxy
-sudo a2enmod proxy_http
-sudo a2enmod ssl
-sudo a2enmod rewrite
+apachectl -M | grep -E "headers|proxy|proxy_http|ssl|rewrite"
 ```
 
-## Apache config
+Notes:
 
-Add the next `RewriteCond` and `RewriteRule` into existing `.htaccess` file to redirect bot's traffic to pre-rendering engine
+- Debian/Ubuntu package Apache: `a2enmod headers proxy proxy_http ssl rewrite`
+- RHEL/Alma/Rocky/cPanel: enable via distro/panel tooling and verify with `apachectl -M`
+
+## 2) Use correct directive context
+
+Do **not** put server-level directives into `.htaccess`:
+
+- `LoadModule` is server-level only.
+- `SSLProxyEngine` is server/vhost/proxy-section only.
+
+Recommended server/vhost config:
+
+```apache
+<IfModule mod_ssl.c>
+  SSLProxyEngine on
+</IfModule>
+
+<IfModule mod_proxy.c>
+  # Keep upstream Host as render.ostr.io to avoid host mismatch 404.
+  ProxyPreserveHost Off
+</IfModule>
+```
+
+## 3) `.htaccess` rules for prerender routing
+
+Add/update rules in your site `.htaccess`:
 
 ```apacheconf
-# IF SSL MANAGED BY APACHE, ADD NEXT LINE:
-# SSLProxyEngine on
-
 <IfModule mod_headers.c>
   ########
-  # Do not forget to change _YOUR_AUTH_TOKEN_ to token you get from ostr.io
+  # Replace _YOUR_AUTH_TOKEN_ with your ostr.io token (base64, without extra spaces)
   ########
   RequestHeader set Authorization "Basic _YOUR_AUTH_TOKEN_"
   RequestHeader set User-Agent "%{User-Agent}i"
@@ -55,7 +65,52 @@ Add the next `RewriteCond` and `RewriteRule` into existing `.htaccess` file to r
     
     RewriteCond "%{QUERY_STRING}" "_escaped_fragment_" [NC]
 
-    RewriteRule ^(.*)$ "https://render.ostr.io/render/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1" [P, END]
+    RewriteRule ^(.*)$ "https://render.ostr.io/render/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1" [P,END]
   </IfModule>
 </IfModule>
 ```
+
+## 4) Validate and reload Apache
+
+```bash
+apachectl -t
+systemctl reload apache2 || systemctl reload httpd
+```
+
+## 5) Testing checklist
+
+Use `GET` requests (not `curl -I`/HEAD):
+
+```bash
+# Normal browser UA: should stay on origin response
+curl -sS -A "Mozilla/5.0" "https://your-domain/" -o /tmp/human.html
+
+# Bot UA: should go through prerender path
+curl -sS -A "googlebot" "https://your-domain/" -o /tmp/bot.html
+
+# Compare response bodies
+wc -c /tmp/human.html /tmp/bot.html
+diff -u /tmp/human.html /tmp/bot.html | head -n 80
+
+# Static file: should bypass prerender
+curl -i -A "googlebot" "https://your-domain/app.js"
+```
+
+Success criteria:
+
+1. Bot traffic receives prerendered HTML.
+2. Normal browser traffic remains unchanged.
+3. Static assets are not proxied to prerender.
+
+## 6) Common issues
+
+- `Invalid command 'SSLProxyEngine'`:
+  - `mod_ssl` is not loaded, or directive is placed in `.htaccess`.
+- `Invalid command 'ProxyPreserveHost'`:
+  - `mod_proxy` is not loaded.
+- Bot requests return origin HTML:
+  - rewrite rules are not effective (`AllowOverride`, module state, or condition mismatch).
+- Bot requests return upstream `404`:
+  - host mismatch to upstream; keep `ProxyPreserveHost Off`.
+- No pages cached in ostr:
+  - testing was done with `HEAD` instead of `GET`, invalid token format, or rewrite branch was not reached.

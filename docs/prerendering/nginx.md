@@ -17,6 +17,7 @@ ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engi
     - [Nginx: Basic integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-integration)
     - [Nginx: Phusion Passenger integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
     - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
+    - [Nginx: Node.js integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#nodejs-integration)
     - [Nginx: Django integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#django-integration)
     - [Nginx: Go integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#go-integration)
     - [Nginx: Laravel integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#laravel-integration)
@@ -314,6 +315,112 @@ server {
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
+}
+```
+
+### Node.js integration
+
+Pre-rendering integration for plain Node.js websites (Express, Fastify, Koa, NestJS, h3, and similar) behind Nginx. Keep API, auth, admin, health, metrics, webhook, websocket, sitemap XML, feed, and system endpoints on origin; pre-render only safe `GET` and `HEAD` page requests from bots or `_escaped_fragment_` traffic. Serve static assets from Nginx, proxy dynamic traffic to Node.js upstream, and forward standard reverse-proxy headers. See [full nginx config file for Node.js here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/node.conf)
+
+```nginx
+# PRE-RENDER ONLY SAFE, CACHEABLE REQUEST METHODS
+map $request_method $is_prerender_method {
+  default 0;
+  GET 1;
+  HEAD 1;
+}
+
+# DO NOT PRE-RENDER WEBSOCKET OR OTHER UPGRADE REQUESTS
+map $http_upgrade $is_upgrade_request {
+  default 1;
+  "" 0;
+}
+
+# REQUIRED FOR WEBSOCKET UPGRADE TO NODE.JS BACKEND
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  "" close;
+}
+
+# KEEP NODE API, AUTH, ADMIN, HEALTH, METRICS, WS, AND SYSTEM ENDPOINTS ON ORIGIN
+map $uri $is_node_prerender_uri {
+  default 1;
+  ~^/(?:api|admin|auth|oauth|internal|metrics|debug|webhooks?)(?:/|$) 0;
+  ~^/(?:health|healthz|livez|readyz|readiness|liveness|status)(?:/|$) 0;
+  ~^/(?:socket\.io|ws)(?:/|$) 0;
+  ~^/(?:robots\.txt|favicon\.ico)$ 0;
+  ~^/(?:sitemap(?:_index)?|sitemap).*\.xml$ 0;
+  ~^/[^/]+-sitemap[0-9]*\.xml$ 0;
+  ~^/(?:feed|rss)(?:/|$) 0;
+}
+
+map "$is_webbot:$is_prerender_method:$is_node_prerender_uri:$is_upgrade_request" $node_prerender_webbot {
+  default 0;
+  "1:1:1:0" 1;
+}
+
+map "$args:$is_prerender_method:$is_node_prerender_uri:$is_upgrade_request" $node_prerender_fragment {
+  default 0;
+  ~(^|.*&)_escaped_fragment_=[^&]*(?:&.*)?:1:1:0$ 1;
+}
+
+upstream node_app {
+  server 127.0.0.1:3000 fail_timeout=0;
+  # server 127.0.0.1:3001 fail_timeout=0;
+  keepalive 64;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+  root /srv/example.com/current/public;
+  index index.html;
+
+  recursive_error_pages on;
+  error_page 454 = @prerendering;
+  error_page 450 = @application;
+
+  # SERVE STATIC FILES DIRECTLY FROM NGINX
+  location ~* \.(?:3ds|3g2|3gp|3gpp|7z|a|aac|aaf|adp|ai|aif|aiff|alz|ape|apk|appcache|ar|arj|asf|atom|au|avchd|avi|bak|bbaw|bh|bin|bk|bmp|btif|bz2|bzip2|cab|caf|cco|cgm|class|cmx|cpio|cr2|crt|crx|css|csv|cur|dat|deb|der|dex|djvu|dll|dmg|dng|doc|docm|docx|dot|dotm|dra|drc|DS_Store|dsk|dts|dtshd|dvb|dwg|dxf|ear|ecelp4800|ecelp7470|ecelp9600|egg|eol|eot|eps|epub|exe|f4a|f4b|f4p|f4v|fbs|fh|fla|flac|fli|flv|fpx|fst|fvt|g3|geojson|gif|graffle|gz|gzip|h261|h263|h264|hqx|htc|ico|ief|img|ipa|iso|jad|jar|jardiff|jng|jnlp|jpeg|jpg|jpgv|jpm|js|jxr|key|kml|kmz|ktx|less|lha|lvp|lz|lzh|lzma|lzo|m2v|m3u|m4a|m4p|m4v|map|manifest|mar|markdown|md|mdi|mdown|mdwn|mht|mid|midi|mj2|mka|mkd|mkdn|mkdown|mkv|mml|mmr|mng|mobi|mov|movie|mp2|mp3|mp4|mp4a|mpe|mpeg|mpg|mpga|mpv|msi|msm|msp|mxf|mxu|nef|npx|nsv|numbers|o|oex|oga|ogg|ogv|opus|otf|pages|pbm|pcx|pdb|pdf|pea|pem|pgm|pic|pl|pm|png|pnm|pot|potm|potx|ppa|ppam|ppm|pps|ppsm|ppsx|ppt|pptm|pptx|prc|ps|psd|pya|pyc|pyo|pyv|qt|ra|rar|ras|raw|rdf|rgb|rip|rlc|rm|rmf|rmvb|ron|roq|rpm|rss|rtf|run|rz|s3m|s7z|safariextz|scpt|sea|sgi|shar|sil|sit|slk|smv|so|sub|svg|svgz|svi|swf|tar|tbz|tbz2|tcl|tga|tgz|thmx|tif|tiff|tk|tlz|topojson|torrent|ttc|ttf|txt|txz|udf|uvh|uvi|uvm|uvp|uvs|uvu|vcard|vcf|viv|vob|vtt|war|wav|wax|wbmp|wdp|weba|webapp|webm|webmanifest|webp|whl|wim|wm|wma|wml|wmlc|wmv|wmx|woff|woff2|wvx|xbm|xif|xla|xlam|xloc|xls|xlsb|xlsm|xlsx|xlt|xltm|xltx|xm|xmind|xml|xpi|xpm|xsl|xwd|xz|yuv|z|zip|zipx)$ {
+    access_log off;
+    log_not_found off;
+    try_files $uri =404;
+  }
+
+  location / {
+    if ($node_prerender_webbot = 1) {
+      return 454;
+    }
+    if ($node_prerender_fragment = 1) {
+      return 454;
+    }
+
+    # TRY STATIC FILES FIRST, THEN PASS TO NODE.JS APPLICATION
+    try_files $uri @application;
+  }
+
+  location @application {
+    internal;
+    sendfile off;
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    proxy_connect_timeout 10s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+    proxy_redirect off;
+    proxy_pass http://node_app;
+  }
+
+  # ...THE REST OF THE CONFIG INCLUDING STATIC FILES AND @prerendering LOCATION...
 }
 ```
 

@@ -6,4 +6,4 @@ It the same as default Prerendering, but uses more modern JavaScript engine, whi
 
 ## Enable ECMAScript 2015 in one click:
 
-![Enable ES6 with one click Screenshot](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/prerendering-es6.png?raw=true)
+![Enable ES6 with one click Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-es6.png?raw=true)

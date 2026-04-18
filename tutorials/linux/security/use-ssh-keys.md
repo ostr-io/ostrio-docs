@@ -60,7 +60,7 @@ nano ~/.ssh/authorized_keys
 # Close file with: "ctrl + x" combination
 ```
 
-*Skip this step if root user will be used for login*. On a Server, to login as any other user (*secure*, [read how to create a user](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/users/create-user.md))
+*Skip this step if root user will be used for login*. On a Server, to login as any other user (*secure*, [read how to create a user](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/users/create-user.md))
 
 __Note:__ Do not forget to change `username` to actual users' name below:
 
@@ -129,6 +129,6 @@ ssh username@host -o IdentitiesOnly=yes
 ### Further reading:
 
 - [SSH Key-Based Authentication by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
-- [Change Default SSH port](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/change-ssh-port.md)
-- [Disable root login via SSH](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/disable-ssh-root.md)
-- [Sample `sshd_config`](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/sshd_config)
+- [Change Default SSH port](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/change-ssh-port.md)
+- [Disable root login via SSH](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/disable-ssh-root.md)
+- [Sample `sshd_config`](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/sshd_config)

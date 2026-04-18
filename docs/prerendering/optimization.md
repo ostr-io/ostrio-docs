@@ -2,8 +2,8 @@
 
 ## ToC:
 
-- [Speed up rendering](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/optimization.md#speed-up-rendering)
-- [Nginx](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/optimization.md#nginx)
+- [Speed up rendering](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/optimization.md#speed-up-rendering)
+- [Nginx](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/optimization.md#nginx)
 
 ### Speed up rendering
 
@@ -93,4 +93,4 @@ http {
 
 ## Further reading
 
-- [Content optimization for different crawlers](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/detect-prerendering.md)
+- [Content optimization for different crawlers](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)

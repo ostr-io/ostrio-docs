@@ -28,6 +28,6 @@ ssh -p 64537 username@host
 
 ## Further reading:
 
-- [Disable root login via SSH](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/disable-ssh-root.md)
-- [Use SSH keys to login](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/use-ssh-keys.md)
-- [Sample `sshd_config`](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/sshd_config)
+- [Disable root login via SSH](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/disable-ssh-root.md)
+- [Use SSH keys to login](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/use-ssh-keys.md)
+- [Sample `sshd_config`](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/sshd_config)

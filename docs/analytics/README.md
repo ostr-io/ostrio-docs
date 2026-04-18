@@ -6,8 +6,8 @@ Web Analytics is a fully-featured and drop-in web-tracking solution with no conf
 
 ## How to's
 
-- [Detect AdBlock usage](https://github.com/veliovgroup/ostrio/blob/master/docs/analytics/detect-adblock.md)
-- [Track Accelerated Mobile Pages (AMP)](https://github.com/veliovgroup/ostrio/blob/master/docs/analytics/track-amp.md)
+- [Detect AdBlock usage](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/detect-adblock.md)
+- [Track Accelerated Mobile Pages (AMP)](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/track-amp.md)
 
 > [!TIP]
 > Enable "Development Mode" to test web analytics integration and data-reports right from `localhost`

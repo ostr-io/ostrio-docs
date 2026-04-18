@@ -2,12 +2,12 @@
 
 In this tutorial (ToC):
 
-- [Create private GitHub Repository](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/automated-backups.md#create-private-github-repository)
-- [Add SSH Keys to private GitHub Repository](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/automated-backups.md#add-ssh-keys-to-private-github-repository)
-- [Enable LFS](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/automated-backups.md#enable-lfs)
-- [Select resources to backup](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/automated-backups.md#select-resources-to-backup)
-- [Create a bash script](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/automated-backups.md#create-the-bash-script)
-- [Schedule backups with CRON](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/automated-backups.md#schedule-backups-with-cron)
+- [Create private GitHub Repository](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/automated-backups.md#create-private-github-repository)
+- [Add SSH Keys to private GitHub Repository](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/automated-backups.md#add-ssh-keys-to-private-github-repository)
+- [Enable LFS](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/automated-backups.md#enable-lfs)
+- [Select resources to backup](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/automated-backups.md#select-resources-to-backup)
+- [Create a bash script](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/automated-backups.md#create-the-bash-script)
+- [Schedule backups with CRON](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/automated-backups.md#schedule-backups-with-cron)
 
 ## Create private GitHub Repository
 

@@ -16,7 +16,7 @@
 - 📔 [ToS](https://ostr.io/info/terms-and-conditions)
 - 📔 [Privacy Policy](https://ostr.io/info/privacy-policy)
 - 📔 [GDPR](https://ostr.io/info/gdpr)
-- 👷 [Changelog](https://github.com/veliovgroup/ostrio/blob/master/HISTORY.md)
+- 👷 [Changelog](https://github.com/ostr-io/ostrio-docs/blob/master/HISTORY.md)
 
 ## Services
 
@@ -45,7 +45,7 @@ These pages exist only for logged-in users.
 - 📦 [`seo-middleware-nextjs`](https://github.com/veliovgroup/seo-middleware-nextjs)
 - 📦 [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware#spiderable-middleware)
 - 📦 [`ostrio-analytics`](https://github.com/veliovgroup/ostrio-analytics/#analytics-for-ostrio)
-- 📋 [Documentation repository](https://github.com/veliovgroup/ostrio)
+- 📋 [Documentation repository](https://github.com/ostr-io/ostrio-docs)
 
 ## Domains
 

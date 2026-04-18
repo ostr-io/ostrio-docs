@@ -37,5 +37,5 @@ lynis audit dockerfile <path/to/docker>
 
 ## Further reading:
 
-- [Use RKHunter (Rootkit Hunter) to scan OS for vulnerabilities](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/rootkit-hunter.md)
-- [Basic firewall with `iptables`](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/security/iptables-firewall.md)
+- [Use RKHunter (Rootkit Hunter) to scan OS for vulnerabilities](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/rootkit-hunter.md)
+- [Basic firewall with `iptables`](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/security/iptables-firewall.md)

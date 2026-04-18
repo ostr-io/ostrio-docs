@@ -34,7 +34,32 @@ Step-by-step guide: connect ostr.io pre-rendering to your website via CloudFlare
 
 <img width="640" alt="ostr.io integration guide — CLOUDFLARE tab" src="images/ostrio-cf-acc.png" />
 
----
+1. Go to "Account Home" in the sidebar
+2. __In the sidebar:__ Compute (Workers) > Workers & Pages (*see [UI screenshot](#create-new-worker-from-step-2)*)
+3. At __Workers & Pages__ page click on <kbd>Create</kbd> > Then select "Start with Hello World!" (*see [UI screenshot](#create-new-worker-from-hello-world-template-from-step-3)*)
+4. __New Worker Form__: Enter memorable name (ex.: `examplecom-seo-worker`) > click on <kbd>Deploy</kbd> (*see [UI screenshot](#create-new-worker-deploy-hello-world-worker-from-step-4)*)
+5. After __new Worker__ created > click on <kbd>Edit Code</kbd> (*see [UI screenshot](#create-new-worker-edit-hello-world-worker-from-step-5)*)
+6. At __Worker Editor__ > Remove default "Hello World" worker code and replace with [CF Worker Code](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
+7. After Worker's code placed into __Worker Editor__ > click on <kbd>Deploy</kbd> (*see [UI screenshot](#create-new-worker-paste-and-deploy-workers-code-from-step-7)*)
+8. __Pass API key to CloudFlare Worker via environment variable__ (*see [UI screenshots](#add-api-key-from-step-8)*)
+    - Go to "Workers & Pages" > Open Newly Created Worker > Settings > Variables and Secrets > Click on <kbd>Add</kbd> button:
+        - Type: `text`
+        - Variable Name: `OSTR_AUTH`
+        - Value: Place value (*from "integration guide", see step no.6*) that starts with `Basic ...`
+    - Click on <kbd>Deploy</kbd> after adding `OSTR_AUTH` variable
+9. __Connect Worker to a website__ (*see [UI screenshots](#connect-worker-to-a-website-from-step-9)*)
+    - Go to "Account Home" > Domains > (*click on your domain name*)
+    - In sidebar open "__Workers Routes__" > HTTP Routes > click on <kbd>Add Route</kbd>
+    - __Add Route__ (*one of below*):
+        - Standard (*recommended*): `https://example.com/*` or `https://www.example.com/*` (*if `www.` is your primary website location; __Must include `/*` (slash and asterisk) at the end of route__*)
+        - Support both `http:` and `https:` protocols : `*example.com/*`
+        - Apply to main domain (TLD) and __all__ subdomains (*PRO and BUSINESS plans only*) `*example.com/*`
+        - Apply __only__ to for subdomains __only__ (*PRO and BUSINESS plans only*) `*.example.com/*`
+    - __Worker:__ Select newly created worker from dropdown
+    - Click on <kbd>save</kbd>
+10. __Purge cache at CloudFlare__ (see [UI screenshot](#purge-websites-cache-from-step-10))
+    - Go to "Account Home" in the sidebar menu
+    - (*click on your domain name*) > Caching > Configuration > <kbd>Purge Everything</kbd>
 
 ## 3. Create Worker
 
@@ -60,7 +85,8 @@ Step-by-step guide: connect ostr.io pre-rendering to your website via CloudFlare
 
 1. After deploying the worker click <kbd>Edit Code</kbd>
 
-<img width="640" alt="Worker created — Edit Code button" src="images/ostrio-cf-5.png" />
+In editor paste [pre-rendering worker's code](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) and click on <kbd>Deploy</kbd> then click on the name of the worker to go back
+<img width="1557" height="858" alt="create-worker-step-5" src="https://github.com/user-attachments/assets/3b19c1d5-be24-4fb9-85b2-6e027f6bfd87" />
 
 2. Select all code in the editor and delete it
 
@@ -167,6 +193,6 @@ Look for `X-Prerender-Id` in the response. If present — everything works.
 
 ## Further reading
 
-- [Speed-up rendering](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/optimization.md#speed-up-rendering)
-- [Detect requests from pre-rendering](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/detect-prerendering.md)
-- [Pre-rendering documentation](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/README.md)
+- 🏎️ [Speed-up rendering](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/optimization.md#speed-up-rendering)
+- 🤖 [Detect requests from pre-rendering](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)
+- 📔 [Detailed Pre-rendering service documentation](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md)

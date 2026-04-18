@@ -4,8 +4,8 @@ AdBlock is the great add-on in most of the cases as the Internet full of scam, s
 
 __Two options:__
 
-- [Vanilla solution without 3rd party libraries](https://github.com/veliovgroup/ostrio/blob/master/docs/analytics/detect-adblock.md#vanilla-solution-without-3rd-party-libraries)
-- [Detect using NPM library](https://github.com/veliovgroup/ostrio/blob/master/docs/analytics/detect-adblock.md#with-npm-library)
+- [Vanilla solution without 3rd party libraries](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/detect-adblock.md#vanilla-solution-without-3rd-party-libraries)
+- [Detect using NPM library](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/detect-adblock.md#with-npm-library)
 
 ## Vanilla solution without 3rd party libraries
 

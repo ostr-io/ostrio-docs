@@ -4,7 +4,7 @@
 
 CloudFlare Workers is the great alternative to server-specific proxy (Nginx, Apache, HAProxy) and app-specific middleware (NPM, PHP, Node.js, Django, and other)
 
-- [Step-by-step Tutorial](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/coudflare-worker-guide.md)
-- **Shopify** [CloudFlare Worker Integration](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/shopify-seo-integration.md#seo-middleware-worker-for-shopify)
-- *Modern and recommended*: [ES Module Worker](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
-- *Legacy*: [Event Listener Worker](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare-listener.worker.js)
+- [Step-by-step Tutorial](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/coudflare-worker-guide.md)
+- **Shopify** [CloudFlare Worker Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/shopify-seo-integration.md#seo-middleware-worker-for-shopify)
+- *Modern and recommended*: [ES Module Worker](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
+- *Legacy*: [Event Listener Worker](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare-listener.worker.js)

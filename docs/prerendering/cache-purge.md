@@ -4,7 +4,7 @@
 
 In the case of significant changes on a website, cached results can be purged. Full cache purging available once per 2 hours.
 
-![Purge Full Pre-rendering Cache Screenshot](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/prerendering-cache-purge.png?raw=true)
+![Purge Full Pre-rendering Cache Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache-purge.png?raw=true)
 
 ## Individual page cache purge:
 
@@ -12,10 +12,10 @@ While full cache purging is limited by time-frame. The individually cached page 
 
 <table><tbody><tr>
   <td>
-    <img src="https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/prerendering-cache-id.png?raw=true" alt="Prerendering Id Header Screenshot">
+    <img src="https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache-id.png?raw=true" alt="Prerendering Id Header Screenshot">
   </td>
   <td>
-    <img src="https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/prerendering-cache-purge-single.png?raw=true" alt="Purge Single Page from Prerendering Cache Screenshot">
+    <img src="https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache-purge-single.png?raw=true" alt="Purge Single Page from Prerendering Cache Screenshot">
   </td>
 </tr></tbody></table>
 
@@ -35,4 +35,4 @@ The reason why you may not found `x-prerender-id` header in DevTools is aggressi
 
 ## Notes:
 
-While cache is purged from Pre-rendering engine it may remain cached in intermediate caching layers from few minutes to several days, it depends on selected "Cache TTL" and [rendering endpoint](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/rendering-endpoints.md).
+While cache is purged from Pre-rendering engine it may remain cached in intermediate caching layers from few minutes to several days, it depends on selected "Cache TTL" and [rendering endpoint](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md).

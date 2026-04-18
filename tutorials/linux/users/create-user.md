@@ -58,4 +58,4 @@ adduser [username]
 
 ### Further reading:
 
-- [rbash - restricted users](https://github.com/veliovgroup/ostrio/blob/master/tutorials/linux/users/rbash.md)
+- [rbash - restricted users](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/linux/users/rbash.md)

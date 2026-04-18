@@ -12,8 +12,8 @@ We do not charge for requests to the cached results, mean cheaper Prerendering s
 
 Cache TTL can be set per each host individually starting from 2 hours and ending with 744 hours (31 days).
 
-![Set Prerendering Cache TTL Screenshot](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/prerendering-cache.png?raw=true)
+![Set Prerendering Cache TTL Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache.png?raw=true)
 
 ## Cache purging
 
-The cache may be fully purged once per 2 hours, but the specific page can be purged individually at any moment. Read more in [cache purging docs](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/cache-purge.md).
+The cache may be fully purged once per 2 hours, but the specific page can be purged individually at any moment. Read more in [cache purging docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cache-purge.md).

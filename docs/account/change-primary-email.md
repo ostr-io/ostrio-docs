@@ -6,4 +6,4 @@
 
 Once another email address is added and verified, click on the *star* icon next to it. After you confirm this action you will be logged out, and since then you have to use new "Primary Email" to login into your account.
 
-![Change Primary Email Address Screenshot](https://github.com/veliovgroup/ostrio/blob/master/docs/account/change-primary-email.png?raw=true)
+![Change Primary Email Address Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/account/change-primary-email.png?raw=true)

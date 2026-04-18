@@ -18,6 +18,7 @@ ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engi
     - [Nginx: Phusion Passenger integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
     - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
     - [Nginx: Django integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#django-integration)
+    - [Nginx: Go integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#go-integration)
     - [Nginx: Laravel integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#laravel-integration)
     - [Nginx: FastCGI integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#fastcgi-integration)
     - [Nginx: WordPress integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#wordpress-integration)
@@ -387,6 +388,104 @@ server {
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
+}
+```
+
+### Go integration
+
+Pre-rendering integration for Go websites served by Nginx with a Go HTTP backend (`net/http`, Gin, Echo, Chi, Fiber adapter, and similar). Keep API, auth, admin, health, metrics, sitemap XML, feed, and system endpoints on origin; pre-render only safe `GET` and `HEAD` page requests from bots or `_escaped_fragment_` traffic. Serve static assets from Nginx, proxy dynamic traffic to upstream Go app, and forward standard reverse-proxy headers. See [full nginx config file for Go here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/go.conf)
+
+```nginx
+# PRE-RENDER ONLY SAFE, CACHEABLE REQUEST METHODS
+map $request_method $is_prerender_method {
+  default 0;
+  GET 1;
+  HEAD 1;
+}
+
+# DO NOT PRE-RENDER WEBSOCKET OR OTHER UPGRADE REQUESTS
+map $http_upgrade $is_upgrade_request {
+  default 1;
+  "" 0;
+}
+
+# KEEP API, AUTH, ADMIN, HEALTH, METRICS, SITEMAP, AND SYSTEM ENDPOINTS ON ORIGIN
+map $uri $is_go_prerender_uri {
+  default 1;
+  ~^/(?:api|admin|auth|oauth|internal|metrics|debug)(?:/|$) 0;
+  ~^/(?:health|healthz|livez|readyz|readiness|liveness|status)(?:/|$) 0;
+  ~^/(?:robots\.txt|favicon\.ico)$ 0;
+  ~^/(?:sitemap(?:_index)?|sitemap).*\.xml$ 0;
+  ~^/[^/]+-sitemap[0-9]*\.xml$ 0;
+  ~^/(?:feed|rss)(?:/|$) 0;
+}
+
+map "$is_webbot:$is_prerender_method:$is_go_prerender_uri:$is_upgrade_request" $go_prerender_webbot {
+  default 0;
+  "1:1:1:0" 1;
+}
+
+map "$args:$is_prerender_method:$is_go_prerender_uri:$is_upgrade_request" $go_prerender_fragment {
+  default 0;
+  ~(^|.*&)_escaped_fragment_=[^&]*(?:&.*)?:1:1:0$ 1;
+}
+
+upstream go_app {
+  # Go HTTP backend, for example:
+  # net/http, Gin, Echo, Chi, or Fiber adapter
+  server 127.0.0.1:8080 fail_timeout=0;
+  keepalive 64;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+
+  root /srv/example.com/current/public;
+  index index.html;
+
+  recursive_error_pages on;
+  # CUSTOM 454 CODE FOR INTERNAL REDIRECT TO @prerendering
+  error_page 454 = @prerendering;
+  # CUSTOM 450 CODE FOR INTERNAL REDIRECT TO @application
+  error_page 450 = @application;
+
+  location / {
+    # IF REQUEST RECEIVED FROM BOT OR
+    # WITH "FRAGMENT" REDIRECT TO @prerendering
+    if ($go_prerender_webbot = 1) {
+      return 454;
+    }
+    if ($go_prerender_fragment = 1) {
+      return 454;
+    }
+
+    # TRY STATIC FILES FIRST, THEN PASS TO GO APPLICATION
+    try_files $uri @application;
+  }
+
+  location @application {
+    internal;
+    sendfile off;
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "";
+
+    proxy_connect_timeout 10s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+    proxy_redirect off;
+    proxy_pass http://go_app;
+  }
+
+  # ...THE REST OF THE CONFIG INCLUDING STATIC FILES AND @prerendering LOCATION...
 }
 ```
 

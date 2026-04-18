@@ -15,6 +15,7 @@ ostr.io pre-rendering SEO Middleware delivers fully rendered HTML to search engi
     3. Prerequisite: [Create pre-rendering directive](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#pre-rendering-directive-location)
 - [Nginx: Examples](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#nginx-examples)
     - [Nginx: Basic integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-integration)
+    - [Nginx: Static website integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#static-website-integration)
     - [Nginx: Phusion Passenger integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#phusion-passenger-integration)
     - [Nginx: Basic upstream integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#basic-upstream-integration)
     - [Nginx: Node.js integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md#nodejs-integration)
@@ -201,6 +202,70 @@ server {
   }
 
   # ...THE REST OF THE CONFIG INCLUDING @prerendering LOCATION...
+}
+```
+
+### Static website integration
+
+Pre-rendering integration for modern static websites served directly by Nginx (for example Astro, Vite, Hugo, Gatsby, Eleventy, SvelteKit static export, Next.js static export, and similar). Keep sitemap, robots, feed, favicon, and health endpoints on origin; pre-render only safe `GET` and `HEAD` page requests from bots or `_escaped_fragment_` traffic. Serve static assets from disk with immutable caching and route unresolved paths to `index.html` for SPA-style navigation. See [full nginx config file for static websites here](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/nginx/static.conf)
+
+```nginx
+# PRE-RENDER ONLY SAFE, CACHEABLE REQUEST METHODS
+map $request_method $is_prerender_method {
+  default 0;
+  GET 1;
+  HEAD 1;
+}
+
+# DO NOT PRE-RENDER WEBSOCKET OR OTHER UPGRADE REQUESTS
+map $http_upgrade $is_upgrade_request {
+  default 1;
+  "" 0;
+}
+
+# KEEP STATIC SITE SYSTEM ENDPOINTS ON ORIGIN
+map $uri $is_static_prerender_uri {
+  default 1;
+  ~^/(?:robots\.txt|favicon\.ico)$ 0;
+  ~^/(?:sitemap(?:_index)?|sitemap).*\.xml$ 0;
+  ~^/[^/]+-sitemap[0-9]*\.xml$ 0;
+  ~^/(?:feed|rss)(?:/|$) 0;
+  ~^/(?:health|healthz|livez|readyz|readiness|liveness|status)$ 0;
+}
+
+map "$is_webbot:$is_prerender_method:$is_static_prerender_uri:$is_upgrade_request" $static_prerender_webbot {
+  default 0;
+  "1:1:1:0" 1;
+}
+
+map "$args:$is_prerender_method:$is_static_prerender_uri:$is_upgrade_request" $static_prerender_fragment {
+  default 0;
+  ~(^|.*&)_escaped_fragment_=[^&]*(?:&.*)?:1:1:0$ 1;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+  root /srv/example.com/current/dist;
+  index index.html;
+
+  recursive_error_pages on;
+  error_page 454 = @prerendering;
+
+  location / {
+    if ($static_prerender_webbot = 1) {
+      return 454;
+    }
+    if ($static_prerender_fragment = 1) {
+      return 454;
+    }
+
+    # STATIC WEBSITE OR SPA FALLBACK
+    try_files $uri $uri/ /index.html;
+  }
+
+  # ...THE REST OF THE CONFIG INCLUDING STATIC FILES AND @prerendering LOCATION...
 }
 ```
 

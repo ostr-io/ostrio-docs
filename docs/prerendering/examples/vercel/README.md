@@ -2,6 +2,8 @@
 
 Drop-in [Vercel Routing Middleware](https://vercel.com/docs/routing-middleware) that routes bot traffic to [ostr.io](https://ostr.io) prerendering CDN. One file, zero config, works with any framework.
 
+> For the integration guide with context, prerequisites, and alternatives see [`../../vercel-prerendering.md`](../../vercel-prerendering.md).
+
 ## What it does
 
 | Request | Behavior |
@@ -76,9 +78,11 @@ Works with any framework deployed to Vercel:
 
 ## Links
 
-- [ostr.io](https://ostr.io) -- prerendering service provider
+- [Vercel integration guide](../../vercel-prerendering.md) — full context, alternatives, and validation steps
+- [Pre-rendering overview](../../README.md)
+- [ostr.io](https://ostr.io) — pre-rendering service provider
 - [Vercel Routing Middleware docs](https://vercel.com/docs/routing-middleware)
-- [spiderable-middleware](https://github.com/veliovgroup/spiderable-middleware) -- bot list source
+- [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware) — bot list source
 
 ---
 

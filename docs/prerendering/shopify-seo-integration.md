@@ -160,3 +160,9 @@ Check that `X-Prerender-Id` exists in response headers
 - 🏎️ [Speed up rendering](optimization.md#speed-up-rendering)
 - 🤖 [Detect requests from pre-rendering](detect-prerendering.md)
 - 📔 [Detailed pre-rendering service documentation](README.md)
+
+## Related
+
+- [General Cloudflare Worker integration](cloudflare-worker.md) — same pattern for non-Shopify hosted platforms (Webflow, Framer, Squarespace, Wix, Ghost, etc.)
+- [Rendering endpoints](rendering-endpoints.md)
+- [Canonical crawler regex](shared/crawler-ua-regex.md)

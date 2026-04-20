@@ -17,6 +17,7 @@ Lightning-fast, technology-agnostic SEO for websites, web apps, online shops and
   - [Optimizations](#optimizations)
   - [Extras](#extras)
   - [Integration tests](#integration-tests)
+- [Shared references](#shared-references)
 
 ## Why pre-rendering SEO middleware
 
@@ -48,47 +49,52 @@ Common terms used across the pre-rendering documentation:
 
 Pick based on where you can change configuration:
 
-| If you control… | Use |
+| If you control… | Pick |
 | --- | --- |
-| DNS / CDN only | [Cloudflare Worker](cloudflare-worker.md), [Shopify via Cloudflare](shopify-seo-integration.md) |
-| A managed host | [Netlify](netlify-prerendering.md) |
-| A reverse proxy | [Nginx](nginx.md), [Apache](apache.md), [Caddy](caddy-prerendering.md) |
-| Application code only | [Node.js (NPM)](node-npm.md), [Next.js](nextjs-prerendering.md), [Meteor.js](meteor-atmosphere.md) |
+| DNS / CDN only (no server, no code access) | [Cloudflare Worker](cloudflare-worker.md) — works with Webflow, Framer, Squarespace, Wix, Ghost, Notion-proxied sites, and more |
+| A Shopify store | [Cloudflare Worker for Shopify](shopify-seo-integration.md) |
+| A Netlify deployment (PRO / ENTERPRISE) | [Netlify integration](netlify-prerendering.md) |
+| A Vercel deployment | [Vercel Routing Middleware](vercel-prerendering.md) |
+| A reverse proxy | [Nginx](nginx.md), [Apache](apache.md), or [Caddy](caddy-prerendering.md) |
+| Next.js application code | [Self-managed `middleware.ts`](nextjs-prerendering.md#option-1--self-managed-middlewarets) or [`seo-middleware-nextjs` NPM package](nextjs-prerendering.md#option-2--seo-middleware-nextjs-npm-package) |
+| Any other Node.js app | [`spiderable-middleware` NPM package](node-npm.md) |
+| A Meteor.js app | [`ostrio:spiderable-middleware` Atmosphere package](meteor-atmosphere.md) |
 
 ## Integrations
 
-Pre-rendering SEO middleware has various implementations and integration methods.
+All ten supported integration paths.
 
 ### Cloud / Edge integrations
 
-Operate at the CDN or worker layer — no origin changes required.
+Operate at the CDN / worker layer — **no origin, server, or application changes required**. Ideal for hosted/no-code platforms where you cannot deploy middleware yourself.
 
-- **Shopify** — [Cloudflare Worker integration](shopify-seo-integration.md#seo-middleware-worker-for-shopify)
-- General — [Cloudflare Worker integration](cloudflare-worker.md)
+- **General Cloudflare Worker** — [Cloudflare Worker integration](cloudflare-worker.md). Compatible with Webflow, Framer, Squarespace, Wix, Carrd, Bubble, Ghost(Pro), Substack, Notion-proxied sites, WordPress.com, BigCommerce, Wix Stores, and any origin reachable through Cloudflare's orange-cloud DNS.
+- **Shopify** — [Cloudflare Worker for Shopify](shopify-seo-integration.md). Dedicated walkthrough for Shopify domains (including Shopify-managed domains that need to be transferred to Cloudflare first).
 
 ### Managed platform integrations
 
-Enable at the hosting-platform level — no plugins or codebase changes.
+Enable at the hosting-platform level — no plugins, no codebase changes.
 
-- [Netlify integration](netlify-prerendering.md)
-- Vercel — *coming soon*
-- Supabase — *coming soon*
+- [**Netlify**](netlify-prerendering.md) — enabled via Netlify Support on PRO / ENTERPRISE plans.
+- [**Vercel**](vercel-prerendering.md) — drop-in Vercel Routing Middleware; one `middleware.js` file plus env vars.
+- **Supabase** — *coming soon.*
 
 ### Server-level integrations
 
 Integrate with your reverse proxy — no plugins required.
 
-- [Nginx integration](nginx.md)
-- [Apache integration](apache.md)
-- [Caddy integration](caddy-prerendering.md)
+- [**Nginx**](nginx.md) — `map $http_user_agent` + `@prerendering` internal location. Complete stack-specific examples for Node.js, Go, Django, Laravel, WordPress, PHP-FPM, and Phusion Passenger.
+- [**Apache**](apache.md) — `mod_rewrite` + `mod_proxy`. Complete stack-specific `.htaccess` examples for WordPress, Drupal, Joomla, Magento, Moodle, Laravel, Zend/Laminas, and plain PHP.
+- [**Caddy**](caddy-prerendering.md) — Caddyfile-based integration. Complete examples for Node.js/Next.js, PHP, Django, static sites, and other frameworks.
 
 ### Application-level integrations
 
 Application-specific integrations via NPM / Atmosphere packages.
 
-- [Next.js integration](nextjs-prerendering.md)
-- [Node.js integration via NPM](node-npm.md)
-- [Meteor.js integration via Atmosphere](meteor-atmosphere.md)
+- [**Next.js — self-managed `middleware.ts`**](nextjs-prerendering.md#option-1--self-managed-middlewarets) — copy one file into the project, no extra dependency.
+- [**Next.js — `seo-middleware-nextjs` NPM package**](nextjs-prerendering.md#option-2--seo-middleware-nextjs-npm-package) — maintained package, one-line import.
+- [**Node.js — `spiderable-middleware` NPM package**](node-npm.md) — works with Express, Connect, Koa, Fastify (via adapter), vanilla `http`, and any Node middleware signature.
+- [**Meteor.js — `ostrio:spiderable-middleware` Atmosphere package**](meteor-atmosphere.md) — plugs into `WebApp.connectHandlers`.
 
 ## Features and how-tos
 
@@ -122,8 +128,8 @@ Learn how to use different features and settings within pre-rendering SEO middle
 
 - Use `cURL` with an `Authorization` header (*see Nginx integration*): `curl -v -H "Authorization: Basic TOKEN" https://render-bypass.ostr.io/?url=https://your-website-domain.com`
 - Use `cURL` with authentication credentials (*see Node.js integration*): `curl -v https://auth:string@render-bypass.ostr.io/?url=https://your-website-domain.com`
-- Use `test:test` credentials to verify general integration (*confirms that the web application server can reach the pre-rendering service*)
-- Use the `Authorization: Basic dGVzdDp0ZXN0` header to verify general integration (*confirms that the web application server can reach the pre-rendering service*)
+- Use `test:test` credentials to verify general integration (*confirms that the web application server can reach the pre-rendering service*).
+- Use the `Authorization: Basic dGVzdDp0ZXN0` header to verify general integration (*confirms that the web application server can reach the pre-rendering service*).
 
 ## Shared references
 

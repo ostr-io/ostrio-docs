@@ -145,3 +145,12 @@ Open new Netlify Support ticket requesting removal of the ostr.io pre-rendering 
 * **Netlify Support:** enable/disable the integration for specific sites and apply/update the Auth Token.
 
 If additional details are needed for enterprise scenarios (multi-site enablement, staged rollouts, or custom crawler policies), contact ostr.io support with the target domains and desired policy.
+
+## Related
+
+Alternatives to the managed Netlify integration:
+
+- [Vercel integration](vercel-prerendering.md) — same layer, different host.
+- [Cloudflare Worker integration](cloudflare-worker.md) — CDN-level, works for any origin.
+- [Next.js integration](nextjs-prerendering.md) — if your Netlify site is Next.js and you want in-app control.
+- [Rendering endpoints](rendering-endpoints.md)

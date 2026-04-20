@@ -56,6 +56,11 @@ Use __any__ standard or custom status codes:
 - `500` - `<!-- response:status-code=500 -->`
 - `514` - `<!-- response:status-code=514 -->` (*non-standard*)
 
-## Result:
+## Result
 
-![Return Genuine Status Code Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-genuine-status-code.png?raw=true)
+![Return genuine status code screenshot](./prerendering-genuine-status-code.png)
+
+## Related
+
+- [Custom status codes](prerendering-custom-status-codes.md) — `7xx` debugging codes emitted by the pre-rendering engine
+

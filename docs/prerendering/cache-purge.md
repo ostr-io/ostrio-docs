@@ -1,38 +1,38 @@
-# Prerendering Cache Purging
+# Pre-rendering: Cache Purging
 
-## Full cache purging:
+## Full cache purge
 
-In the case of significant changes on a website, cached results can be purged. Full cache purging available once per 2 hours.
+When significant changes happen on a website, cached results can be purged entirely. Full cache purge is available **once per 2 hours**.
 
-![Purge Full Pre-rendering Cache Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache-purge.png?raw=true)
+![Purge full pre-rendering cache screenshot](./prerendering-cache-purge.png)
 
-## Individual page cache purge:
+## Individual page cache purge
 
-While full cache purging is limited by time-frame. The individually cached page can be purged anytime without limits. To purge single page from cache "Cache ID" has to be obtained in response headers as `X-Prerender-Id`.
+Full cache purge is rate-limited, but individual pages can be purged **any time, without limits**. To purge a single page, obtain its *Cache ID* from the response headers as `X-Prerender-Id`.
 
 <table><tbody><tr>
   <td>
-    <img src="https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache-id.png?raw=true" alt="Prerendering Id Header Screenshot">
+    <img src="./prerendering-cache-id.png" alt="Pre-rendering Id header screenshot">
   </td>
   <td>
-    <img src="https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache-purge-single.png?raw=true" alt="Purge Single Page from Prerendering Cache Screenshot">
+    <img src="./prerendering-cache-purge-single.png" alt="Purge single page from pre-rendering cache screenshot">
   </td>
 </tr></tbody></table>
 
-## Purge aggressively cached pages
+## Purging aggressively-cached pages
 
-The reason why you may not found `x-prerender-id` header in DevTools is aggressive caching headers or usage of ServiceWorker or AppCache, to avoid this issue please follow next steps (*in Chrome, Opera, Brave, and other Chromium-based browser*):
+The `X-Prerender-Id` header may be missing in DevTools because of aggressive client caching headers, a Service Worker, or AppCache. To work around this (*in Chrome, Opera, Brave, and other Chromium-based browsers*):
 
-1. Open new **Private** window
-2. Open URL with appended `?_escaped_fragment_=`
-3. Open "Developer Tools"
-4. In "Developer Tools" go to "Network" tab
-5. Check "Disable Cache" checkbox
-6. Reload/Refresh page
-7. In "Network" tab select `/?_escaped_fragment_=` document (*should be the first*)
-8. In opened area make sure "Header" tab is selected
-9. In "Response Headers" section find `x-prerender-id` header
+1. Open a new **Private** window
+2. Open the URL with `?_escaped_fragment_=` appended
+3. Open **Developer Tools**
+4. Go to the **Network** tab
+5. Enable **Disable Cache**
+6. Reload / refresh the page
+7. Select the `/?_escaped_fragment_=` document (*should be first*)
+8. Open the **Headers** tab
+9. Under **Response Headers**, find `x-prerender-id`
 
-## Notes:
+## Notes
 
-While cache is purged from Pre-rendering engine it may remain cached in intermediate caching layers from few minutes to several days, it depends on selected "Cache TTL" and [rendering endpoint](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md).
+When cache is purged from the pre-rendering engine, it may remain cached in intermediate caching layers for a few minutes up to several days, depending on your *Cache TTL* and [rendering endpoint](rendering-endpoints.md).

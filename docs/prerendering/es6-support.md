@@ -1,9 +1,14 @@
-# Enable ES6 support for Prerendering
+# Pre-rendering: ES6 Support
 
-Love bleeding edge technology? Using ES6 and ES7 at your website? Great! We are happy to introduce ES6 and partial ES7 syntax support. This feature is not enabled by default and can be turned on individually for each host in "Prerendering" panel.
+Love bleeding-edge JavaScript? Using ES6 or ES7 on your website? We offer ES6 (and partial ES7) syntax support in the pre-rendering engine. This feature is **off by default** and can be toggled individually per host in the **Pre-rendering Panel**.
 
-It the same as default Prerendering, but uses more modern JavaScript engine, which may be less stable.
+Behavior is the same as default pre-rendering, but a more modern JavaScript engine is used, which may be slightly less stable for older code.
 
-## Enable ECMAScript 2015 in one click:
+## Enable ECMAScript 2015 in one click
 
-![Enable ES6 with one click Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-es6.png?raw=true)
+![Enable ES6 screenshot](./prerendering-es6.png)
+
+## Related
+
+- [Strip JavaScript](strip-javascript.md)
+- [Client optimization](optimization.md)

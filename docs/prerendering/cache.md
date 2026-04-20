@@ -1,19 +1,24 @@
-# Prerendering Caching
+# Pre-rendering: Caching
 
-All Prerendering engine results are cached by default. Cache TTL can be changed in the Prerendering settings, individually per each host.
+All pre-rendering engine results are cached by default. Cache TTL can be changed in the pre-rendering settings, individually per host.
 
 ## Why cache results?
 
-Caching allows to offload servers, save bandwidth and speed up sequential requests to the same pages by web crawlers, mean better SEO score for your website.
+Caching offloads your origin, saves bandwidth, and speeds up sequential requests to the same pages by web crawlers — resulting in a better SEO score for your website.
 
-We do not charge for requests to the cached results, mean cheaper Prerendering service for you.
+Requests served from cache are **not** billed, making pre-rendering cheaper the more it is used.
 
 ## Cache TTL
 
-Cache TTL can be set per each host individually starting from 2 hours and ending with 744 hours (31 days).
+Cache TTL is set per host and ranges from **2 hours** to **744 hours (31 days)**.
 
-![Set Prerendering Cache TTL Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-cache.png?raw=true)
+![Set Pre-rendering Cache TTL screenshot](./prerendering-cache.png)
 
 ## Cache purging
 
-The cache may be fully purged once per 2 hours, but the specific page can be purged individually at any moment. Read more in [cache purging docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cache-purge.md).
+Full cache purges are limited to once per 2 hours, but any specific page can be purged individually at any moment. See [cache purging](cache-purge.md) for details.
+
+## Related
+
+- [Rendering endpoints](rendering-endpoints.md) — caching behavior per endpoint
+- [Cache purge](cache-purge.md)

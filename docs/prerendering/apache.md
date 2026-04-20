@@ -1,10 +1,11 @@
 # Apache Integration
 
-ostr.io pre-rendering SEO Middleware serves rendered HTML to search engines, social preview bots, and AI crawlers. Apache integration keeps application code unchanged: Apache detects crawler traffic and proxies matching page requests to ostr.io renderer.
+ostr.io pre-rendering SEO middleware serves rendered HTML to search engines, social preview bots, and AI crawlers. The Apache integration keeps application code unchanged: Apache detects crawler traffic and proxies matching page requests to the ostr.io renderer.
 
 - [Pre-rendering overview](README.md)
 - [Rendering endpoints](rendering-endpoints.md)
 - [Complete Apache examples](examples/apache/)
+- Canonical regex sources — [Crawler User-Agent](shared/crawler-ua-regex.md), [Static-asset extensions](shared/static-extensions-regex.md)
 
 ## Contents
 

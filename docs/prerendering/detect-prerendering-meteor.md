@@ -1,12 +1,17 @@
-# Detect request from Prerendering engine in Meteor.js
+# Detect Pre-rendering Engine Requests in Meteor.js
 
-When requests are coming from pre-rendering engine it can be detected in JS-runtime (e.g. front-end code)
+When requests come from the pre-rendering engine they can be detected at JS runtime (e.g. front-end code).
 
-## Detect that request is coming from pre-rendering engine
+See the non-Meteor version: [Detect pre-rendering engine requests](detect-prerendering.md).
 
-Pre-rendering engine will set `window.IS_PRERENDERING` global variable to `true`. As in Meteor everything should be reactive, let's bound it with `ReactiveVar`:
+## Detect that a request is coming from the pre-rendering engine
+
+The pre-rendering engine sets `window.IS_PRERENDERING` to `true`. Because Meteor favors reactive state, bind it to a `ReactiveVar`:
 
 ```js
+import { ReactiveVar } from 'meteor/reactive-var';
+import { Template } from 'meteor/templating';
+
 const IS_PRERENDERING = new ReactiveVar(window.IS_PRERENDERING || false);
 Object.defineProperty(window, 'IS_PRERENDERING', {
   set(val) {
@@ -17,14 +22,44 @@ Object.defineProperty(window, 'IS_PRERENDERING', {
   }
 });
 
-// Make globally available Blaze helper,
-// Feel free to omit this line in case if you're not using Blaze
-// or going to handle logic in JavaScript part
+// Expose a global Blaze helper.
+// Omit this line if you are not using Blaze or if you prefer to handle
+// the logic in plain JavaScript.
 Template.registerHelper('IS_PRERENDERING', () => IS_PRERENDERING.get());
 ```
 
-__Note__: `window.IS_PRERENDERING` might be `undefined` on initial page load, and may change during runtime.
+> [!NOTE]
+> `window.IS_PRERENDERING` may be `undefined` on initial page load and can change during runtime.
 
-## Detect type of the pre-rendering engine
+## Detect the type of pre-rendering engine
 
-Like browsers, crawler, and bots come as "mobile" (small screen touch-devices) or as "desktop" (large screens without touch-events) the pre-rendering engine has the same two types. For cases when content needs to get optimized for different screens pre-rendering engine will set `window.IS_PRERENDERING_TYPE` global variable to `desktop` or `mobile`
+Like browsers, crawlers and bots come as "mobile" (small-screen touch devices) or "desktop" (large screens without touch events). The pre-rendering engine exposes the same two types via `window.IS_PRERENDERING_TYPE`, set to either `desktop` or `mobile`:
+
+```js
+import { ReactiveVar } from 'meteor/reactive-var';
+import { Template } from 'meteor/templating';
+
+const IS_PRERENDERING_TYPE = new ReactiveVar(window.IS_PRERENDERING_TYPE || '');
+Object.defineProperty(window, 'IS_PRERENDERING_TYPE', {
+  set(val) {
+    IS_PRERENDERING_TYPE.set(val);
+  },
+  get() {
+    return IS_PRERENDERING_TYPE.get();
+  }
+});
+
+Template.registerHelper('IS_PRERENDERING_TYPE', () => IS_PRERENDERING_TYPE.get());
+```
+
+Use it in application code:
+
+```js
+if (window.IS_PRERENDERING_TYPE === 'mobile') {
+  // Request is coming from a mobile crawler and mobile pre-rendering engine
+} else if (window.IS_PRERENDERING_TYPE === 'desktop') {
+  // Request is coming from a desktop crawler and desktop pre-rendering engine
+} else {
+  // Request is from a regular user
+}
+```

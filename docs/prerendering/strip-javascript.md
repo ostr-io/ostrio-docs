@@ -1,6 +1,9 @@
-Prerendering: Strip JavaScript
-======
+# Pre-rendering: Strip JavaScript
 
-By default, after the page is rendered - all JavaScript blocks and file references will be removed from the final result. This is done to avoid unpredictable behavior and results on the web crawler end. We have seen some weird situations with content being rendered multiple times. Although it's recommended to keep this option ON, you're free to turn it off.
+By default, after a page is rendered all JavaScript blocks and file references are removed from the final result. This avoids unpredictable behavior on the web-crawler end — we have seen cases where content was rendered multiple times. It is recommended to keep this option **on**, but you are free to turn it off.
 
-![Disable/Enable JS Stripping on Prerendering Screenshot](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-stripjs.png?raw=true)
+![Enable / disable JS stripping screenshot](./prerendering-stripjs.png)
+
+## Related
+
+- [Detect pre-rendering engine requests at runtime](detect-prerendering.md) — needed when JS stripping is off and your app should behave differently under the pre-renderer

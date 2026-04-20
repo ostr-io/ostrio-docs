@@ -1,6 +1,11 @@
 # Caddy Integration
 
-Tutorial for adding `ostr.io` pre-rendering middleware to a site behind Caddy. In short, Caddy detects crawler traffic and rewrites matching requests to: `https://render.ostr.io/render/<original-url>` so bots get prerendered HTML while regular users continue to receive the normal app response.
+Tutorial for adding `ostr.io` pre-rendering middleware to a site behind Caddy. In short, Caddy detects crawler traffic and rewrites matching requests to `https://render.ostr.io/render/<original-url>` so bots get prerendered HTML while regular users continue to receive the normal app response.
+
+- [Pre-rendering overview](README.md)
+- [Rendering endpoints](rendering-endpoints.md)
+- [Complete Caddy examples](examples/caddy/)
+- Canonical regex sources — [Crawler User-Agent](shared/crawler-ua-regex.md), [Static-asset extensions](shared/static-extensions-regex.md)
 
 ## ToC
 

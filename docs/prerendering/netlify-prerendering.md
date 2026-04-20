@@ -1,6 +1,6 @@
 # Netlify Integration: Pre-rendering with ostr.io
 
-This guide explains how to enable [ostr.io pre-rendering SEO MIddleware](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md) for sites deployed on Netlify.
+This guide explains how to enable [ostr.io pre-rendering SEO middleware](README.md) for sites deployed on Netlify.
 
 <img width="1536" height="1024" alt="ostrio-prerendering-netlify-support_web" src="https://github.com/user-attachments/assets/350da2b5-40ed-45d1-a680-231a05c9916b" />
 

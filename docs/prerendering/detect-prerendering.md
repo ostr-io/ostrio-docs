@@ -1,6 +1,8 @@
-# Detect request from Prerendering engine during runtime
+# Detect Pre-rendering Engine Requests at Runtime
 
-When requests are coming from pre-rendering engine it can be detected in JS-runtime (e.g. front-end code)
+When requests come from the pre-rendering engine they can be detected at JS runtime (e.g. front-end code).
+
+For a Meteor-specific reactive version, see [Detect pre-rendering in Meteor.js](detect-prerendering-meteor.md).
 
 ## Detect that request is coming from pre-rendering engine
 

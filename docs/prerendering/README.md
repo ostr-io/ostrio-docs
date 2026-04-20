@@ -1,107 +1,133 @@
-# Prerendering
+# Pre-rendering
 
-Lightning-fast, technology-agnostic SEO for websites, web apps, online shops and blogs — powered by pre-rendering middleware. Optimize TTFB, LCP, INP and CLS metrics, accelerate indexation, improve rich search results, and deliver consistent link previews across social and chat platforms
+Lightning-fast, technology-agnostic SEO for websites, web apps, online shops and blogs — powered by pre-rendering middleware. Optimize TTFB, LCP, INP and CLS metrics, accelerate indexation, improve rich search results, and deliver consistent link previews across social and chat platforms.
 
-## ToC
+## Contents
 
-- [Reasons to use SEO Middleware](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#why-pre-rendering-seo-middleware)
-- [Terminology](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#used-terms)
-- [Integrations](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#integrations)
-  - [Cloud-level integrations](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#cloud-level-integrations)
-  - [Server-level integrations](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#server-level-integrations)
-  - [Application-level integrations](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#application-level-integrations)
-- [How to's and pre-rendering features](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#how-tos-and-pre-rendering-features)
-  - [Features](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#features)
-  - [Optimizations](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#optimizations)
-  - [Extra features](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#extra-features)
-  - [Integration Tests](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#integration-tests)
+- [Why pre-rendering SEO middleware](#why-pre-rendering-seo-middleware)
+- [Terminology](#terminology)
+- [Which integration should I pick?](#which-integration-should-i-pick)
+- [Integrations](#integrations)
+  - [Cloud / Edge integrations](#cloud--edge-integrations)
+  - [Managed platform integrations](#managed-platform-integrations)
+  - [Server-level integrations](#server-level-integrations)
+  - [Application-level integrations](#application-level-integrations)
+- [Features and how-tos](#features-and-how-tos)
+  - [Features](#features)
+  - [Optimizations](#optimizations)
+  - [Extras](#extras)
+  - [Integration tests](#integration-tests)
 
-## Why Pre-rendering SEO Middleware
+## Why pre-rendering SEO middleware
 
-Reasons to use SEO Middleware
+- 🏎️ Expands crawl budget — improves timings for dynamic and static pages via advanced CDN and caching.
+- 🚀 Boosts Web Vitals and Lighthouse scores.
+- 🎛️ Improves TTFB, LCP, INP, CLS and other Web Vitals and Lighthouse metrics, positively enhancing overall SEO score.
+- 🖥 Supports PWAs and SPAs.
+- 📱 Supports mobile-like crawlers.
+- ⚡️ Supports [AMP (Accelerated Mobile Pages)](https://www.ampproject.org).
+- 🤝 AI agents, search engines, and social network crawlers love optimized pages delivered in a blazingly-fast manner.
+- 🖼️ Consistent link previews in messaging apps — iMessage, Messages, Facebook Messenger, Slack, Telegram, WhatsApp, Viber, VK, Twitter/X, and others.
+- 👥 Image, title, and description previews for links posted on social networks — Facebook, X/Twitter, Instagram, LinkedIn, and others.
 
-- 🏎️ Expands Crawl Budget — Improves timings for dynamic and static pages via advanced CDN and caching;
-- 🚀 Boosts Web Vitals and Lighthouse scores;
-- 🎛️ Improves TTFB, LCP, INP, CLS, and other Web Vitals and LightHouse metrics positively enhancing overall SEO score;
-- 🖥 Supports PWAs and SPAs;
-- 📱 Supports mobile-like crawlers;
-- ⚡️ Supports [AMP (Accelerated Mobile Pages)](https://www.ampproject.org);
-- 🤝 AI agents, search engines, and social network crawlers love optimized pages that delivered in blazingly-fast manner;
-- 🖼️ Consistent link previews in messaging apps, like iMessage, Messages, Facebook, Slack, Telegram, WhatsApp, Viber, VK, Twitter, and other apps;
-- 👥 Image, title, and description previews for links posted at social networks, like Facebook, X/Twitter, Instagram, and other social networks.
+## Terminology
 
-## Used Terms
+Common terms used across the pre-rendering documentation:
 
-Common terms used across pre-rendering documentation
+- **Pre-rendering** / **SEO middleware** — thin micro-service that redirects bot traffic to ostr.io [rendering endpoints](rendering-endpoints.md).
+- **Search engine** — system designed to search for information on the Web (Google, Yahoo, Bing, etc.). [Wikipedia](https://en.wikipedia.org/wiki/Web_search_engine).
+- **AI chat / AI bot / AI agent** — interface to an LLM that can search the web (ChatGPT, Perplexity, Gemini, Grok, Claude and similar).
+- **Crawler** — internet bot that systematically browses the Web. [Wikipedia](https://en.wikipedia.org/wiki/Web_crawler). Crawlers are an internal part of search engines, messengers, and social networks (Facebook, Viber, WhatsApp, Skype, etc.) and typically fetch image, title, and description information for shared links.
+- **Spider** — same as crawler.
+- **Cache / caching** — page rendering is a time- and resource-consuming operation. To provide the best possible response time, pre-rendered results are stored for the period defined as *Cache TTL*.
+- **Cache freshness / Cache TTL** — time in hours during which cache remains fresh and is served to all matching requests.
+- **Pre-rendering engine** — core of the pre-rendering SEO middleware.
+- **(Pre)rendering endpoint** — address where the pre-rendering engine is located. We offer three differently-configured [rendering endpoints](rendering-endpoints.md) to fit every case.
 
-- "Pre-rendering" or "SEO middleware" - Thin micro-service that redirect bot's traffic to ostr.io "rendering endpoints";
-- "Search Engine" - System that is designed to search for information on the World Wide Web. Like: Google, Yahoo, Bing, etc. [Wiki definition](https://en.wikipedia.org/wiki/Web_search_engine);
-- "AI chat", "AI bot", or "AI agent" — Interface to LLM that can perform search around the web, like Chat GPT, Perplexity, Gemini, Grok, Claude and similar;
-- "Crawler" - An Internet bot that systematically browses the World Wide Web. [Wiki definition](https://en.wikipedia.org/wiki/Web_crawler). A crawler is one of the internal parts of Search Engines, messengers, and social networks. Like: Facebook, Viber, WhatsApp, Skype, etc. Mainly used to fetch and show information (image, title, description) about shared link;
-- "Spider" - Same as "Crawler";
-- "Cache" and "Caching" - Page "rendering" is time and resource consuming operation. To provide best possible response time "prerendered" results will be saved for time defined as "Cache TTL";
-- "Cache Freshness" or "Cache TTL" - Time in hours, during this period cache will remain fresh and will be served to all request;
-- "Pre-rendering Engine" - Core of the pre-rendering SEO middleware;
-- "(Pre)rendering Endpoint" - Address where located "Pre-rendering engine", we have 3 differently configured [rendering endpoints](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md), to fit every case.
+## Which integration should I pick?
+
+Pick based on where you can change configuration:
+
+| If you control… | Use |
+| --- | --- |
+| DNS / CDN only | [Cloudflare Worker](cloudflare-worker.md), [Shopify via Cloudflare](shopify-seo-integration.md) |
+| A managed host | [Netlify](netlify-prerendering.md) |
+| A reverse proxy | [Nginx](nginx.md), [Apache](apache.md), [Caddy](caddy-prerendering.md) |
+| Application code only | [Node.js (NPM)](node-npm.md), [Next.js](nextjs-prerendering.md), [Meteor.js](meteor-atmosphere.md) |
 
 ## Integrations
 
-Pre-rendering SEO Middleware has various implementations and integration methods
+Pre-rendering SEO middleware has various implementations and integration methods.
 
-### Cloud-level integrations
+### Cloud / Edge integrations
 
-Pre-rendering operates as middleware and can be easily integrated via CloudFlare Workers, or enabled at the level of Netlify, Vercel, Supabase *without extra plugins* and *without changes in the existing codebase*.
+Operate at the CDN or worker layer — no origin changes required.
 
-- **Shopify** [CloudFlare Worker Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/shopify-seo-integration.md#seo-middleware-worker-for-shopify)
-- General [CloudFlare Worker Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cloudflare-worker.md)
-- [Netlify Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/netlify-prerendering.md)
+- **Shopify** — [Cloudflare Worker integration](shopify-seo-integration.md#seo-middleware-worker-for-shopify)
+- General — [Cloudflare Worker integration](cloudflare-worker.md)
+
+### Managed platform integrations
+
+Enable at the hosting-platform level — no plugins or codebase changes.
+
+- [Netlify integration](netlify-prerendering.md)
+- Vercel — *coming soon*
+- Supabase — *coming soon*
 
 ### Server-level integrations
 
-Pre-rendering operates as middleware and can be easily integrated with CloudFlare Workers, Nginx, or Apache without extra plugins.
+Integrate with your reverse proxy — no plugins required.
 
-- [Nginx Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md)
-- [Apache Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/apache.md)
+- [Nginx integration](nginx.md)
+- [Apache integration](apache.md)
+- [Caddy integration](caddy-prerendering.md)
 
 ### Application-level integrations
 
-Application specific integrations are available via NPM packages. For Meteor.js integration, we have published Atmosphere package.
+Application-specific integrations via NPM / Atmosphere packages.
 
-- [Next.js Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nextjs-prerendering.md)
-- [Node.js Integration via NPM](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/node-npm.md)
-- [Meteor.js Integration via Atmosphere](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/meteor-atmosphere.md)
+- [Next.js integration](nextjs-prerendering.md)
+- [Node.js integration via NPM](node-npm.md)
+- [Meteor.js integration via Atmosphere](meteor-atmosphere.md)
 
-## How to's and pre-rendering features
+## Features and how-tos
 
-Learn how to use different features and settings within pre-rendering SEO middleware
+Learn how to use different features and settings within pre-rendering SEO middleware.
 
 ### Features
 
-- [Caching](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cache.md)
-- [Cache purge](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cache-purge.md)
-- [Strip JavaScript](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/strip-javascript.md)
-- [Custom Status Codes in Analytics](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/prerendering-custom-status-codes.md)
-- [ES5 & Legacy Websites Support](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/es6-support.md)
+- [Caching](cache.md)
+- [Cache purge](cache-purge.md)
+- [Strip JavaScript](strip-javascript.md)
+- [Custom status codes in analytics](prerendering-custom-status-codes.md)
+- [ES5 and legacy websites support](es6-support.md)
 
 > [!TIP]
-> Pass `/sitemap.xml` to <kbd>Pre-Render</kbd> (*Pre-render a website*) in **Pre-rendering Panel** to instantly render whole website
+> Pass `/sitemap.xml` to <kbd>Pre-Render</kbd> (*Pre-render a website*) in the **Pre-rendering Panel** to instantly render the whole website.
 
 ### Optimizations
 
-- [Return genuine status code](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/genuine-status-code.md)
-- [Client Optimization](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/optimization.md)
-- [Server Optimization](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md)
-- [Use Custom Rendering Endpoints](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md)
+- [Return genuine status code](genuine-status-code.md)
+- [Client optimization](optimization.md)
+- [Server optimization](rendering-endpoints.md)
+- [Use custom rendering endpoints](rendering-endpoints.md)
 
-### Extra features
+### Extras
 
-- [Accelerated Mobile Pages (AMP) Integration](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/amp-support.md)
-- [Detect Pre-rendering engine requests during runtime](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)
-- [Detect Pre-rendering engine requests during runtime (*Meteor.js specific*)](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering-meteor.md)
+- [Accelerated Mobile Pages (AMP) integration](amp-support.md)
+- [Detect pre-rendering engine requests during runtime](detect-prerendering.md)
+- [Detect pre-rendering engine requests during runtime — *Meteor.js*](detect-prerendering-meteor.md)
 
 ### Integration tests
 
-- Use `cURL` and `Authorization` header (*see nginx integration*): `curl -v -H "Authorization: Basic TOKEN" https://render-bypass.ostr.io/?url=https://your-website-domain.com`;
-- Use `cURL` and authentication credentials (*see node.js integration*): `curl -v https://auth:string@render-bypass.ostr.io/?url=https://your-website-domain.com`;
-- Use `test:test` credentials to test general integration (*to make sure web application server can reach pre-rendering service*);
-- Use `Authorization: Basic dGVzdDp0ZXN0` header to test general integration (*to make sure web application server can reach pre-rendering service*);
+- Use `cURL` with an `Authorization` header (*see Nginx integration*): `curl -v -H "Authorization: Basic TOKEN" https://render-bypass.ostr.io/?url=https://your-website-domain.com`
+- Use `cURL` with authentication credentials (*see Node.js integration*): `curl -v https://auth:string@render-bypass.ostr.io/?url=https://your-website-domain.com`
+- Use `test:test` credentials to verify general integration (*confirms that the web application server can reach the pre-rendering service*)
+- Use the `Authorization: Basic dGVzdDp0ZXN0` header to verify general integration (*confirms that the web application server can reach the pre-rendering service*)
+
+## Shared references
+
+Canonical regex sources used by every integration:
+
+- [Crawler User-Agent regex](shared/crawler-ua-regex.md)
+- [Static-asset extensions regex](shared/static-extensions-regex.md)

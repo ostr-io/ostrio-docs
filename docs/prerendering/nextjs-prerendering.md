@@ -52,7 +52,7 @@ When you cannot modify `middleware.ts` — or you prefer to keep pre-rendering c
 - 🌤️ [Via Cloudflare Worker](cloudflare-worker.md) — DNS/edge-level, works with any Next.js host.
 - ✨ [Via Netlify](netlify-prerendering.md) — enable in Netlify site settings (Pro/Enterprise).
 - ▲ [Via Vercel Routing Middleware](vercel-prerendering.md) — Vercel-edge middleware, works for any framework.
-- 🥞 Via Supabase — *coming soon*.
+- 🥞 [Via Supabase Edge Functions](supabase-prerendering.md) — Deno-native middleware for apps served from Supabase (plain `Deno.serve`, Hono, Oak, Fresh).
 
 ## Validation
 

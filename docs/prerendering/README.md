@@ -55,6 +55,7 @@ Pick based on where you can change configuration:
 | A Shopify store | [Cloudflare Worker for Shopify](shopify-seo-integration.md) |
 | A Netlify deployment (PRO / ENTERPRISE) | [Netlify integration](netlify-prerendering.md) |
 | A Vercel deployment | [Vercel Routing Middleware](vercel-prerendering.md) |
+| A Supabase Edge Function serving HTML | [Supabase integration](supabase-prerendering.md) — Deno, Hono, Oak, Fresh |
 | A reverse proxy | [Nginx](nginx.md), [Apache](apache.md), or [Caddy](caddy-prerendering.md) |
 | Next.js application code | [Self-managed `middleware.ts`](nextjs-prerendering.md#option-1--self-managed-middlewarets) or [`seo-middleware-nextjs` NPM package](nextjs-prerendering.md#option-2--seo-middleware-nextjs-npm-package) |
 | Any other Node.js app | [`spiderable-middleware` NPM package](node-npm.md) |
@@ -77,7 +78,7 @@ Enable at the hosting-platform level — no plugins, no codebase changes.
 
 - [**Netlify**](netlify-prerendering.md) — enabled via Netlify Support on PRO / ENTERPRISE plans.
 - [**Vercel**](vercel-prerendering.md) — drop-in Vercel Routing Middleware; one `middleware.js` file plus env vars.
-- **Supabase** — *coming soon.*
+- [**Supabase**](supabase-prerendering.md) — Deno-native middleware for [Supabase Edge Functions](https://supabase.com/docs/guides/functions). Complete examples for plain `Deno.serve`, Hono, Oak, and Fresh.
 
 ### Server-level integrations
 

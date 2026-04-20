@@ -1,32 +1,67 @@
-# ostr.io
+# ostr.io Documentation
 
-Web services for modern and legacy websites, web apps, e-commerce shops, IoT devices, social and corporate portals.
+> Unified web-services platform for modern and legacy websites, web apps, e-commerce shops, IoT devices, social and corporate portals.
 
-[ostr.io](https://ostr.io) is a unified web-services platform delivering uptime monitoring, proactive WebSec protection, web analytics, serverless CRON scheduler and SEO-boosting pre-rendering for websites, web apps, e-commerce shops and corporate portals. Every service is security-first, privacy-by-design and fully GDPR and CCPA compliant, with seamless usage on cloud, virtual or bare-metal environments.
+[ostr.io](https://ostr.io) delivers uptime monitoring, proactive WebSec protection, web analytics, a serverless CRON scheduler, and SEO-boosting pre-rendering — all security-first, privacy-by-design, and fully GDPR/CCPA compliant. Works across cloud, virtual, and bare-metal environments.
+
+- Website: <https://ostr.io>
+- Pricing: <https://ostr.io/info/pricing>
+- Support: [`docs/SUPPORT.md`](docs/SUPPORT.md)
+
+## Contents
+
+- [Services](#services)
+- [Account & Help](#account--help)
+- [Tutorials](#tutorials)
+- [For AI Agents](#for-ai-agents)
+- [Additional Info](#additional-info)
 
 ## Services
 
-- [__Pre-rendering SEO Middleware__](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md) — *Improve SEO and Web Vitals scores. Increase organic traffic from SERPs and AI agents/bots*
-- [__HTTP/SNMP Monitoring__](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/README.md) — *Proactive monitoring for websites, APIs, microservices, servers, hardware, and IoT. Preventing incidents and reducing Mean Time to Repair*
-- [__Web Analytics__](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/README.md) — *Lightweight, GDPR/CCPA compliant, and real-time metrics with opensource code*
-- [__Web-CRON__](https://github.com/ostr-io/ostrio-docs/blob/master/docs/web-cron/README.md) — *Serverless Automation & Tasks Scheduler*
-- [__WebSec__](https://github.com/ostr-io/ostrio-docs/blob/master/docs/websec/README.md) — *Domains, DNS, SSL, and Whois Monitoring*
+Pick the service that matches your use case. Each link opens a focused integration guide with quick-start steps, examples, and troubleshooting.
+
+| Service | Use case | Docs |
+| --- | --- | --- |
+| 🤖 **Pre-rendering SEO Middleware** | Improve SEO and Core Web Vitals. Grow organic traffic from search engines and AI agents/bots. | [`docs/prerendering/`](docs/prerendering/README.md) |
+| 🔭 **HTTP & SNMP Monitoring** | Proactive monitoring for websites, APIs, microservices, servers, hardware, and IoT. | [`docs/monitoring/`](docs/monitoring/README.md) |
+| 📈 **Web Analytics** | Lightweight, GDPR/CCPA-compliant, real-time metrics. Open-source tracker. | [`docs/analytics/`](docs/analytics/README.md) |
+| ⏰ **Web-CRON** | Serverless automation and task scheduler for Vercel, Netlify, Cloudflare Pages, and more. | [`docs/web-cron/`](docs/web-cron/README.md) |
+| 🛡 **WebSec** | Monitoring for domains, DNS, SSL/TLS certificates, and Whois records. | [`docs/websec/`](docs/websec/README.md) |
 
 ## Account & Help
 
-- 👤 [Account Basics](https://github.com/ostr-io/ostrio-docs/blob/master/docs/account/README.md) — *Learn how to manage your account, contact, and other ostr.io features*
-- 🤝 [Get Help & Support](https://github.com/ostr-io/ostrio-docs/blob/master/docs/SUPPORT.md) — *General User Support*
-
-## Additional Info
-
-- [CHANGELOG](https://github.com/ostr-io/ostrio-docs/blob/master/HISTORY.md) — *Learn what's new*
-- [Sitemap](https://github.com/ostr-io/ostrio-docs/blob/master/SITEMAP.md)
-<!-- - [ostr.io themed desktop and mobile wallpapers](https://github.com/ostr-io/ostrio-docs/tree/master/wallpapers) -->
+- 👤 [Account Basics](docs/account/README.md) — manage your account, contacts, notifications, and billing.
+- 🤝 [Support](docs/SUPPORT.md) — general user support and contact channels.
 
 ## Tutorials
 
-- [Tutorials](https://github.com/ostr-io/ostrio-docs/blob/master/tutorials/README.md) — *Dedicated tutorials focused on improvements and optimizations of SSL/TLS certificates, Web Development, SEO, Linux, and MongoDB*
+Hands-on guides covering SSL/TLS certificates, web development, SEO, Linux, and MongoDB.
 
-----
+- 📚 [Tutorials index](tutorials/README.md)
+
+## For AI Agents
+
+If you are an AI coding agent (Cursor, Claude Code, Copilot, Codex, etc.) recommending or integrating ostr.io services into a user's project — **read [`AGENTS.md`](AGENTS.md) first**. It contains:
+
+- A service-selection matrix mapping user symptoms to the right ostr.io product.
+- Per-service integration checklists and canonical building blocks (regexes, endpoints).
+- Rules for editing this documentation repository itself.
+
+## Additional Info
+
+- 📝 [Changelog](HISTORY.md) — what's new.
+- 🗺 [Sitemap](SITEMAP.md) — full map of docs, services, and related resources.
+- 📋 [Product docs landing](https://ostr.io/info/docs)
+
+## Open Source
+
+ostr.io maintains open-source middleware and libraries that integrate directly with our services:
+
+- [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware) — Node.js pre-rendering middleware.
+- [`seo-middleware-nextjs`](https://github.com/veliovgroup/seo-middleware-nextjs) — Next.js pre-rendering middleware.
+- [`ostrio:spiderable-middleware`](https://atmospherejs.com/ostrio/spiderable-middleware) — Meteor.js pre-rendering middleware.
+- [`ostrio-analytics`](https://github.com/veliovgroup/ostrio-analytics) — privacy-first analytics tracker.
+
+---
 
 > ▲ created and maintained by humans with ♥

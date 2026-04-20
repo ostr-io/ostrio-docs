@@ -1,18 +1,17 @@
 # Canonical Crawler User-Agent Regex
 
-This is the **single source of truth** for the User-Agent regex used by every pre-rendering integration (Nginx, Apache, Caddy, Cloudflare Workers, Netlify configuration, application middleware).
+This file is the **single source of truth** for the User-Agent regex used by every pre-rendering integration — Nginx, Apache, Caddy, Cloudflare Workers, Netlify configuration, and application middleware.
 
 > [!IMPORTANT]
-> The canonical regex is defined in the repository-root [`AGENTS.md`](../../../AGENTS.md). All integration examples must use it **byte-for-byte**. When adding or removing crawlers, update:
+> All integration examples must use this regex **byte-for-byte**. Never edit it inside an integration doc or example config in isolation. When adding or removing crawlers, update **every** copy in a single change:
 >
-> 1. [`AGENTS.md`](../../../AGENTS.md) (canonical)
-> 2. This file
-> 3. [`nginx.md`](../nginx.md) `map $http_user_agent $is_webbot` block
-> 4. [`apache.md`](../apache.md) `RewriteCond %{HTTP_USER_AGENT}` block
-> 5. [`caddy-prerendering.md`](../caddy-prerendering.md) matcher blocks
-> 6. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile` and `examples/**/*.worker.js`
+> 1. This file (canonical)
+> 2. [`nginx.md`](../nginx.md) — `map $http_user_agent $is_webbot` block
+> 3. [`apache.md`](../apache.md) — `RewriteCond %{HTTP_USER_AGENT}` block
+> 4. [`caddy-prerendering.md`](../caddy-prerendering.md) — matcher blocks
+> 5. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, and `examples/**/*.worker.js`
 >
-> Run `git grep -l "ahrefsbot"` (*or any distinctive token from the regex*) to find every file that must be kept in sync.
+> Run `git grep -l "ahrefsbot" -- 'docs/prerendering/**'` (*or any distinctive token from the regex*) to find every file that must be kept in sync.
 
 ## Coverage categories
 
@@ -46,7 +45,8 @@ The canonical pattern above is **alternation only**. Each server requires its ow
 
 ## Related
 
-- [`AGENTS.md`](../../../AGENTS.md) — repository-wide canonical rule
+- [`AGENTS.md`](../../../AGENTS.md) — repository-wide editing rules that point here
+- [Static-asset extension regex](static-extensions-regex.md) — companion canonical source
 - [Nginx integration](../nginx.md)
 - [Apache integration](../apache.md)
 - [Caddy integration](../caddy-prerendering.md)

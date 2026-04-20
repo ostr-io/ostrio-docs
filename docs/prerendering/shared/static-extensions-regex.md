@@ -1,16 +1,17 @@
 # Canonical Static-Asset Extension Regex
 
-Every integration example skips requests whose URI ends in one of these extensions. Serving assets directly from Nginx/Apache/Caddy/CDN (or the Cloudflare worker's `fetch` pass-through) prevents the pre-rendering engine from being invoked for CSS, JS, images, fonts, archives, PDFs, and media files.
+This file is the **single source of truth** for the static-asset extension regex. Every integration example skips requests whose URI ends in one of these extensions so that CSS, JS, images, fonts, archives, PDFs, and media files are served directly by Nginx, Apache, Caddy, the CDN, or the Cloudflare worker's `fetch` pass-through instead of hitting the pre-rendering engine.
 
 > [!IMPORTANT]
-> The canonical regex is defined in the repository-root [`AGENTS.md`](../../../AGENTS.md). All integration examples must use it **byte-for-byte**. When adding or removing extensions, update:
+> All integration examples must use this regex **byte-for-byte**. Never edit it inside an integration doc or example config in isolation. When adding or removing extensions, update **every** copy in a single change:
 >
-> 1. [`AGENTS.md`](../../../AGENTS.md) (canonical)
-> 2. This file
-> 3. [`nginx.md`](../nginx.md) `location ~* \.(...)$` block
-> 4. [`apache.md`](../apache.md) `RewriteCond %{REQUEST_URI}` blocks
-> 5. [`caddy-prerendering.md`](../caddy-prerendering.md) `@static_assets` matcher
-> 6. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, and `examples/**/*.worker.js`
+> 1. This file (canonical)
+> 2. [`nginx.md`](../nginx.md) — `location ~* \.(...)$` block
+> 3. [`apache.md`](../apache.md) — `RewriteCond %{REQUEST_URI}` blocks
+> 4. [`caddy-prerendering.md`](../caddy-prerendering.md) — `@static_assets` matcher
+> 5. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, and `examples/**/*.worker.js`
+>
+> Run `git grep -l "DS_Store" -- 'docs/prerendering/**'` (*or any distinctive token from the regex*) to find every file that must be kept in sync.
 
 ## What it matches
 
@@ -49,7 +50,8 @@ Some extensions are **deliberately left out** so they continue to hit the origin
 
 ## Related
 
-- [`AGENTS.md`](../../../AGENTS.md) — repository-wide canonical rule
+- [`AGENTS.md`](../../../AGENTS.md) — repository-wide editing rules that point here
+- [Crawler User-Agent regex](crawler-ua-regex.md) — companion canonical source
 - [Nginx integration](../nginx.md)
 - [Apache integration](../apache.md)
 - [Caddy integration](../caddy-prerendering.md)

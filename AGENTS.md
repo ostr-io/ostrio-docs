@@ -1,116 +1,87 @@
 # Agent Instructions
 
-Binding rules for any agent editing this repository. Sections 1–3 apply to integration configs under `docs/prerendering/examples/` and prose in `docs/prerendering/*.md`. Section 4 applies to the pre-rendering documentation itself.
+Binding rules for agents editing this repository. Keep changes minimal, cite upstream when adding non-obvious config, and link to canonical sources instead of duplicating them.
 
-## 1. Canonical static-asset extension regex
+## Contents
 
-Every Nginx `location ~*`, Apache `RewriteCond %{REQUEST_URI} !\.(...)$`, Caddy `path_regexp`, and Cloudflare Worker asset pass-through must use this regex **byte-for-byte**:
+- [1. Canonical regexes](#1-canonical-regexes)
+- [2. Example-config scope](#2-example-config-scope)
+- [3. Documentation conventions](#3-documentation-conventions)
+- [4. Adding a new integration](#4-adding-a-new-integration)
 
-```regex
-\.(?:3ds|3g2|3gp|3gpp|7z|a|aac|aaf|adp|ai|aif|aiff|alz|ape|apk|appcache|ar|arj|asf|asx|atom|au|avchd|avi|bak|bbaw|bh|bin|bk|bmp|btif|bz2|bzip2|cab|caf|cco|cgm|class|cmx|cpio|cr2|crt|crx|css|csv|cur|dat|deb|der|dex|djvu|dll|dmg|dng|doc|docm|docx|dot|dotm|dra|drc|DS_Store|dsk|dts|dtshd|dvb|dwg|dxf|ear|ecelp4800|ecelp7470|ecelp9600|egg|eol|eot|eps|epub|exe|f4a|f4b|f4p|f4v|fbs|fh|fla|flac|fli|flv|fpx|fst|fvt|g3|geojson|gif|graffle|gz|gzip|h261|h263|h264|hqx|htc|ico|ief|img|ipa|iso|jad|jar|jardiff|jng|jnlp|jpeg|jpg|jpgv|jpm|js|jxr|key|kml|kmz|ktx|less|lha|lvp|lz|lzh|lzma|lzo|m2v|m3u|m4a|m4p|m4v|map|manifest|mar|markdown|md|mdi|mdown|mdwn|mht|mid|midi|mj2|mka|mkd|mkdn|mkdown|mkv|mml|mmr|mng|mobi|mov|movie|mp2|mp3|mp4|mp4a|mpe|mpeg|mpg|mpga|mpv|msi|msm|msp|mxf|mxu|nef|npx|nsv|numbers|o|oex|oga|ogg|ogv|opus|otf|pages|pbm|pcx|pdb|pdf|pea|pem|pgm|pic|pl|pm|png|pnm|pot|potm|potx|ppa|ppam|ppm|pps|ppsm|ppsx|ppt|pptm|pptx|prc|ps|psd|pya|pyc|pyo|pyv|qt|ra|rar|ras|raw|rdf|rgb|rip|rlc|rm|rmf|rmvb|ron|roq|rpm|rss|rtf|run|rz|s3m|s7z|safariextz|scpt|sea|sgi|shar|sil|sit|slk|smv|so|sub|svg|svgz|svi|swf|tar|tbz|tbz2|tcl|tga|tgz|thmx|tif|tiff|tk|tlz|topojson|torrent|ttc|ttf|txt|txz|udf|uvh|uvi|uvm|uvp|uvs|uvu|vcard|vcf|viv|vob|vtt|war|wav|wax|wbmp|wdp|weba|webapp|webm|webmanifest|webp|whl|wim|wm|wma|wml|wmlc|wmv|wmx|woff|woff2|wvx|xbm|xif|xla|xlam|xloc|xls|xlsb|xlsm|xlsx|xlt|xltm|xltx|xm|xmind|xpi|xpm|xsl|xwd|xz|yuv|z|zip|zipx)$
-```
+## 1. Canonical regexes
 
-Human-friendly coverage notes, per-server wrappers, and intentional exclusions live in [`docs/prerendering/shared/static-extensions-regex.md`](docs/prerendering/shared/static-extensions-regex.md).
+Two regexes are replicated byte-for-byte across every integration. Each has **one canonical source**; never inline either regex anywhere else.
 
-## 2. Canonical bot User-Agent regex
+| Regex | Canonical source | Used by |
+| --- | --- | --- |
+| Crawler `User-Agent` matcher | [`docs/prerendering/shared/crawler-ua-regex.md`](docs/prerendering/shared/crawler-ua-regex.md) | Nginx `map`, Apache `BrowserMatchNoCase`, Caddy `header_regexp`, Cloudflare Worker `RegExp`, application middleware |
+| Static-asset extension matcher | [`docs/prerendering/shared/static-extensions-regex.md`](docs/prerendering/shared/static-extensions-regex.md) | Nginx `location ~*`, Apache `RewriteCond %{REQUEST_URI}`, Caddy `path_regexp`, Cloudflare Worker early return |
 
-Every User-Agent matcher — Nginx `map $http_user_agent`, Apache `RewriteCond %{HTTP_USER_AGENT}` / `BrowserMatchNoCase`, Caddy `header_regexp`, Cloudflare Worker `RegExp`, application middleware — must use this regex **byte-for-byte**. It covers search-engine crawlers, social/messenger previewers, and AI fetchers:
+Rules:
 
-```regex
-\.net crawler|360spider|50\.nu|8bo crawler bot|aboundex|accoona|adldxbot|ahrefsbot|altavista|appengine-google|applebot|archiver|arielisbot|ask jeeves|auskunftbot|baidumobaider|baiduspider|becomebot|bingbot|bingpreview|bitbot|bitlybot|blitzbot|blogbridge|boardreader|botseer|catchbot|catchpoint bot|charlotte|checklinks|cliqzbot|clumboot|coccocbot|converacrawler|crawl-e|crawlconvera|dataparksearch|daum|deusu|discordbot|dotbot|duckduckbot|elefent|embedly|evernote|exabot|facebookbot|facebookexternalhit|meta-external|fatbot|fdse robot|feed seeker bot|feedfetcher|femtosearchbot|findlinks|flamingo_searchengine|flipboard|followsite bot|furlbot|fyberspider|gaisbot|galaxybot|geniebot|genieo|gigablast|gigabot|girafabot|gomezagent|gonzo1|googlebot|google sketchup|adsbot-google|google-structured-data-testing-tool|google-extended|developers\.google\.com/\+/web/snippet|haosouspider|heritrix|holmes|hoowwwer|htdig|ia_archiver|idbot|infuzapp|innovazion crawler|instagram|internetarchive|iqdb|iskanie|istellabot|izsearch\.com|kaloogabot|kaz\.kz_bot|kd bot|konqueror|kraken|kurzor|larbin|leia|lesnikbot|linguee bot|linkaider|linkapediabot|linkedinbot|lite bot|llaut|lookseek|lycos|mail\.ru_bot|masidani_bot|masscan|mediapartners-google|metajobbot|mj12bot|mnogosearch|mogimogi|mojeekbot|motominerbot|mozdex|msiecrawler|msnbot|msrbot|netpursual|netresearch|netvibes|newsgator|ng-search|nicebot|nutchcvs|nuzzel|nymesis|objectssearch|odklbot|omgili|oovoo|oozbot|openfosbot|orangebot|orbiter|org_bot|outbrain|pagepeeker|pagesinventory|parsijoobot|paxleframework|peeplo screenshot bot|pinterest|plantynet_webrobot|plukkie|pompos|psbot|quora link preview|qwantify|read%20later|reaper|redcarpet|redditbot|retreiver|riddler|rival iq|rogerbot|saucenao|scooter|scrapy|scrubby|searchie|searchsight|seekbot|semanticdiscovery|seznambot|showyoubot|simplepie|simpy|sitelockspider|skypeuripreview|petalbot|slackbot|slack-imgproxy|slurp|snappy|sogou|solofield|speedyspider|speedy spider|sputnikbot|stackrambler|teeraidbot|teoma|theusefulbot|thumbshots\.ru|thumbshotsbot|tineye|tiktokspider|toweya\.com|toweyabot|tumblr|tweetedtimes|tweetmemebot|twitterbot|url2png|vagabondo|vebidoobot|viber|visionutils|vkshare|voilabot|vortex|votay bot|voyager|w3c_validator|wasalive\.bot|web-sniffer|websquash\.com|webthumb|whatsapp|whatweb|wire|wotbox|yacybot|yahoo|yandex|yeti|yisouspider|yodaobot|yooglifetchagent|yoozbot|yottaamonitor|yowedo|zao-crawler|zebot_www\.ze\.bz|zooshot|zyborgi|ai2bot|amazonbot|anthropic\.com|bard|bytespider|ccbot|chatgpt-user|claude-web|claudebot|cohere-ai|deepseek|diffbot|duckassistbot|gemini|gptbot|grok|mistralai|oai-searchbot|openai\.com|perplexity\.ai|perplexitybot|xai|youbot
-```
+- Copy each regex **byte-for-byte** from its canonical source.
+- Never edit a regex inside an integration doc or example config in isolation.
+- When adding or removing an entry, update the canonical source **and every copy** in a single change. Each shared file documents its full update-together contract.
 
-Human-friendly coverage categories and per-server wrappers live in [`docs/prerendering/shared/crawler-ua-regex.md`](docs/prerendering/shared/crawler-ua-regex.md).
-
-### Update-together contract (applies to both regexes above)
-
-When adding or removing an entry, update **every** occurrence in a single change. To find them:
+To find every copy:
 
 ```shell
-# Bot UA regex: pick any distinctive token
-git grep -l "ahrefsbot" -- 'docs/prerendering/**'
-
-# Static extensions regex: pick any distinctive token
-git grep -l "DS_Store" -- 'docs/prerendering/**'
+git grep -l "ahrefsbot" -- 'docs/prerendering/**'   # crawler UA regex
+git grep -l "DS_Store" -- 'docs/prerendering/**'    # static-asset regex
 ```
 
-The minimum set that must stay in sync:
+## 2. Example-config scope
 
-- This file — sections 1 and 2
-- `docs/prerendering/shared/static-extensions-regex.md`
-- `docs/prerendering/shared/crawler-ua-regex.md`
-- `docs/prerendering/nginx.md`
-- `docs/prerendering/apache.md`
-- `docs/prerendering/caddy-prerendering.md`
-- Every `docs/prerendering/examples/nginx/*.conf`
-- Every `docs/prerendering/examples/apache/*.htaccess`
-- Every `docs/prerendering/examples/caddy/*.caddyfile`
-- Every `docs/prerendering/examples/cloudflare-worker/*.worker.js`
+Configs under `docs/prerendering/examples/**` are **minimal, stack-specific** starting points.
 
-## 3. Framework-example config scope
+Include:
 
-Framework example configs (`docs/prerendering/examples/**`) must stay **minimal and stack-specific**.
+- Proxy / rewrite rules and route exclusions specific to the stack — Laravel `try_files` front controller, WordPress `wp-content/*.php` deny, Node `node_modules` deny, Django `STATIC_ROOT` / `MEDIA_ROOT` pass-through.
+- Upstream doc citations for non-obvious exclusions.
 
-Do:
-- Include only the proxy/rewrite rules and route exclusions that are specific to the stack — e.g. Laravel `try_files` front controller, WordPress `wp-content/*.php` deny, Node `node_modules` deny, Django `STATIC_ROOT` / `MEDIA_ROOT` pass-through.
-- Cite upstream framework/CMS/runtime docs when they recommend a non-obvious exclusion.
+Do **not** add:
 
-Do not:
-- Add generic `$map` blocks, dotfile denies, dev-tooling secret denies (`.env`, `.git`, `.DS_Store`), generic PHP exec denies, `location = /favicon.ico`, or similar "hardening" unless upstream framework docs recommend it.
-- Duplicate security best-practices that belong at the platform or firewall layer.
+- Generic `$map` blocks, dotfile denies, dev-tooling secret denies (`.env`, `.git`, `.DS_Store`), generic PHP-exec denies, `location = /favicon.ico`, or similar "hardening" unless upstream framework docs recommend it.
+- Security best-practices that belong at the platform or firewall layer.
 
-Rationale: these configs are starting points for real deployments. Generic hardening invites copy-paste drift without improving pre-rendering correctness.
+Rationale: generic hardening invites copy-paste drift without improving pre-rendering correctness.
 
-## 4. Pre-rendering documentation conventions
+## 3. Documentation conventions
 
 Applies to every file under `docs/prerendering/`.
 
-### 4.1 Links
+### 3.1 Links and images
 
-- **Markdown-to-markdown cross-references** inside the repo must be **relative** (`README.md`, `../../optimization.md`, `shared/crawler-ua-regex.md`). Never hardcode `https://github.com/ostr-io/ostrio-docs/...` URLs in prose or ToCs.
-- **Same-page anchors** are `#slug` only — never a full `https://...#slug` URL.
-- **Config and worker files** (`.conf`, `.htaccess`, `.caddyfile`, `.worker.js`, `.ts`, `.js`) **may** keep absolute GitHub URLs in code comments, since they are copied to servers outside the repo context.
-- **External links** (Cloudflare/Shopify/Google docs, npm packages, `veliovgroup/spiderable-middleware`, `ostr.io` site, etc.) stay absolute.
+- Markdown-to-markdown cross-references **must be relative** (`README.md`, `../nginx.md`, `shared/crawler-ua-regex.md`). Never hardcode `https://github.com/ostr-io/ostrio-docs/...` URLs in prose or ToCs.
+- Same-page anchors use `#slug` only — never a fully qualified `https://...#slug` URL.
+- Config/worker files (`.conf`, `.htaccess`, `.caddyfile`, `.worker.js`, `.ts`, `.js`) **may** keep absolute GitHub URLs in comments since they are copied to servers outside the repo context.
+- External links (Cloudflare, Shopify, Google, Vercel docs, NPM packages, GitHub repos, `ostr.io`) stay absolute.
+- In-repo screenshots use relative paths (`./prerendering-cache.png`).
 
-### 4.2 Images
-
-- Screenshots stored in the repo must be referenced by relative path (`./prerendering-cache.png`, not `https://github.com/ostr-io/ostrio-docs/blob/master/.../*.png?raw=true`).
-- New diagrams or hero images hosted on `user-attachments` may stay absolute until they are moved into the repo.
-
-### 4.3 Terminology
+### 3.2 Terminology
 
 - **"Pre-rendering"** (hyphenated) in prose and headings.
-- **"prerendering"** (one word, lowercase) only in identifiers — file stems, URL slugs, HTTP header names (`X-Prerender-Id`), code variables, regex groups.
-- Product names: **Cloudflare** (not "CloudFlare"), **Nginx** (sentence-cased, not "NGINX" unless the code context demands it), **Lighthouse** (not "LightHouse"), **Next.js**, **Meteor.js**, **ostr.io**.
-- Use the term "crawler" for all automated fetchers in prose; use "bot" only when quoting a server variable (`$is_webbot`) or existing public API.
+- **"prerendering"** (one word) only in identifiers — file stems, URL slugs, HTTP headers (`X-Prerender-Id`), code variables, regex groups.
+- Product names: **Cloudflare**, **Nginx**, **Lighthouse**, **Next.js**, **Meteor.js**, **ostr.io**.
+- Use "crawler" in prose; use "bot" only when quoting a server variable (`$is_webbot`) or an existing public API.
 
-### 4.4 Page shape
+### 3.3 Page shape
 
-New or rewritten docs follow this skeleton:
+Every doc — including short stubs — uses **Title → one-paragraph summary → main sections → Related**.
 
-```markdown
-# Title
+- `#` / `##` / `###` heading syntax only. No legacy `====` / `----` underline headings.
+- Add a `## Contents` section with `#slug` anchors when the doc has more than ~3 top-level sections.
+- The summary paragraph must stand on its own for AI retrieval and search landings.
 
-One-paragraph summary that makes sense out of context (for AI retrieval and readers arriving from search).
+### 3.4 Duplication
 
-## Contents
-<only if the doc is longer than ~3 sections>
+- **Do not** inline code examples for linked NPM / Atmosphere packages or other external resources. Describe the use case and link to the authoritative source (package README, upstream repo, or an in-repo `examples/<stack>/` folder).
+- **Do not** duplicate shared building blocks (the two regexes, setup steps already covered by an `examples/<stack>/README.md`, etc.). Link to the canonical location instead.
 
-## <main sections>
+## 4. Adding a new integration
 
-## Related
-- [Linked doc 1](...)
-- [Linked doc 2](...)
-```
-
-- Use `#`/`##`/`###` heading syntax. Do not use the legacy `====` / `----` underline style.
-- ToC links use relative `#slug` anchors.
-- Short stub docs still carry the summary paragraph and a Related section — this is what makes them individually useful for AI-powered search.
-
-### 4.5 Adding a new integration
-
-1. Create `docs/prerendering/<stack>.md` following the [`nginx.md`](docs/prerendering/nginx.md) / [`apache.md`](docs/prerendering/apache.md) template (`How it works → Quick start → Shared building blocks → Minimal integration pattern → Choose example → Validation → Common issues`).
+1. Create `docs/prerendering/<stack>.md` following the [`nginx.md`](docs/prerendering/nginx.md) / [`apache.md`](docs/prerendering/apache.md) template (*How it works → Quick start → Shared building blocks → Minimal integration pattern → Choose example → Validation → Common issues*).
 2. Add complete examples under `docs/prerendering/examples/<stack>/`.
 3. Link the new doc from [`docs/prerendering/README.md`](docs/prerendering/README.md) under the correct tier (Cloud/Edge, Managed platform, Server-level, Application-level).
-4. Use the canonical regexes from sections 1 and 2 byte-for-byte.
-5. Reference [`shared/crawler-ua-regex.md`](docs/prerendering/shared/crawler-ua-regex.md) and [`shared/static-extensions-regex.md`](docs/prerendering/shared/static-extensions-regex.md) from the new doc.
+4. Reference [`shared/crawler-ua-regex.md`](docs/prerendering/shared/crawler-ua-regex.md) and [`shared/static-extensions-regex.md`](docs/prerendering/shared/static-extensions-regex.md) instead of inlining the regexes.

@@ -100,7 +100,7 @@ Learn how to use different features and settings within pre-rendering SEO middle
 - [Cache purge](cache-purge.md)
 - [Strip JavaScript](strip-javascript.md)
 - [Custom status codes in analytics](prerendering-custom-status-codes.md)
-- [ES5 and legacy websites support](es6-support.md)
+- [Legacy (ES5) support](es5-legacy-support.md)
 
 > [!TIP]
 > Pass `/sitemap.xml` to <kbd>Pre-Render</kbd> (*Pre-render a website*) in the **Pre-rendering Panel** to instantly render the whole website.

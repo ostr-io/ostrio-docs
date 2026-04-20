@@ -62,6 +62,12 @@ ostr.io maintains open-source middleware and libraries that integrate directly w
 - [`ostrio:spiderable-middleware`](https://atmospherejs.com/ostrio/spiderable-middleware) — Meteor.js pre-rendering middleware.
 - [`ostrio-analytics`](https://github.com/veliovgroup/ostrio-analytics) — privacy-first analytics tracker.
 
+## Agent Skills
+
+[`ostr-io/ostrio-agent-skills`](https://github.com/ostr-io/ostrio-agent-skills) — open-source Agent Skills for AI coding agents (Cursor, Claude Code, Codex CLI, Antigravity, and any `SKILL.md`-aware agent):
+
+- [`ostrio-prerendering`](https://github.com/ostr-io/ostrio-agent-skills/tree/main/skills/ostrio-prerendering) — integrate, operate, debug, purge, and maintain ostr.io pre-rendering end-to-end on Next.js, Node, Meteor, Nginx, Apache, Caddy, Cloudflare Workers, Netlify, Vercel, Supabase Edge, Shopify, WordPress, and any SPA/PWA/SSR/static site.
+
 ---
 
 > ▲ created and maintained by humans with ♥

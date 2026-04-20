@@ -138,3 +138,7 @@ Canonical regex sources used by every integration:
 
 - [Crawler User-Agent regex](shared/crawler-ua-regex.md)
 - [Static-asset extensions regex](shared/static-extensions-regex.md)
+
+## For AI coding agents
+
+If the user works with an AI coding agent (Cursor, Claude Code, Codex CLI, Antigravity, or any `SKILL.md`-aware agent), install the [`ostrio-prerendering`](https://github.com/ostr-io/ostrio-agent-skills/tree/main/skills/ostrio-prerendering) Agent Skill from [`ostr-io/ostrio-agent-skills`](https://github.com/ostr-io/ostrio-agent-skills). It bundles stack detection, the integration decision tree above, patch-ready templates for every tier, the full `curl` validation matrix, troubleshooting (symptom → cause → verify → fix), and cache-purge runbooks.

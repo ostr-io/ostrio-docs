@@ -7,16 +7,27 @@ List of changes in chronological order, most recent first.
 - 👷‍♂️🏗 wip
 
 
+#### [2026-04-20]
+
+- 😎 Agentic [skills for pre-rendering integration](https://github.com/ostr-io/ostrio-agent-skills/tree/main/skills/ostrio-prerendering)
+- 📔 [Docs refactored](https://github.com/ostr-io/ostrio-docs) and moved under @ostr-io organization
+- 📔 New [Caddy server pre-rendering integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/caddy-prerendering.md)
+- 📔 New [Supabase server pre-rendering integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/supabase-prerendering.md)
+- 📔 New [Vercel server pre-rendering integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/vercel-prerendering.md)
+- 📔 Updated [Apache server pre-rendering integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/apache.md)
+- 📔 Updated [Nginx server pre-rendering integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md)
+- 📔 Updated [Node.js server pre-rendering integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/node-npm.md)
+
 #### [2025-08-22]
 
-- 🛍️ Shopify: [pre-rendering integration guidelines via CloudFlare](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/shopify-seo-integration.md#seo-middleware-worker-for-shopify)
-- 🌤️ Pre-rendering CloudFlare worker: [Refactoring and improvements in `cloudflare.worker.js`](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
-- 📔 Pre-rendering Next.js middleware and NPM package: [minor refactoring](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nextjs-prerendering.md)
+- 🛍️ Shopify: [pre-rendering integration guidelines via CloudFlare](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/shopify-seo-integration.md#seo-middleware-worker-for-shopify)
+- 🌤️ Pre-rendering CloudFlare worker: [Refactoring and improvements in `cloudflare.worker.js`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
+- 📔 Pre-rendering Next.js middleware and NPM package: [minor refactoring](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nextjs-prerendering.md)
 
 #### [2025-08-18]
 
-- 📔 [Next.js: integration docs](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nextjs-prerendering.md)
-- 📔 [Netlify: integration docs](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/netlify-prerendering.md)
+- 📔 [Next.js: integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nextjs-prerendering.md)
+- 📔 [Netlify: integration docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/netlify-prerendering.md)
 
 #### [2025-07-31]
 
@@ -24,7 +35,7 @@ List of changes in chronological order, most recent first.
 
 #### [2025-07-30]
 
-- 📔 Pre-rendering docs: Refactor and improve CloudFlare worker: [`cloudflare.worker.js`](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
+- 📔 Pre-rendering docs: Refactor and improve CloudFlare worker: [`cloudflare.worker.js`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js)
 
 #### [2025-07-29]
 
@@ -38,16 +49,16 @@ List of changes in chronological order, most recent first.
 - 🖥️ Refactored "My account" UI for better UX
 - 🖥️ Refactored "Login" form UI for better UX
 - 🖥️ Refactored "Sign up" form UI for better UX
-- 🔭 Monitoring: Reference ["JSON" and "XML" custom data monitoring examples](https://github.com/veliovgroup/ostrio/blob/master/docs/monitoring/basics.md#custom-data-monitoring)
+- 🔭 Monitoring: Reference ["JSON" and "XML" custom data monitoring examples](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/basics.md#custom-data-monitoring)
 - ⚠️ Change grace period between changing pricing plans to 24 hours (*was 3 minutes*)
 
 #### [2025-07-16]
 
-- 🤖 Pre-rendering: Added `window.IS_PRERENDERING_TYPE` runtime variable, — [see docs](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/detect-prerendering.md)
+- 🤖 Pre-rendering: Added `window.IS_PRERENDERING_TYPE` runtime variable, — [see docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)
 - 🤖 Pre-rendering: Added details to errors returned from pre-rendering endpoints for better debugging, integration process, and support
-- 📔 Docs: Pre-rendering: Added details regarding custom "status codes" in pre-rendering panel, — [see docs](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/README.md#custom-status-codes)
-- 📔 Docs: Pre-rendering: updated [runtime engine documentation](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/detect-prerendering.md)
-- 📔 Docs: [New Apache integration guide](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/apache.md)
+- 📔 Docs: Pre-rendering: Added details regarding custom "status codes" in pre-rendering panel, — [see docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/README.md#custom-status-codes)
+- 📔 Docs: Pre-rendering: updated [runtime engine documentation](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)
+- 📔 Docs: [New Apache integration guide](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/apache.md)
 - 🌎 Domain Whois: Display "domain expiration" detailed to a minute
 - 🌍 DNS Checks: Full support for CloudFlare, now CloudFlare `A` and `AAAA` records reported as `CloudFlare` without unnecessary alerts when CloudFlare rotates IPs
 - 🌍 WHOIS Checks: now supports most of TLDs
@@ -59,7 +70,7 @@ List of changes in chronological order, most recent first.
 #### [2025-06-25]
 
 - 🤖 Pre-rendering: Improved Nginx integration
-- 📔 Pre-rendering docs: [Improved examples in Nginx tutorials](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md)
+- 📔 Pre-rendering docs: [Improved examples in Nginx tutorials](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md)
 - 🤖 Pre-rendering: Improved "cache purge" UX/UI
 - 🤖 Pre-rendering: Improved redirect handling in edge cases
 - 🤖 Pre-rendering: Improved "status code" reporting; Fixing [#20](https://github.com/veliovgroup/spiderable-middleware/issues/20); Thanks to @FTCHD
@@ -85,8 +96,8 @@ This release include various UI/UX enhancements and fixes across the app, improv
 - 🤖 Pre-rendering: ES5 support now marketed as "for legacy websites"
 - 🖥 UI/UX: Refactored pricing and landing pages
 - 😎 UI: Improve dark mode styles
-- 📔 Pre-rendering docs: [Improve Nginx tutorials](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/nginx.md)
-- 📔 Pre-rendering docs: [Add CloudFlare tutorial](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/cloudflare-worker.md)
+- 📔 Pre-rendering docs: [Improve Nginx tutorials](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/nginx.md)
+- 📔 Pre-rendering docs: [Add CloudFlare tutorial](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cloudflare-worker.md)
 
 #### [2024-08-03]
 
@@ -219,7 +230,7 @@ __Do not forget__: our website is a fully-featured progressive web application (
 
 #### [2019-10-06]
 
-- Automated and simplified the [right to be forgotten](https://github.com/veliovgroup/ostrio/blob/master/docs/account/account-removal.md) following our GDPR compliance
+- Automated and simplified the [right to be forgotten](https://github.com/ostr-io/ostrio-docs/blob/master/docs/account/account-removal.md) following our GDPR compliance
 - Overall fixes to our mailing service, splitting "urgent" and "regular" email for better user experience
 - All forms: Better UI/UX implementation
 
@@ -310,7 +321,7 @@ __Do not forget__: our website is a fully-featured progressive web application (
 
 #### [2018-11-24 - 2018-12-02]
 
-- Add sitemap [to GitHub](https://github.com/veliovgroup/ostrio/blob/master/SITEMAP.md) and [website](https://ostr.io/info/sitemap)
+- Add sitemap [to GitHub](https://github.com/ostr-io/ostrio-docs/blob/master/SITEMAP.md) and [website](https://ostr.io/info/sitemap)
 - Add support for sitemap.xml in prerender panel. Now you can scan your `/sitemap.xml` to render and cache all pages of your website
 - Various minor UI enhancements
 
@@ -356,9 +367,9 @@ We're listening you carefully, thank you all for contributions, suggestions, and
 - 🕸 Prerendering - __Most wanted feature__. Auto pre-render upon cache expiration. If this feature enabled, all pages which are about to expire will be scheduled for re-rendering;
 - 🕸 Prerendering - "Cache browser", browse and edit currently cached pages;
 - 🕸 Prerendering - Internal analytics for better SEO and service setup;
-- 🕸 Prerendering - [Support for Accelerated Mobile Pages (APM)](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/amp-support.md)
-- 🛑📈 Analytics - [Detect and Track __AdBlock__ usage](https://github.com/veliovgroup/ostrio/blob/master/docs/analytics/detect-adblock.md);
-- 📈 Analytics - [Track Accelerated Mobile Pages (AMP) and other static pages](https://github.com/veliovgroup/ostrio/blob/master/docs/analytics/track-amp.md)
+- 🕸 Prerendering - [Support for Accelerated Mobile Pages (APM)](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/amp-support.md)
+- 🛑📈 Analytics - [Detect and Track __AdBlock__ usage](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/detect-adblock.md);
+- 📈 Analytics - [Track Accelerated Mobile Pages (AMP) and other static pages](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/track-amp.md)
 - 📈 Analytics - Fix displayed dates (*for some users charts had wrong month title*);
 - 📈 Analytics - Referrers now grouped by the domain name;
 - 📈 Analytics - "Development" mode for localhost testing. See [this suggestion](https://github.com/veliovgroup/ostrio-analytics/issues/2), thanks to @nicooprat;
@@ -377,7 +388,7 @@ We're listening you carefully, thank you all for contributions, suggestions, and
 
 #### [2017-12-09]
 
-- __Prerendering__ - Introducing "[Rendering Endpoints](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/rendering-endpoints.md)"
+- __Prerendering__ - Introducing "[Rendering Endpoints](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/rendering-endpoints.md)"
 - Upgrade front-face app to [`meteor@1.6.0.1`](https://github.com/meteor/meteor/blob/devel/History.md#v1601-2017-12-08)
 
 #### [2017-12-08]
@@ -405,7 +416,7 @@ We're listening you carefully, thank you all for contributions, suggestions, and
 
 #### [2017-12-03]
 
-- __Prerendering__ - Expose `IS_PRERENDERING` global variable inside "prerendering" engines, [see this issue](https://github.com/veliovgroup/spiderable-middleware/issues/4), and [updated docs](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/detect-prerendering.md)
+- __Prerendering__ - Expose `IS_PRERENDERING` global variable inside "prerendering" engines, [see this issue](https://github.com/veliovgroup/spiderable-middleware/issues/4), and [updated docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/detect-prerendering.md)
 - __Prerendering__ - New rendering farm for __PRO__ and __Business__. Up to 3 seconds load time decrease on __PRO__ and __Business__ plans
 
 #### [2017-12-02]

@@ -3,11 +3,11 @@
 // Plain Deno.serve reverse-proxy Edge Function.
 //
 // Crawler requests → proxied to https://render.ostr.io with OSTR_AUTH.
-// Visitor requests → proxied to OSTR_SITE_ORIGIN untouched.
+// Visitor requests → proxied to ROOT_URL untouched.
 // Renderer error / OSTR_AUTH missing → fail-open to origin.
 //
 // Deploy:
-//   supabase secrets set OSTR_AUTH='Basic <base64>' OSTR_SITE_ORIGIN='https://example.com'
+//   supabase secrets set OSTR_AUTH='Basic <base64>' ROOT_URL='https://example.com'
 //   supabase functions deploy ostr-prerender --no-verify-jwt
 //
 // See ../supabase-prerendering.md for domain-routing options.

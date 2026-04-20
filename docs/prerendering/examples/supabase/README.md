@@ -18,7 +18,7 @@ Drop-in [Supabase Edge Function](https://supabase.com/docs/guides/functions) mid
 
 | Request | Behavior |
 | --- | --- |
-| Human visitor (`GET`/`HEAD` HTML) | Passes through to your app (inline middleware) or to `OSTR_SITE_ORIGIN` (reverse proxy) |
+| Human visitor (`GET`/`HEAD` HTML) | Passes through to your app (inline middleware) or to `ROOT_URL` (reverse proxy) |
 | Known crawler / social preview / AI fetcher | Proxied to `render.ostr.io`, rendered snapshot returned |
 | Non-`GET`/`HEAD`, `.well-known/`, static-asset extension | Skipped — pre-rendering never fires |
 | `render.ostr.io` errors or `OSTR_AUTH` missing | Falls back to origin / next handler (fail-open) |
@@ -42,7 +42,7 @@ For Fresh apps, `fresh-middleware.ts` goes to `routes/_middleware.ts` in the Fre
 
 | File | Shape | Use when |
 | --- | --- | --- |
-| [`deno.ts`](deno.ts) | Reverse proxy — function is the site's public entry point, forwards non-crawler traffic to `OSTR_SITE_ORIGIN` | Smallest footprint, no app framework, origin lives elsewhere |
+| [`deno.ts`](deno.ts) | Reverse proxy — function is the site's public entry point, forwards non-crawler traffic to `ROOT_URL` | Smallest footprint, no app framework, origin lives elsewhere |
 | [`hono.ts`](hono.ts) | Inline middleware — drops into an existing Hono app via `app.use('*', ostrPrerender)` | Your site is already a Hono app deployed as an Edge Function |
 | [`oak.ts`](oak.ts) | Inline middleware — drops into an existing Oak app via `app.use(ostrPrerender)` | Your site is already an Oak app deployed as an Edge Function |
 | [`fresh-middleware.ts`](fresh-middleware.ts) | Inline `routes/_middleware.ts` — runs before every Fresh route | Your site is a Fresh SSR app (on Supabase Edge Functions or Deno Deploy) |
@@ -66,7 +66,7 @@ Get the `Basic ...` token from the [ostr.io pre-rendering panel](https://ostr.io
 ```shell
 supabase secrets set \
   OSTR_AUTH='Basic <base64 user:password>' \
-  OSTR_SITE_ORIGIN='https://example.com'
+  ROOT_URL='https://example.com'
 ```
 
 Optional: set `OSTR_SERVICE_URL` to override the default `https://render.ostr.io` (for example, `https://render-cache.ostr.io` for aggressive caching — see [`../../rendering-endpoints.md`](../../rendering-endpoints.md)).
@@ -114,15 +114,15 @@ Legacy fragment request should hit the renderer:
 curl -sI 'https://example.com/?_escaped_fragment_='
 ```
 
-Check **Supabase Studio → Edge Functions → Logs** — a bot request should log one outbound `fetch` to `render.ostr.io`; a visitor request should log one outbound `fetch` to `OSTR_SITE_ORIGIN` (reverse-proxy variant) or fall through to app routing (inline variants).
+Check **Supabase Studio → Edge Functions → Logs** — a bot request should log one outbound `fetch` to `render.ostr.io`; a visitor request should log one outbound `fetch` to `ROOT_URL` (reverse-proxy variant) or fall through to app routing (inline variants).
 
 ## How it works
 
 [`shared.ts`](shared.ts) centralizes three primitives used by every variant:
 
-- **`decide(req, siteOrigin?)`** — classifies the request against the [canonical crawler User-Agent regex](../../shared/crawler-ua-regex.md) and the [canonical static-asset extension list](../../shared/static-extensions-regex.md). Short-circuits non-`GET`/`HEAD`, `/.well-known/`, and static assets. Also strips `_escaped_fragment_` out of the forwarded query string and returns the canonical `renderTarget` URL built from `OSTR_SITE_ORIGIN`.
+- **`decide(req, siteOrigin?)`** — classifies the request against the [canonical crawler User-Agent regex](../../shared/crawler-ua-regex.md) and the [canonical static-asset extension list](../../shared/static-extensions-regex.md). Short-circuits non-`GET`/`HEAD`, `/.well-known/`, and static assets. Also strips `_escaped_fragment_` out of the forwarded query string and returns the canonical `renderTarget` URL built from `ROOT_URL`.
 - **`fetchRendered(req, renderTarget, ua)`** — `fetch`es the ostr.io renderer with `Authorization: <OSTR_AUTH>`, forwards `user-agent` and `accept-language`, strips hop-by-hop and cache-pollution response headers. Returns `null` on non-2xx/3xx or throw so callers can fail-open.
-- **`proxyToOrigin(req, siteOrigin?)`** — passes the request through to `OSTR_SITE_ORIGIN` untouched. Only used by the reverse-proxy variant (`deno.ts`); inline variants defer to their framework's `next()` handler instead.
+- **`proxyToOrigin(req, siteOrigin?)`** — passes the request through to `ROOT_URL` untouched. Only used by the reverse-proxy variant (`deno.ts`); inline variants defer to their framework's `next()` handler instead.
 
 Every framework variant wires these three primitives into the same decision tree as the [Vercel middleware](../vercel/middleware.js), [Next.js middleware](../next.js/middleware.ts), and [Cloudflare Worker](../cloudflare-worker/cloudflare.worker.js) — one canonical behavior, one source of truth.
 

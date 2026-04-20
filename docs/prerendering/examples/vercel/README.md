@@ -36,7 +36,7 @@ npm install @vercel/functions
 |----------|-------|----------|
 | `OSTR_SERVICE_URL` | `https://render.ostr.io` | Yes |
 | `OSTR_AUTH` | `Basic <base64 user:password>` | Yes |
-| `OSTR_SITE_ORIGIN` | `https://yourdomain.com` | Only if preview URLs differ from your registered domain |
+| `ROOT_URL` | `https://yourdomain.com` | Only if preview URLs differ from your registered domain |
 
 Get your credentials from the [ostr.io dashboard](https://ostr.io) after adding your domain.
 

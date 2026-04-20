@@ -125,7 +125,7 @@ export interface PrerenderDecision {
  */
 export function decide(req: Request, siteOrigin?: string): PrerenderDecision {
   const url = new URL(req.url);
-  const origin = siteOrigin ?? Deno.env.get('OSTR_SITE_ORIGIN') ?? url.origin;
+  const origin = siteOrigin ?? Deno.env.get('ROOT_URL') ?? url.origin;
 
   // Filter _escaped_fragment_ out of the forwarded query string.
   const params = new URLSearchParams(url.searchParams);
@@ -194,7 +194,7 @@ export async function fetchRendered(
  */
 export function proxyToOrigin(req: Request, siteOrigin?: string): Promise<Response> {
   const url = new URL(req.url);
-  const origin = siteOrigin ?? Deno.env.get('OSTR_SITE_ORIGIN') ?? url.origin;
+  const origin = siteOrigin ?? Deno.env.get('ROOT_URL') ?? url.origin;
   const target = origin + url.pathname + url.search;
   return fetch(target, {
     method: req.method,

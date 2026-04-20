@@ -42,7 +42,7 @@ The complete drop-in middleware, env-var reference, and deploy steps live in [`e
 
 1. Copy [`examples/vercel/middleware.js`](examples/vercel/middleware.js) to your project root.
 2. Install `@vercel/functions`.
-3. Set `OSTR_AUTH` (from the [ostr.io pre-rendering panel](https://ostr.io/service/prerender)) and, if needed, `OSTR_SITE_ORIGIN` as Vercel environment variables.
+3. Set `OSTR_AUTH` (from the [ostr.io pre-rendering panel](https://ostr.io/service/prerender)) and, if needed, `ROOT_URL` as Vercel environment variables.
 4. Deploy.
 
 See the [example README](examples/vercel/README.md) for full details.

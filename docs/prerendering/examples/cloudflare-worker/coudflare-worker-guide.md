@@ -90,7 +90,7 @@ In the editor paste the [pre-rendering worker code](cloudflare.worker.js) and cl
 
 2. Select all code in the editor and delete it
 
-3. Open the [pre-rendering worker script](https://github.com/veliovgroup/ostrio/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) > copy its full contents > paste into the editor
+3. Open the [pre-rendering worker script](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js) > copy its full contents > paste into the editor
 
 4. Click <kbd>Deploy</kbd> (top-right corner)
 

@@ -2,8 +2,6 @@
 
 ostr.io pre-rendering SEO middleware for apps whose HTML is served from [Supabase Edge Functions](https://supabase.com/docs/guides/functions) — Deno-native, standard Fetch API. Each example is a drop-in middleware that detects crawler traffic and proxies matching page requests to the ostr.io renderer. Application code is untouched; visitor traffic remains on origin.
 
-<img width="1536" height="1024" alt="ostrio-prerendering-supabase-support" src="https://github.com/user-attachments/assets/350da2b5-40ed-45d1-a680-231a05c9916b" />
-
 - [Pre-rendering overview](README.md)
 - [Rendering endpoints](rendering-endpoints.md)
 - [Complete Supabase examples](examples/supabase/)

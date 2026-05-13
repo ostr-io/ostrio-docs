@@ -12,6 +12,7 @@ AWS Lambda@Edge can add ostr.io pre-rendering in front of any public site alread
 - [How it works](#how-it-works)
 - [When to use](#when-to-use)
 - [Quick start](#quick-start)
+- [Operational notes](#operational-notes)
 - [Cache behavior](#cache-behavior)
 - [Validation](#validation)
 - [Common issues](#common-issues)
@@ -39,18 +40,37 @@ Do not use this integration when you can deploy a simpler platform-native middle
 
 1. Add and verify the production domain in the [ostr.io pre-rendering panel](https://ostr.io/service/prerender); copy the `Basic ...` token.
 2. Copy [`examples/aws-lambda/cloudfront-viewer-request.js`](examples/aws-lambda/cloudfront-viewer-request.js) into a CloudFront Function, publish it, and associate it with the cache behavior as **Viewer request**.
-3. Configure the cache behavior:
-   - Cache key includes header `X-Ostr-Prerender`.
-   - Query strings are included.
-   - Origin request policy forwards `X-Ostr-Prerender` and `X-Ostr-User-Agent`.
+3. Configure the cache behavior policies:
+   - **Cache policy** — include header `X-Ostr-Prerender` in the cache key. Include all query strings (or at least every public query parameter plus `_escaped_fragment_`).
+   - **Origin request policy** — forward both `X-Ostr-Prerender` and `X-Ostr-User-Agent` to origin, and forward query strings consistent with the cache policy.
+   - Do **not** put raw `User-Agent` in the cache key. AWS recommends against it because UA values fragment the cache; this integration uses a low-cardinality `X-Ostr-Prerender: 0|1` instead.
 4. Add origin custom header `X-Ostr-Auth: Basic <token>` to the CloudFront origin. Lambda@Edge does not support custom environment variables, so this is the recommended secret path.
-5. Copy [`examples/aws-lambda/lambda-edge-origin-request.js`](examples/aws-lambda/lambda-edge-origin-request.js) into a Node.js Lambda function in `us-east-1`.
-6. Publish a numbered Lambda version and associate that version with the cache behavior as **Origin request**.
-7. Deploy the distribution and run [Validation](#validation).
+5. Create the Lambda execution role with a trust policy for **both** Lambda and Lambda@Edge:
+
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [{
+       "Effect": "Allow",
+       "Principal": { "Service": ["lambda.amazonaws.com", "edgelambda.amazonaws.com"] },
+       "Action": "sts:AssumeRole"
+     }]
+   }
+   ```
+
+   Attach `AWSLambdaBasicExecutionRole` for CloudWatch Logs. No additional permissions are required.
+6. Copy [`examples/aws-lambda/lambda-edge-origin-request.js`](examples/aws-lambda/lambda-edge-origin-request.js) into a Node.js Lambda function in `us-east-1` using the role above.
+7. Publish a numbered Lambda version and associate that version with the cache behavior as **Origin request**.
+8. Deploy the distribution and run [Validation](#validation).
 
 See [`examples/aws-lambda/`](examples/aws-lambda/) for file-level setup and behavior details.
 
-## Cache Behavior
+### Operational notes
+
+- **Logs spread across regions** — Lambda@Edge writes to CloudWatch Logs in the region nearest each viewer, not `us-east-1`. Default retention is "Never expire". Set retention (e.g. 7 days) on the `/aws/lambda/us-east-1.<function-name>` log group in every region the distribution serves, or apply it programmatically.
+- **Tests** — the example Lambda exports private helpers for unit testing. Run `node --test examples/aws-lambda/` from the docs tree.
+
+## Cache behavior
 
 CloudFront origin-request Lambda@Edge runs only when CloudFront sends a request to origin. If a page is already in edge cache, the origin-request Lambda does not execute. The viewer-request CloudFront Function solves this by adding a low-cardinality `X-Ostr-Prerender` cache-key header before cache lookup:
 
@@ -62,6 +82,12 @@ CloudFront origin-request Lambda@Edge runs only when CloudFront sends a request 
 Do not put raw `User-Agent` in the cache key. AWS documents that `User-Agent` has many possible values and can fragment the cache. The example copies the original viewer UA into `X-Ostr-User-Agent` only for Lambda routing and renderer analytics.
 
 ## Validation
+
+After deploying, invalidate the CloudFront cache so the first test request does not hit a pre-integration cached response:
+
+```shell
+aws cloudfront create-invalidation --distribution-id <id> --paths '/*'
+```
 
 Bot request should return a pre-rendered snapshot with `X-Prerender-Id`:
 
@@ -87,7 +113,7 @@ Direct renderer smoke test:
 curl -v -H "Authorization: Basic dGVzdDp0ZXN0" "https://render-bypass.ostr.io/?url=https://example.com"
 ```
 
-## Common Issues
+## Common issues
 
 - **Bot gets human HTML** - `X-Ostr-Prerender` is not in the cache key, the CloudFront Function is not associated with viewer-request, or CloudFront cache was not invalidated after deployment.
 - **Lambda never runs** - origin-request Lambda@Edge only runs on cache misses. Invalidate the URL or wait for TTL expiry.

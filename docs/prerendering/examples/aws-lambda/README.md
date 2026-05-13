@@ -11,6 +11,7 @@ Drop-in AWS CloudFront edge pair that routes crawler traffic to the [ostr.io](ht
 - [File layout](#file-layout)
 - [Setup](#setup)
 - [Validation](#validation)
+- [Tests](#tests)
 - [How it works](#how-it-works)
 - [Related](#related)
 
@@ -28,6 +29,8 @@ Drop-in AWS CloudFront edge pair that routes crawler traffic to the [ostr.io](ht
 CloudFront origin-request Lambda@Edge functions execute only on cache misses. A single origin-request Lambda can miss crawler traffic when a human version is already cached. The companion CloudFront Function runs at viewer-request time and adds `X-Ostr-Prerender: 1` or `0` before CloudFront builds the cache key, so crawler and visitor HTML use separate cache variants.
 
 CloudFront Functions cannot make network requests, so they cannot call the renderer directly. Lambda@Edge viewer-request functions can generate responses, but AWS limits generated viewer-request responses to 40 KB. Rewriting the origin request avoids that response-size ceiling and lets `render.ostr.io` return the full HTML snapshot.
+
+This split — a CloudFront Function shaping the cache key at viewer-request, plus a Lambda@Edge mutating the request at origin-request — is AWS's canonical pattern for cache-aware request rewriting at the edge.
 
 ## File layout
 
@@ -50,20 +53,40 @@ aws-lambda/
 
 Create or update the cache behavior:
 
-- Cache policy: include the `X-Ostr-Prerender` header in the cache key.
-- Query strings: include all query strings, or at least every query parameter your public pages use plus `_escaped_fragment_`.
-- Origin request policy: forward `X-Ostr-Prerender` and `X-Ostr-User-Agent` to the origin request Lambda.
+- **Cache policy**:
+  - Headers → "Include the following headers" → add `X-Ostr-Prerender`.
+  - Query strings → "All" (or at least every query parameter your public pages use plus `_escaped_fragment_`).
+  - Cookies → as your app needs; this integration does not depend on cookies.
+- **Origin request policy**:
+  - Forward `X-Ostr-Prerender` and `X-Ostr-User-Agent` to the origin request Lambda.
+  - Forward query strings consistent with the cache policy.
 
 Do not cache on the raw `User-Agent` header. CloudFront has many user-agent values, and AWS recommends avoiding `User-Agent` in the cache key because it fragments the cache.
 
 ### 3. Add the Lambda@Edge function
 
-1. Create a Node.js Lambda function in `us-east-1`.
-2. Paste [`lambda-edge-origin-request.js`](lambda-edge-origin-request.js).
-3. Publish a numbered version.
-4. Associate that version with the same cache behavior as **Origin request**.
+1. Create the execution role. Lambda@Edge needs both Lambda and Lambda@Edge in the trust policy:
+
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [{
+       "Effect": "Allow",
+       "Principal": { "Service": ["lambda.amazonaws.com", "edgelambda.amazonaws.com"] },
+       "Action": "sts:AssumeRole"
+     }]
+   }
+   ```
+
+   Attach the AWS-managed `AWSLambdaBasicExecutionRole` for CloudWatch Logs. No further permissions are required.
+2. Create a Node.js Lambda function in `us-east-1` using that role.
+3. Paste [`lambda-edge-origin-request.js`](lambda-edge-origin-request.js).
+4. Publish a numbered version.
+5. Associate that version with the same cache behavior as **Origin request**.
 
 Lambda@Edge requires a published function version; aliases and `$LATEST` are not valid for CloudFront associations.
+
+Lambda@Edge writes CloudWatch Logs in the region nearest each viewer. Set a retention policy (e.g. 7 days) on `/aws/lambda/us-east-1.<function-name>` in every region the distribution serves, or apply it programmatically.
 
 ### 4. Add `OSTR_AUTH`
 
@@ -83,6 +106,12 @@ The Lambda reads `X-Ostr-Auth` from `request.origin.*.customHeaders`, removes it
 Alternative: inject `BASIC_TOKEN` during CI before publishing the Lambda version. Do not commit a real token.
 
 ## Validation
+
+After deploying, invalidate the CloudFront cache so the first test request does not hit a pre-integration cached response:
+
+```shell
+aws cloudfront create-invalidation --distribution-id <id> --paths '/*'
+```
 
 Bot request should return a pre-rendered snapshot:
 
@@ -104,6 +133,16 @@ curl -sI 'https://example.com/?_escaped_fragment_='
 ```
 
 In CloudFront logs, crawler cache misses should use `render.ostr.io` as the dynamic origin. Human cache misses should use the original origin.
+
+## Tests
+
+The Lambda exports private helpers for unit testing. From this directory:
+
+```shell
+node --test
+```
+
+The included test file covers crawler/static/path skip rules and renderer-target reconstruction.
 
 ## How it works
 

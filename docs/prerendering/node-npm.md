@@ -33,7 +33,7 @@ The legacy `_escaped_fragment_` crawling scheme was [deprecated by Google in 201
 </html>
 ```
 
-Modern crawlers rely on the User-Agent check that `spiderable-middleware` performs automatically, so this markup is **not required** for Googlebot, Bingbot, facebookexternalhit, AI fetchers, or any crawler that advertises itself via User-Agent.
+Modern crawlers rely on the User-Agent check that `spiderable-middleware` performs automatically, so this markup is **not required** for Googlebot, Bingbot, facebookexternalhit, meta-externalagent, AI fetchers, or any crawler that advertises itself via User-Agent.
 
 ## Related
 

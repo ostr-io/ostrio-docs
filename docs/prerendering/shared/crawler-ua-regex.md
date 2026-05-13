@@ -1,6 +1,6 @@
 # Canonical Crawler User-Agent Regex
 
-This file is the **single source of truth** for the User-Agent regex used by every pre-rendering integration — Nginx, Apache, Caddy, Cloudflare Workers, Netlify configuration, and application middleware.
+This file is the **single source of truth** for the User-Agent regex used by every pre-rendering integration — Nginx, Apache, Caddy, Cloudflare Workers, AWS Lambda@Edge, Netlify configuration, and application middleware.
 
 > [!IMPORTANT]
 > All integration examples must use this regex **byte-for-byte**. Never edit it inside an integration doc or example config in isolation. When adding or removing crawlers, update **every** copy in a single change:
@@ -9,7 +9,7 @@ This file is the **single source of truth** for the User-Agent regex used by eve
 > 2. [`nginx.md`](../nginx.md) — `map $http_user_agent $is_webbot` block
 > 3. [`apache.md`](../apache.md) — `RewriteCond %{HTTP_USER_AGENT}` block
 > 4. [`caddy-prerendering.md`](../caddy-prerendering.md) — matcher blocks
-> 5. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, and `examples/**/*.worker.js`
+> 5. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, `examples/**/*.worker.js`, and edge JavaScript example
 >
 > Run `git grep -l "ahrefsbot" -- 'docs/prerendering/**'` (*or any distinctive token from the regex*) to find every file that must be kept in sync.
 
@@ -35,6 +35,7 @@ The canonical pattern above is **alternation only**. Each server requires its ow
 - **Apache** (`RewriteCond %{HTTP_USER_AGENT}`): append `[NC]` flag, wrap in double quotes
 - **Caddy** (`header_regexp`): use a `@is_bot` matcher with `(?i)(PATTERN)`
 - **Cloudflare Worker** (JavaScript): `new RegExp('(PATTERN)', 'i').test(userAgent)`
+- **AWS Lambda@Edge / CloudFront Function** (JavaScript): use the same case-insensitive JavaScript wrapper, and keep the CloudFront Function before cache lookup
 - **Node.js middleware**: same as Cloudflare Worker, or delegate to the [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware) package
 
 ## Why so many user agents?
@@ -51,3 +52,4 @@ The canonical pattern above is **alternation only**. Each server requires its ow
 - [Apache integration](../apache.md)
 - [Caddy integration](../caddy-prerendering.md)
 - [Cloudflare Worker integration](../cloudflare-worker.md)
+- [AWS Lambda@Edge integration](../aws-lambda.md)

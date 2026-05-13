@@ -113,6 +113,7 @@ See the full [step-by-step tutorial](examples/cloudflare-worker/coudflare-worker
 ## Related
 
 - [Shopify via Cloudflare Worker](shopify-seo-integration.md) — Shopify-specific variant
+- [AWS Lambda@Edge integration](aws-lambda.md) — CloudFront equivalent when AWS is the CDN layer
 - [Netlify integration](netlify-prerendering.md) — alternative for Netlify-hosted sites
 - [Vercel integration](vercel-prerendering.md) — alternative for Vercel-hosted sites
 - [Rendering endpoints](rendering-endpoints.md)

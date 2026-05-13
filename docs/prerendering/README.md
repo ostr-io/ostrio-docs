@@ -52,6 +52,7 @@ Pick based on where you can change configuration:
 | If you control… | Pick |
 | --- | --- |
 | DNS / CDN only (no server, no code access) | [Cloudflare Worker](cloudflare-worker.md) — works with Webflow, Framer, Squarespace, Wix, Ghost, Notion-proxied sites, and more |
+| An Amazon CloudFront distribution | [AWS Lambda@Edge](aws-lambda.md) — CloudFront Function plus origin-request Lambda@Edge |
 | A Shopify store | [Cloudflare Worker for Shopify](shopify-seo-integration.md) |
 | A Netlify deployment (PRO / ENTERPRISE) | [Netlify integration](netlify-prerendering.md) |
 | A Vercel deployment | [Vercel Routing Middleware](vercel-prerendering.md) |
@@ -63,13 +64,14 @@ Pick based on where you can change configuration:
 
 ## Integrations
 
-All ten supported integration paths.
+Supported integration paths.
 
 ### Cloud / Edge integrations
 
 Operate at the CDN / worker layer — **no origin, server, or application changes required**. Ideal for hosted/no-code platforms where you cannot deploy middleware yourself.
 
 - **General Cloudflare Worker** — [Cloudflare Worker integration](cloudflare-worker.md). Compatible with Webflow, Framer, Squarespace, Wix, Carrd, Bubble, Ghost(Pro), Substack, Notion-proxied sites, WordPress.com, BigCommerce, Wix Stores, and any origin reachable through Cloudflare's orange-cloud DNS.
+- **AWS Lambda@Edge** — [AWS Lambda@Edge integration](aws-lambda.md). CloudFront Function marks crawler cache variants before cache lookup; origin-request Lambda@Edge rewrites matching cache misses to ostr.io.
 - **Shopify** — [Cloudflare Worker for Shopify](shopify-seo-integration.md). Dedicated walkthrough for Shopify domains (including Shopify-managed domains that need to be transferred to Cloudflare first).
 
 ### Managed platform integrations

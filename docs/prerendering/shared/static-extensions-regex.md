@@ -1,6 +1,6 @@
 # Canonical Static-Asset Extension Regex
 
-This file is the **single source of truth** for the static-asset extension regex. Every integration example skips requests whose URI ends in one of these extensions so that CSS, JS, images, fonts, archives, PDFs, and media files are served directly by Nginx, Apache, Caddy, the CDN, or the Cloudflare worker's `fetch` pass-through instead of hitting the pre-rendering engine.
+This file is the **single source of truth** for the static-asset extension regex. Every integration example skips requests whose URI ends in one of these extensions so that CSS, JS, images, fonts, archives, PDFs, and media files are served directly by Nginx, Apache, Caddy, the CDN, Cloudflare Worker, or AWS Lambda@Edge pass-through instead of hitting the pre-rendering engine.
 
 > [!IMPORTANT]
 > All integration examples must use this regex **byte-for-byte**. Never edit it inside an integration doc or example config in isolation. When adding or removing extensions, update **every** copy in a single change:
@@ -9,7 +9,7 @@ This file is the **single source of truth** for the static-asset extension regex
 > 2. [`nginx.md`](../nginx.md) — `location ~* \.(...)$` block
 > 3. [`apache.md`](../apache.md) — `RewriteCond %{REQUEST_URI}` blocks
 > 4. [`caddy-prerendering.md`](../caddy-prerendering.md) — `@static_assets` matcher
-> 5. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, and `examples/**/*.worker.js`
+> 5. Every `examples/**/*.conf`, `examples/**/*.htaccess`, `examples/**/*.caddyfile`, `examples/**/*.worker.js`, and edge JavaScript example
 >
 > Run `git grep -l "DS_Store" -- 'docs/prerendering/**'` (*or any distinctive token from the regex*) to find every file that must be kept in sync.
 
@@ -38,6 +38,7 @@ The regex matches a file extension at the end of the request URI. Categories cov
 - **Apache** — `RewriteCond %{REQUEST_URI} !<PATTERN> [NC]` *before* the bot / fragment rules, so the proxy rule only fires on page requests.
 - **Caddy** — `@static_assets path_regexp <PATTERN>` matcher, paired with `file_server` or direct response.
 - **Cloudflare Worker** — `if (STATIC_ASSET_REGEX.test(url.pathname)) { return fetch(request); }` early-return before bot detection.
+- **AWS Lambda@Edge / CloudFront Function** — test the URI before bot detection and before setting `X-Ostr-Prerender`.
 
 ## Intentional exclusions
 

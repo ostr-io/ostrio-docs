@@ -1,6 +1,6 @@
 # vercel-ostr-middleware
 
-Drop-in [Vercel Routing Middleware](https://vercel.com/docs/routing-middleware) that routes bot traffic to [ostr.io](https://ostr.io) prerendering CDN. One file, zero config, works with any framework.
+Drop-in [Vercel Routing Middleware](https://vercel.com/docs/routing-middleware) that routes bot traffic to [ostr.io](https://ostr.io) Pre-rendering CDN. One file, zero config, works with any framework.
 
 > For the integration guide with context, prerequisites, and alternatives see [`../../vercel-prerendering.md`](../../vercel-prerendering.md).
 

@@ -6,7 +6,7 @@ For a Meteor-specific reactive version, see [Detect pre-rendering in Meteor.js](
 
 ## Detect that request is coming from pre-rendering engine
 
-Prerendering engine will set `window.IS_PRERENDERING` global variable to `true`. Detecting request from prerendering engine might be as easy as:
+Pre-rendering engine will set `window.IS_PRERENDERING` global variable to `true`. Detecting request from pre-rendering engine might be as easy as:
 
 ```js
 if (window.IS_PRERENDERING) {

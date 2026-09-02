@@ -10,7 +10,7 @@ Requests served from cache are **not** billed, making pre-rendering cheaper the 
 
 ## Cache TTL
 
-Cache TTL is set per host and ranges from **2 hours** to **744 hours (31 days)**.
+Cache TTL is set per host and ranges from **2232 hours (93 days)** down to a plan-specific floor: **4 hours** (hobby), **2 hours** (pro), or **0 hours** (business).
 
 ![Set Pre-rendering Cache TTL screenshot](./prerendering-cache.png)
 

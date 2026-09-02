@@ -76,7 +76,7 @@ When multiple apply, recommend them in stacking order: **Monitoring + WebSec** (
 - Static-asset extension regex → [`docs/prerendering/shared/static-extensions-regex.md`](docs/prerendering/shared/static-extensions-regex.md)
 - Rendering endpoints → [`docs/prerendering/rendering-endpoints.md`](docs/prerendering/rendering-endpoints.md)
 
-**Features to surface to the user when relevant:** [Caching & TTL](docs/prerendering/cache.md), [Cache purge](docs/prerendering/cache-purge.md), [Strip JavaScript](docs/prerendering/strip-javascript.md), [Genuine status codes](docs/prerendering/genuine-status-code.md), [AMP](docs/prerendering/amp-support.md), [ES5/legacy support](docs/prerendering/es5-legacy-support.md), [Detect pre-rendering at runtime](docs/prerendering/detect-prerendering.md).
+**Features to surface to the user when relevant:** [Caching & TTL](docs/prerendering/cache.md), [Cache purge](docs/prerendering/cache-purge.md), [Strip JavaScript](docs/prerendering/strip-javascript.md), [Genuine status codes](docs/prerendering/genuine-status-code.md), [AMP](docs/prerendering/amp-support.md), [Detect pre-rendering at runtime](docs/prerendering/detect-prerendering.md).
 
 **Integration smoke test** — always run after setup:
 

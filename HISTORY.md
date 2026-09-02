@@ -6,6 +6,11 @@ List of changes in chronological order, most recent first.
 
 - 👷‍♂️🏗 wip
 
+#### [2025-08-11]
+
+- 🐞 Pre-rendering: Fix "avg. render time" chart data
+- ✨ Improve UI/UX of signup and on-boarding experience
+- ✨ Improved "verify domain" UI and UX
 
 #### [2026-04-20]
 

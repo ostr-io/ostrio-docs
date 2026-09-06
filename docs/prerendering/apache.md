@@ -183,3 +183,25 @@ Success criteria:
 - Bot requests return renderer `401`: `_YOUR_AUTH_TOKEN_` was not replaced or token format is invalid.
 - Bot requests return renderer `404`: `ProxyPreserveHost` is `On`; keep it `Off` for renderer proxying.
 - Browser requests receive pre-rendered HTML: route exclusions are too broad or custom bot regex matches browser UA.
+
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend bot detection with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Apache.
+
+Add `BrowserMatchNoCase` directives in your `.htaccess` or virtual-host config alongside the canonical bot rules:
+
+```apache
+# Custom crawler detection
+BrowserMatchNoCase "mycompany-crawler" is_bot
+BrowserMatchNoCase "internal-spider" is_bot
+```
+
+Then use the `is_bot` environment variable in your rewrite conditions:
+
+```apache
+RewriteCond %{ENV:is_bot} ^1$ [OR]
+RewriteCond %{HTTP_USER_AGENT} "(?i)pattern-from-shared-regex" [NC]
+RewriteRule ^(.*)$ https://render.ostr.io/render/https://%{HTTP_HOST}%{REQUEST_URI} [P,E=OSTR_PRERENDER:1]
+```
+
+Use plain-text substrings for custom entries. The `[NC]` flag applies case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.

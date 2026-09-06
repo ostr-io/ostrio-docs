@@ -202,6 +202,44 @@ For non-crawler traffic, response should be from your app server without `X-Prer
 
 Use the `render-bypass.ostr.io` endpoint temporarily if you suspect cached results. See the full list of rendering endpoints and their behaviour in the [ostr.io rendering endpoints documentation](https://docs.ostr.io/prerendering/rendering-endpoints). Swap `OSTR_AUTH` and endpoint only in a temporary staging config first.
 
+## 6.1. Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend the bot-detection matcher with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Caddy.
+
+Add a new `@is_custom_bot` matcher block in your Caddyfile:
+
+```caddyfile
+@is_custom_bot header_regexp User-Agent (?i)(mycompany-crawler|internal-spider)
+```
+
+Then combine it with your existing prerender matchers using the comma syntax:
+
+```caddyfile
+# Prerender on crawler detection (canonical + custom)
+@is_crawler header_regexp User-Agent "(?i)(canonical-pattern-here|mycompany-crawler|internal-spider)"
+
+handle @is_crawler {
+  rewrite * /render/https://{host}{uri}
+  reverse_proxy localhost:3000 {
+    header_uri Authorization "Basic $OSTR_AUTH"
+  }
+}
+```
+
+Alternatively, define custom matchers separately and combine them in the route:
+
+```caddyfile
+@is_canonical_bot header_regexp User-Agent "(?i)(pattern-from-shared-regex)"
+@is_custom_bot header_regexp User-Agent "(?i)(mycompany-crawler|internal-spider)"
+
+handle @is_canonical_bot,@is_custom_bot {
+  rewrite * /render/https://{host}{uri}
+  reverse_proxy localhost:3000
+}
+```
+
+Use plain-text substrings in the regex, escaped for `(?i)` case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
+
 ## 7. Notes
 
 - If you use a CDN in front of Caddy, keep your bot detection and token in Caddy, not in CDN logic.

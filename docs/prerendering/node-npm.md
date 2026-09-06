@@ -35,6 +35,25 @@ The legacy `_escaped_fragment_` crawling scheme was [deprecated by Google in 201
 
 Modern crawlers rely on the User-Agent check that `spiderable-middleware` performs automatically, so this markup is **not required** for Googlebot, Bingbot, facebookexternalhit, meta-externalagent, AI fetchers, or any crawler that advertises itself via User-Agent.
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, use the `botsUA` option when initializing `spiderable-middleware`. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Node.js.
+
+Pass custom User-Agent substrings to the constructor:
+
+```javascript
+const Spiderable = require('spiderable-middleware').default;
+
+app.use(new Spiderable({
+  auth: 'username:password',
+  botsUA: ['mycompany-crawler', 'internal-spider', 'audit-bot']
+}));
+```
+
+Use plain-text substrings, not regex patterns. The middleware applies case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
+
+For complete usage examples and all available options, see the [`spiderable-middleware` README](https://github.com/veliovgroup/spiderable-middleware#readme) on GitHub.
+
 ## Related
 
 For Node.js apps you can also route bot traffic **outside** the app layer, without adding any dependency:

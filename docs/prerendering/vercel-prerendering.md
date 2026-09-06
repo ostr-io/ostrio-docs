@@ -47,6 +47,37 @@ The complete drop-in middleware, env-var reference, and deploy steps live in [`e
 
 See the [example README](examples/vercel/README.md) for full details.
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend the bot-detection array in your Vercel middleware with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Vercel middleware.
+
+Edit your `middleware.js` (copied from the example) to add custom substrings to the `BOT_AGENTS` array:
+
+```javascript
+const BOT_AGENTS = [
+  // Canonical crawlers (from shared/crawler-ua-regex.md)
+  // ... all entries from the canonical list ...
+  // Custom entries:
+  'mycompany-crawler',
+  'internal-spider',
+  'audit-bot'
+];
+const BOT_AGENTS_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
+```
+
+Use plain-text substrings, not regex patterns. The `RegExp(..., 'i')` flag applies case-insensitive matching. If your custom substrings contain regex special characters like `.`, `+`, or `(`, escape them with `\\`:
+
+```javascript
+const BOT_AGENTS = [
+  // ... existing entries ...
+  'mycompany-crawler',
+  'internal-spider\\.bot',  // literal dot
+  'audit\\+pro'              // literal plus
+];
+```
+
+Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected. Redeploy after editing.
+
 ## Validation
 
 Bot request should return a pre-rendered snapshot with the `X-Prerender-Id` header:

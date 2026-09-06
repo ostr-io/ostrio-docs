@@ -54,6 +54,61 @@ When you cannot modify `middleware.ts` — or you prefer to keep pre-rendering c
 - ▲ [Via Vercel Routing Middleware](vercel-prerendering.md) — Vercel-edge middleware, works for any framework.
 - 🥞 [Via Supabase Edge Functions](supabase-prerendering.md) — Deno-native middleware for apps served from Supabase (plain `Deno.serve`, Hono, Oak, Fresh).
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend the bot-detection list with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Next.js.
+
+### Option 1 — Self-managed `middleware.ts`
+
+Edit your `middleware.ts` file to include custom substrings in the bot-detection regex:
+
+```typescript
+const BOT_AGENTS = [
+  // Canonical crawlers (from shared/crawler-ua-regex.md)
+  // ... all entries from the canonical list ...
+  // Custom entries:
+  'mycompany-crawler',
+  'internal-spider',
+  'audit-bot'
+];
+const BOT_AGENTS_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
+
+export function middleware(request: NextRequest) {
+  const userAgent = request.headers.get('user-agent')?.toLowerCase() || '';
+  
+  if (BOT_AGENTS_RE.test(userAgent)) {
+    // Proxy to renderer
+  }
+}
+```
+
+Use plain-text substrings, not regex patterns. The `RegExp(..., 'i')` flag applies case-insensitive matching.
+
+### Option 2 — `seo-middleware-nextjs` package
+
+Use the `botAgents` option when initializing the middleware:
+
+```typescript
+import { SEOMiddleware } from 'seo-middleware-nextjs';
+
+export const config = {
+  matcher: ['/:path*']
+};
+
+export async function middleware(request: NextRequest) {
+  const seo = new SEOMiddleware({
+    auth: process.env.OSTR_AUTH!,
+    botAgents: ['mycompany-crawler', 'internal-spider', 'audit-bot']
+  });
+  
+  return seo.middleware(request);
+}
+```
+
+Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
+
+See the [`seo-middleware-nextjs` README](https://github.com/veliovgroup/seo-middleware-nextjs#readme) for complete usage examples and all available options.
+
 ## Validation
 
 Bot request should return a pre-rendered snapshot with `X-Prerender-Id`:

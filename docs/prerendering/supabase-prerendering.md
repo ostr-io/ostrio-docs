@@ -100,6 +100,41 @@ curl -sI 'https://example.com/some-page?_escaped_fragment_='
 
 Inside the Supabase Studio **Edge Functions → Logs** panel, bot requests should show a single outbound `fetch` to `render.ostr.io`; visitor requests should show a single outbound `fetch` to `ROOT_URL`.
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend the bot-detection array in your `shared.ts` with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Supabase.
+
+Edit `supabase/functions/_shared/ostr.ts` to extend the `BOT_AGENTS` array:
+
+```typescript
+const BOT_AGENTS = [
+  // Canonical crawlers (from shared/crawler-ua-regex.md)
+  '\\.net crawler', '360spider', '50\\.nu', '8bo crawler bot', 'aboundex', 'accoona',
+  // ... all existing entries ...
+  'youbot',
+  // Custom entries:
+  'mycompany-crawler',
+  'internal-spider',
+  'audit-bot'
+];
+
+export const BOT_AGENTS_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
+```
+
+Use plain-text substrings and escape regex special characters for literal matching:
+
+```typescript
+const BOT_AGENTS = [
+  // ... existing entries ...
+  'youbot',
+  'mycompany-crawler',
+  'internal-spider\\.bot',  // literal dot
+  'audit\\+pro'              // literal plus
+];
+```
+
+Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected. Redeploy the function after editing.
+
 ## Common issues
 
 - **Domain mismatch from renderer** — the ostr.io renderer only accepts registered domains. Always build `renderTarget` from `ROOT_URL`, never from the request host (preview URLs, the raw `*.supabase.co` hostname, or a custom domain still propagating will be rejected).

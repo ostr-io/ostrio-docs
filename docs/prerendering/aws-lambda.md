@@ -113,6 +113,24 @@ Direct renderer smoke test:
 curl -v -H "Authorization: Basic dGVzdDp0ZXN0" "https://render-bypass.ostr.io/?url=https://example.com"
 ```
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend the bot-detection regex in your CloudFront Function with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in AWS Lambda@Edge.
+
+Edit the `cloudfront-viewer-request.js` CloudFront Function to extend the `CRAWLER_UA_RE` regex:
+
+```javascript
+const CRAWLER_UA_RE = /\.net crawler|360spider|...|zyborg|ai2bot|amazonbot|xai|youbot|mycompany-crawler|internal-spider|audit-bot/i;
+```
+
+Append your custom substrings at the end of the pattern, before the closing `/i;` flag. Use plain-text substrings and escape regex special characters:
+
+```javascript
+const CRAWLER_UA_RE = /\.net crawler|360spider|...|youbot|mycompany-crawler|internal-spider\.bot|audit\+pro/i;
+```
+
+Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected. Publish the updated function version, associate it with the CloudFront distribution, and invalidate the cache after deployment.
+
 ## Common issues
 
 - **Bot gets human HTML** - `X-Ostr-Prerender` is not in the cache key, the CloudFront Function is not associated with viewer-request, or CloudFront cache was not invalidated after deployment.

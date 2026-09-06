@@ -110,6 +110,37 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 
 See the full [step-by-step tutorial](examples/cloudflare-worker/coudflare-worker-guide.md) with screenshots.
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, extend the `BOT_AGENTS` array in your Worker script with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in your Worker.
+
+If you copied the [ES Module Worker example](examples/cloudflare-worker/cloudflare.worker.js), modify the `BOT_AGENTS` array near the top:
+
+```javascript
+const BOT_AGENTS = [
+  // ... existing canonical entries from shared/crawler-ua-regex.md ...
+  'zyborg', 'ai2bot', 'amazonbot',
+  // ... then add your custom entries:
+  'mycompany-crawler',
+  'internal-spider',
+  'seo-audit-bot'
+];
+const BOT_AGENTS_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
+```
+
+Use plain-text substrings, not regex patterns. The `RegExp(..., 'i')` flag applies case-insensitive matching. If your custom substrings contain regex special characters like `.`, `+`, or `(`, escape them with `\\`:
+
+```javascript
+const BOT_AGENTS = [
+  // ... existing entries ...
+  'mycompany-crawler',
+  'internal-spider\\.bot',  // literal dot
+  'audit\\+pro'              // literal plus
+];
+```
+
+Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected. Rebuild and deploy the Worker after editing.
+
 ## Related
 
 - [Shopify via Cloudflare Worker](shopify-seo-integration.md) — Shopify-specific variant

@@ -34,6 +34,26 @@ The legacy `_escaped_fragment_` crawling scheme was [deprecated by Google in 201
 
 Modern crawlers rely on the User-Agent check that `ostrio:spiderable-middleware` performs automatically, so this markup is **not required** for Googlebot, Bingbot, facebookexternalhit, meta-externalagent, AI fetchers, or any crawler that advertises itself via User-Agent.
 
+## Add custom crawlers to the bot list
+
+To treat additional crawlers as bots, use the `botsUA` option when initializing the package. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Meteor.
+
+In your app's server code, pass custom User-Agent substrings to the middleware initialization:
+
+```javascript
+import { WebApp } from 'meteor/webapp';
+import Spiderable from 'ostrio:spiderable-middleware';
+
+new Spiderable({
+  auth: 'username:password',
+  botsUA: ['mycompany-crawler', 'internal-spider', 'audit-bot']
+});
+```
+
+Use plain-text substrings, not regex patterns. The middleware applies case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
+
+For complete usage examples and all available options, see the [`ostrio:spiderable-middleware` on Atmosphere](https://atmospherejs.com/ostrio/spiderable-middleware) and the [package README](https://github.com/veliovgroup/spiderable-middleware#readme) on GitHub.
+
 ## Related
 
 For Meteor apps deployed behind a reverse proxy or CDN, you can also enable pre-rendering without adding the Atmosphere package:

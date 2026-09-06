@@ -252,20 +252,20 @@ If response is wrong, check in this order:
 
 To treat additional crawlers as bots, extend the bot-detection map with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Nginx.
 
-Add a new `map` directive in the `http` context alongside the canonical bot map:
+Extend the existing `$is_webbot` map regex in the `http` context to include custom patterns:
 
 ```nginx
-map $http_user_agent $is_custom_bot {
+map $http_user_agent $is_webbot {
   default 0;
-  "~*(?:mycompany-crawler|internal-spider)" 1;
+  "~*(?:\.net crawler|360spider|50\.nu|[... existing canonical patterns ...]|mycompany-crawler|internal-spider)" 1;
 }
 ```
 
-Then update your location block to check both the canonical and custom bot variables:
+Then use the standard bot check in your location block:
 
 ```nginx
 location / {
-  if ($is_webbot = 1 || $is_custom_bot = 1) {
+  if ($is_webbot = 1) {
     return 454;
   }
 
@@ -277,4 +277,4 @@ location / {
 }
 ```
 
-Use plain-text substrings, not regex patterns. Nginx applies case-insensitive matching via the `~*` flag. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
+Use plain-text substrings at the end of the canonical regex, not separate map directives. Nginx applies case-insensitive matching via the `~*` flag. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.

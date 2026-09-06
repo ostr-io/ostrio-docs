@@ -86,23 +86,21 @@ Use plain-text substrings, not regex patterns. The `RegExp(..., 'i')` flag appli
 
 ### Option 2 — `seo-middleware-nextjs` package
 
-Use the `botAgents` option when initializing the middleware:
+Use the `botAgents` option when initializing the middleware. Call `createMiddleware()` to get the ready-made handler:
 
 ```typescript
 import { SEOMiddleware } from 'seo-middleware-nextjs';
 
+const seoMiddleware = new SEOMiddleware({
+  auth: process.env.OSTR_AUTH!,
+  botAgents: ['mycompany-crawler', 'internal-spider', 'audit-bot']
+});
+
+export const middleware = seoMiddleware.createMiddleware();
+
 export const config = {
   matcher: ['/:path*']
 };
-
-export async function middleware(request: NextRequest) {
-  const seo = new SEOMiddleware({
-    auth: process.env.OSTR_AUTH!,
-    botAgents: ['mycompany-crawler', 'internal-spider', 'audit-bot']
-  });
-  
-  return seo.middleware(request);
-}
 ```
 
 Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.

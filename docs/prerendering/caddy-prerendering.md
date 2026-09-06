@@ -206,13 +206,7 @@ Use the `render-bypass.ostr.io` endpoint temporarily if you suspect cached resul
 
 To treat additional crawlers as bots, extend the bot-detection matcher with custom User-Agent substrings. The canonical crawler list is in [shared/crawler-ua-regex.md](shared/crawler-ua-regex.md). This section shows how to add custom entries in Caddy.
 
-Add a new `@is_custom_bot` matcher block in your Caddyfile:
-
-```caddyfile
-@is_custom_bot header_regexp User-Agent (?i)(mycompany-crawler|internal-spider)
-```
-
-Then combine it with your existing prerender matchers using the comma syntax:
+Extend the existing bot-detection matcher by combining the canonical patterns with custom substrings in a single `header_regexp` matcher:
 
 ```caddyfile
 # Prerender on crawler detection (canonical + custom)
@@ -220,23 +214,13 @@ Then combine it with your existing prerender matchers using the comma syntax:
 
 handle @is_crawler {
   rewrite * /render/https://{host}{uri}
-  reverse_proxy localhost:3000 {
-    header_uri Authorization "Basic $OSTR_AUTH"
+  reverse_proxy https://render.ostr.io {
+    header_up Authorization "{vars.OSTR_AUTH}"
   }
 }
 ```
 
-Alternatively, define custom matchers separately and combine them in the route:
-
-```caddyfile
-@is_canonical_bot header_regexp User-Agent "(?i)(pattern-from-shared-regex)"
-@is_custom_bot header_regexp User-Agent "(?i)(mycompany-crawler|internal-spider)"
-
-handle @is_canonical_bot,@is_custom_bot {
-  rewrite * /render/https://{host}{uri}
-  reverse_proxy localhost:3000
-}
-```
+The `handle` directive accepts exactly one matcher token. Combine custom patterns directly in the regex alternation instead of using comma-separated matcher names. Always use `header_up` (not `header_uri`) in the `reverse_proxy` block to forward headers upstream.
 
 Use plain-text substrings in the regex, escaped for `(?i)` case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
 

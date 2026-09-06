@@ -201,7 +201,7 @@ Then use the `is_bot` environment variable in your rewrite conditions:
 ```apache
 RewriteCond %{ENV:is_bot} ^1$ [OR]
 RewriteCond %{HTTP_USER_AGENT} "(?i)pattern-from-shared-regex" [NC]
-RewriteRule ^(.*)$ https://render.ostr.io/render/https://%{HTTP_HOST}%{REQUEST_URI} [P,E=OSTR_PRERENDER:1]
+RewriteRule ^(.*)$ https://render.ostr.io/render/%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI} [P,END,E=OSTR_PRERENDER:1]
 ```
 
-Use plain-text substrings for custom entries. The `[NC]` flag applies case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.
+Use plain-text substrings for custom entries. The `[NC]` flag applies case-insensitive matching. The `[END]` flag stops further rewrite processing. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.

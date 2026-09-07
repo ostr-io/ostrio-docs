@@ -14,6 +14,10 @@ General account features
 - [Add phone number(s) for SMS notifications](https://github.com/ostr-io/ostrio-docs/blob/master/docs/account/add-notification-phone-number.md)
 - [Account Removal](https://github.com/ostr-io/ostrio-docs/blob/master/docs/account/account-removal.md)
 
+## Billing and Plans
+
+- [Plans and Pricing](pricing.md)
+
 ## Additional account features
 
 - [Tips'n'Tricks](https://github.com/ostr-io/ostrio-docs/blob/master/docs/account/tips-and-tricks.md)

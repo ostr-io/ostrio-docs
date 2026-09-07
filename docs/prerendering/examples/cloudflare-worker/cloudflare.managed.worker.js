@@ -1,7 +1,10 @@
 // ostr.io MANAGED Cloudflare Worker — uploaded by ostr.io through the customer's OAuth
 // grant as the script `ostrio-prerender` (roadmap plan 3). DO NOT EDIT IN THE CLOUDFLARE
-// DASHBOARD: every install and every settings change re-uploads this exact body, so a hand
-// edit is silently reverted. The customer-adjustable parts are the two bindings below.
+// DASHBOARD: only an install re-uploads this body (`uploadWorker`); a UA-list or path-rule
+// change is a settings PATCH that leaves the body alone, so a hand edit is not reverted —
+// it survives until the recurring recheck hashes the deployed script, flags `script-changed`
+// and marks the integration `drifted`. The customer-adjustable parts are the two bindings
+// below.
 //
 // Bindings, set by ostr.io on upload (`imports/server/cloudflare/install.js`):
 //   OSTR_AUTH            secret_text  `Basic <base64 prerenderId:password>` gateway auth

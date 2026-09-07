@@ -1,6 +1,6 @@
 # Plans and Pricing
 
-Choose the plan that fits your needs. Every plan comes with a 30-day free trial, followed by a 14-day grace period if you don't select a paid plan.
+Choose the plan that fits your needs. Every new account starts with a **Free** plan for 30 days, followed by a 14-day grace period if you don't select a paid plan. Paid plans are charged once your domain's connection is confirmed — no separate trial period.
 
 ## Plans Overview
 
@@ -73,7 +73,7 @@ Every new account starts with a **Free** plan for 30 days:
 - 0 SMS messages
 - 1 WebSec check per day
 
-After 30 days, you enter a **14-day grace period**. During grace, your domains keep running at their existing plan level while you decide on a paid plan. After grace ends without a selection, your domains are parked (pre-rendering returns no response, other services pass through to origin).
+After 30 days, you enter a **14-day grace period**. During grace, your domains keep running at their existing plan level while you decide on a paid plan. After grace ends without a selection, your domains are parked: pre-rendering requests pass through directly to your origin with no rendering or caching, and other metered services skip the metered unit of work.
 
 **You are only charged after your domain's connection is confirmed.** During the free trial and grace period, no payment is required. Once you select a paid plan, we charge only after Stripe confirms your payment method and your domain is actively connected.
 
@@ -101,13 +101,13 @@ The currency is locked to your first subscription or balance credit based on you
 
 ## Free Tier and Legacy AppSumo Accounts
 
-**Free Forever**: The Free plan includes 2,000 renders per month, forever. No payment required, no trial expiration.
+**AppSumo Lifetime Licenses**: If you purchased an ostr.io lifetime license through AppSumo, you can opt in to migrate to a frozen Lifetime plan (Lifetime Hobby or Lifetime Pro) during onboarding. Once migrated, your monthly allowance does not change when the paid-plan pricing updates and you are not charged. Accounts that have not opted in remain on the legacy pre-paid model.
 
-**AppSumo Lifetime Licenses**: If you purchased an ostr.io lifetime license through AppSumo, your account is on a frozen Lifetime plan (Lifetime Hobby or Lifetime Pro). Your monthly allowance does not change when the paid-plan pricing updates. Lifetime accounts are not charged.
+**WebSec Check Frequency Note**: Customers converting from legacy Hobby/Pro plans to the new pricing model should be aware that WebSec check frequency may decrease: legacy Hobby/Pro plans included 6 checks per day, while the new Hobby plan includes 2 checks per day and the new Pro plan includes 4 checks per day. Lifetime plans retain the legacy cadence of 6 checks per day.
 
 ## Changing Plans
 
-You can upgrade, downgrade, or change the size of your plan at any time. Plan changes take effect immediately and reset your billing cycle.
+You can upgrade, downgrade, or change the size of your plan at any time. Plan changes take effect immediately and adjust your charges mid-cycle (adding or removing headroom) without resetting your billing cycle. A fresh billing cycle only begins after your domain exhausts its monthly allowance and you purchase a new plan to restart service.
 
 ## Related
 

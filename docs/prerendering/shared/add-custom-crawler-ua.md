@@ -2,6 +2,14 @@
 
 Extend the built-in list of recognized crawlers with your own custom user-agent substrings.
 
+## Contents
+
+- [Overview](#overview)
+- [How It Works](#how-it-works)
+- [Limits](#limits)
+- [Implementation](#implementation)
+- [Important Notes](#important-notes)
+
 ## Overview
 
 When you integrate pre-rendering into your site, ostr.io automatically detects requests from search engines, social networks, AI/LLM crawlers, and other bots using a [canonical crawler user-agent regex](crawler-ua-regex.md). In some cases — for instance, if your company runs a private SEO audit tool or a custom spider — you may want to add your own patterns to the detection list.
@@ -20,99 +28,38 @@ No regex syntax is supported — entries are treated as plain text substrings, a
 
 ## Limits
 
-- **Maximum 64 custom entries** per domain or per config file.
+- **Maximum 64 custom entries** per domain.
 - **Maximum 128 characters per entry**, ASCII printable (letters, numbers, spaces, and common punctuation).
-- Empty strings are ignored.
+- **Empty strings**: The ostr.io dashboard and API reject empty entries with an `empty-entry` validation error. If parsing a legacy or manually-edited value, empty strings are ignored defensively.
 
 ## Implementation
 
 ### Cloudflare Worker (Plan 3 OAuth Installs)
 
-If you connected pre-rendering through ostr.io's one-click Cloudflare Worker setup (Plan 3), edit your custom crawler user-agents in the **ostr.io dashboard**. Navigate to your domain's pre-rendering settings, locate the "Custom crawler user-agents" field, and add your entries one per line or as a JSON array.
+If you connected pre-rendering through ostr.io's one-click Cloudflare Worker setup (Plan 3), edit your custom crawler user-agents in the **ostr.io dashboard**. Navigate to your domain's pre-rendering settings, locate the "Custom crawler user-agents" field, and add your entries one per submission into the chip list.
 
 The Worker receives these entries via the `OSTR_EXTRA_BOT_UAS` binding and merges them with the canonical list on startup. No Worker code changes are needed.
 
-### Manual Cloudflare Worker / Middleware Integrations
+### Manual Cloudflare Worker
 
-If you manage the Worker or middleware yourself, add custom crawlers to your configuration:
+If you manage the Worker yourself, add custom substrings to the `BOT_AGENTS` array. See the [manual Cloudflare Worker example](../examples/cloudflare-worker/cloudflare.worker.js) for the current bot-agent initialization and add your custom entries as plain-text substrings.
 
-**Manual Cloudflare Worker** (edit `cloudflare.worker.js`):
+### Node.js and Meteor.js Middleware
 
-```javascript
-// Example: add custom substrings to the BOT_AGENTS array
-const BOT_AGENTS = [
-  // ... canonical entries from cloudflare.worker.js:39 ...
-  'mycompany-crawler',
-  'seo-audit-bot',
-  'internal-monitoring-bot'
-];
-const BOT_AGENTS_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
-```
+Both the [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware) (Node.js) and [`ostrio:spiderable-middleware`](https://atmospherejs.com/ostrio/spiderable-middleware) (Meteor.js) packages accept a `botsUA` option to extend the bot list. Pass an array of custom substrings to merge with the canonical regex. See the package documentation for setup and configuration.
 
-**Node.js `spiderable-middleware`**:
+### Server-Level Integration (Nginx, Apache)
 
-```javascript
-const { Spiderable } = require('spiderable-middleware');
+For per-path or per-request routing in Nginx, Apache, or other reverse proxies, follow the canonical integration guides:
 
-new Spiderable({
-  botsUA: [
-    // ... defaults from the canonical regex ...
-    'mycompany-crawler',
-    'seo-audit-bot',
-    'internal-monitoring-bot'
-  ]
-});
-```
-
-**Meteor.js `ostrio:spiderable-middleware`**:
-
-```javascript
-new Spiderable({
-  botsUA: [
-    // ... defaults from the canonical regex ...
-    'mycompany-crawler',
-    'seo-audit-bot',
-    'internal-monitoring-bot'
-  ]
-});
-```
-
-**nginx**:
-
-```nginx
-map $http_user_agent $is_crawler {
-  default 0;
-  ~*ahrefsbot|googlebot|mycompany-crawler|seo-audit-bot 1;
-}
-```
-
-For a complete nginx example, see [`docs/prerendering/nginx.md`](../nginx.md).
-
-**Apache**:
-
-```apache
-# In .htaccess or <VirtualHost>
-BrowserMatch "ahrefsbot|googlebot|mycompany-crawler|seo-audit-bot" is_crawler
-```
-
-For a complete Apache example, see [`docs/prerendering/apache.md`](../apache.md).
+- **[Nginx Integration](../nginx.md)** — the guide includes how to extend the bot-detection `map` directive with custom entries.
+- **[Apache Integration](../apache.md)** — use `BrowserMatch` or `BrowserMatchNoCase` directives to add custom UA patterns.
 
 ### Next.js Middleware
 
-If you use Next.js middleware, add your custom entries to the UA detection:
+Use the [`seo-middleware-nextjs`](https://github.com/veliovgroup/seo-middleware-nextjs) package for a maintained Next.js integration. The `botAgents` option accepts an array of custom substrings to merge with the built-in list. See the [package documentation](https://github.com/veliovgroup/seo-middleware-nextjs?tab=readme-ov-file#seo-middleware-for-nextjs) for setup and options.
 
-```typescript
-// middleware.ts
-const CUSTOM_BOT_UAS = ['mycompany-crawler', 'seo-audit-bot'];
-const ALL_BOT_UAS = [...canonicalBotList, ...CUSTOM_BOT_UAS];
-const BOT_AGENTS_RE = new RegExp(ALL_BOT_UAS.join('|'), 'i');
-
-if (BOT_AGENTS_RE.test(userAgent)) {
-  // Forward to pre-rendering
-}
-```
-
-For a complete Next.js example, see [`docs/prerendering/nextjs-prerendering.md`](../nextjs-prerendering.md).
+Alternatively, implement the detection yourself in a self-managed `middleware.ts` — see [`docs/prerendering/nextjs-prerendering.md`](../nextjs-prerendering.md) for examples.
 
 ## Important Notes
 

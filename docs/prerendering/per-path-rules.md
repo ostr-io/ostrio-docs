@@ -2,6 +2,15 @@
 
 Configure pre-rendering behavior on a per-path basis — choose which paths get pre-rendered, strip query parameters, force pre-rendering for non-bot requests, and select the cache mode.
 
+## Contents
+
+- [Overview](#overview)
+- [Rule Semantics](#rule-semantics)
+- [Rule Keys](#rule-keys)
+- [Implementation](#implementation)
+- [Examples](#examples)
+- [Important Notes](#important-notes)
+
 ## Overview
 
 Per-path rules let you fine-tune pre-rendering on specific URL patterns within your domain. For example:
@@ -19,12 +28,13 @@ Path matching uses **glob patterns** (not regular expressions):
 
 - `*` matches any sequence of characters
 - Anchored at the start of the path
+- No end-anchor — patterns match as a prefix of the path
 - Case-insensitive
 - Examples:
   - `/admin/*` matches `/admin/`, `/admin/users`, `/admin/users/create`, etc.
   - `/products/*` matches `/products/laptop`, `/products/monitor`, etc.
   - `/api/*` matches `/api/users`, `/api/data`, etc.
-  - `/search` matches only `/search` (exact)
+  - `/search` matches `/search`, `/searching`, `/search/page`, and any path starting with `/search` (prefix match, no end-anchor)
 
 ## Rule Keys
 
@@ -49,100 +59,17 @@ The Worker receives these rules via the `OSTR_PATH_RULES` binding and evaluates 
 
 ### Manual Cloudflare Worker
 
-Edit your Worker to include path rules. The example Worker already contains the parsing and evaluation logic:
+If you manage your own Cloudflare Worker code, add per-path-rule logic by implementing path matching and rule evaluation. The managed Cloudflare Worker template (included in Plan 3 OAuth installs) contains the full `pathRulesFor()` and `matchRule()` implementation. For a self-managed Worker, refer to the template's logic in [`examples/cloudflare-worker/cloudflare.managed.worker.js`](examples/cloudflare-worker/cloudflare.managed.worker.js) and port the pattern-matching and rule-evaluation functions to your own code.
 
-```javascript
-// In cloudflare.worker.js, define your rules:
-const OSTR_PATH_RULES = `[
-  {"match": "/admin/*", "render": false},
-  {"match": "/docs/*", "force": true},
-  {"match": "/search", "ignoreGetQuery": true},
-  {"match": "/products/*", "stripParams": ["utm_*", "fbclid", "gclid"]},
-  {"match": "/status/*", "endpoint": "render-bypass"}
-]`;
+### Nginx, Apache, and Application-Level Integrations
 
-// The Worker's buildPathRules() and matchRule() functions handle parsing and evaluation
-const rule = matchRule(pathRulesFor(OSTR_PATH_RULES), url.pathname.toLowerCase());
-```
+For per-path routing in Nginx, Apache, Next.js, and other stacks, follow the canonical integration guides linked below. Each guide covers how to route requests based on path patterns:
 
-For the complete Worker example, see [`docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js`](examples/cloudflare-worker/cloudflare.worker.js).
+- **[Nginx Integration](nginx.md)** — use `location` blocks and `map` directives to route requests; see the "Shared Building Blocks" section for base configuration.
+- **[Apache Integration](apache.md)** — use `RewriteCond` and environment variables to route requests conditionally.
+- **[Next.js Integration](nextjs-prerendering.md)** — implement per-path logic in `middleware.ts` or use the `seo-middleware-nextjs` package, which supports path-based configuration.
 
-### Nginx
-
-Map paths to pre-rendering behavior using `location` and `set` directives:
-
-```nginx
-location /admin/ {
-  # Skip pre-rendering for admin paths
-  set $prerender 0;
-}
-
-location /docs/ {
-  # Force pre-rendering
-  set $force_prerender 1;
-}
-
-location /products/ {
-  # Use aggressive cache
-  set $prerender_endpoint "render-cache";
-}
-
-# Main pre-rendering check
-if ($prerender = 1) {
-  proxy_pass http://prerender.ostr.io/?url=$scheme://$http_host$request_uri;
-}
-```
-
-For a complete Nginx example, see [`docs/prerendering/nginx.md`](nginx.md).
-
-### Apache
-
-Use `RewriteCond` to match paths and set environment variables:
-
-```apache
-# Skip pre-rendering for admin paths
-RewriteCond %{REQUEST_URI} ^/admin/
-RewriteRule ^(.*)$ - [env=skip_prerender:1,L]
-
-# Force pre-rendering for docs
-RewriteCond %{REQUEST_URI} ^/docs/
-RewriteRule ^(.*)$ - [env=force_prerender:1,L]
-```
-
-For a complete Apache example, see [`docs/prerendering/apache.md`](apache.md).
-
-### Next.js Middleware
-
-Add path-based logic to your `middleware.ts`:
-
-```typescript
-import { NextRequest, NextResponse } from 'next/server';
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const userAgent = request.headers.get('User-Agent') || '';
-  
-  // Skip pre-rendering for admin paths
-  if (pathname.startsWith('/admin/')) {
-    return NextResponse.next();
-  }
-  
-  // Force pre-rendering for /docs even if not a bot
-  if (pathname.startsWith('/docs/')) {
-    // Forward to pre-rendering endpoint
-  }
-  
-  // Strip tracking params for /products
-  if (pathname.startsWith('/products/')) {
-    const url = request.nextUrl;
-    url.searchParams.delete('utm_source');
-    url.searchParams.delete('utm_medium');
-    // Forward modified URL
-  }
-}
-```
-
-For a complete Next.js example, see [`docs/prerendering/nextjs-prerendering.md`](nextjs-prerendering.md).
+For manual integrations not covered by a specific guide, implement per-path rules using the same pattern as the canonical configs: detect the path, check your rule set, and route or transform the request accordingly.
 
 ## Examples
 

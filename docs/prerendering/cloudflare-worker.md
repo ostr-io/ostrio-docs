@@ -98,6 +98,13 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 - *Modern and recommended:* [ES Module Worker](examples/cloudflare-worker/cloudflare.worker.js)
 - *Legacy:* [Event Listener Worker](examples/cloudflare-worker/cloudflare-listener.worker.js)
 
+## How it handles errors
+
+The Worker forwards crawler requests to the ostr.io rendering gateway. If the gateway is unavailable or returns an error (HTTP 4xx/5xx), the Worker automatically falls back to the origin server, ensuring your site remains visible to search engines even during gateway outages or authentication issues.
+
+- Gateway response 2xx/3xx → returned as-is to the crawler (success, redirects preserved)
+- Gateway response 4xx/5xx or fetch timeout → origin server is queried instead
+
 ## How to set it up
 
 1. Sign up / log in to [Cloudflare](https://dash.cloudflare.com/sign-up), add your domain, and switch nameservers.

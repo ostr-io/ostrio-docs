@@ -14,9 +14,24 @@ addEventListener('fetch', (e) => {
     const headers = new Headers(request.headers);
     headers.set('Authorization', OSTR_AUTH);
 
-    e.respondWith(fetch(new Request(`https://render.ostr.io/?url=${request.url}&bot=${userAgent}`, {
-      headers: headers,
-      redirect: 'manual',
-    })));
+    e.respondWith((async () => {
+      try {
+        const response = await fetch(new Request(`https://render.ostr.io/?url=${request.url}&bot=${userAgent}`, {
+          headers: headers,
+          redirect: 'manual',
+        }));
+
+        // Fall back to origin on non-2xx/non-3xx responses; 3xx redirects intentionally pass through
+        if (response.status >= 200 && response.status < 400) {
+          return response;
+        }
+
+        console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway returned', response.status, ', falling back to origin');
+        return fetch(request);
+      } catch (fetchError) {
+        console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway fetch failed, falling back to origin:', fetchError);
+        return fetch(request);
+      }
+    })());
   }
 });

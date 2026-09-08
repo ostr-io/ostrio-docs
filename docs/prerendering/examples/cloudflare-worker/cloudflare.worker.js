@@ -120,12 +120,20 @@ export default {
     }
 
     try {
-      return fetch(new Request(`${DICT.service.renderBase}${encodeURIComponent(fetchUrl)}${DICT.args.bot}${encodeURIComponent(userAgent)}`, {
+      const response = await fetch(new Request(`${DICT.service.renderBase}${encodeURIComponent(fetchUrl)}${DICT.args.bot}${encodeURIComponent(userAgent)}`, {
         headers: headers,
         redirect: DICT.manual,
       }));
+
+      // Fall back to origin on non-2xx/non-3xx responses; 3xx redirects intentionally pass through
+      if (response.status >= 200 && response.status < 400) {
+        return response;
+      }
+
+      console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway returned', response.status, ', falling back to origin');
+      return fetch(request);
     } catch (fetchError) {
-      console.warn('[CloudFlare Worker] [pre-rendering] [fetch] REDIRECT TO ostr.io FIALED WITH fetchError:', fetchError);
+      console.warn('[CloudFlare Worker] [pre-rendering] [fetch] REDIRECT TO ostr.io FAILED WITH fetchError:', fetchError);
       return fetch(request);
     }
   }

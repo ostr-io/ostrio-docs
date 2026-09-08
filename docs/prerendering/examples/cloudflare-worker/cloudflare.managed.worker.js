@@ -338,10 +338,24 @@ export default {
       }
 
       console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway returned', response.status, ', falling back to origin');
-      return fetch(request);
+      const originResponse = await fetch(request);
+      const responseWithHeader = new Response(originResponse.body, {
+        status: originResponse.status,
+        statusText: originResponse.statusText,
+        headers: new Headers(originResponse.headers)
+      });
+      responseWithHeader.headers.set('X-Prerender-Reason', `worker-fallback-${response.status}`);
+      return responseWithHeader;
     } catch (fetchError) {
       console.warn('[CloudFlare Worker] [pre-rendering] [fetch] REDIRECT TO ostr.io FAILED WITH fetchError:', fetchError);
-      return fetch(request);
+      const originResponse = await fetch(request);
+      const responseWithHeader = new Response(originResponse.body, {
+        status: originResponse.status,
+        statusText: originResponse.statusText,
+        headers: new Headers(originResponse.headers)
+      });
+      responseWithHeader.headers.set('X-Prerender-Reason', 'worker-fallback-error');
+      return responseWithHeader;
     }
   }
 };

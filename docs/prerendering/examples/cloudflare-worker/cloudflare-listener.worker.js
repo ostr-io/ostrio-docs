@@ -27,10 +27,24 @@ addEventListener('fetch', (e) => {
         }
 
         console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway returned', response.status, ', falling back to origin');
-        return fetch(request);
+        const originResponse = await fetch(request);
+        const responseWithHeader = new Response(originResponse.body, {
+          status: originResponse.status,
+          statusText: originResponse.statusText,
+          headers: new Headers(originResponse.headers)
+        });
+        responseWithHeader.headers.set('X-Prerender-Reason', `worker-fallback-${response.status}`);
+        return responseWithHeader;
       } catch (fetchError) {
         console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway fetch failed, falling back to origin:', fetchError);
-        return fetch(request);
+        const originResponse = await fetch(request);
+        const responseWithHeader = new Response(originResponse.body, {
+          status: originResponse.status,
+          statusText: originResponse.statusText,
+          headers: new Headers(originResponse.headers)
+        });
+        responseWithHeader.headers.set('X-Prerender-Reason', 'worker-fallback-error');
+        return responseWithHeader;
       }
     })());
   }

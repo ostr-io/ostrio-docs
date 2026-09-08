@@ -105,6 +105,13 @@ The Worker forwards crawler requests to the ostr.io rendering gateway. If the ga
 - Gateway response 2xx/3xx → returned as-is to the crawler (success, redirects preserved)
 - Gateway response 4xx/5xx or fetch timeout → origin server is queried instead
 
+When falling back to the origin, the Worker attaches a marker header to the response so external verification tools can distinguish "gateway refused this route" from "this route is completely broken and never reached ostr.io":
+
+- On gateway error status (4xx/5xx): `X-Prerender-Reason: worker-fallback-<status>` (e.g. `worker-fallback-403`, `worker-fallback-429`)
+- On gateway fetch failure (network error, timeout): `X-Prerender-Reason: worker-fallback-error`
+
+The origin's response body, status, and other headers pass through completely unmodified — only this marker header is added to signal that the Worker executed and attempted to reach the gateway.
+
 ## How to set it up
 
 1. Sign up / log in to [Cloudflare](https://dash.cloudflare.com/sign-up), add your domain, and switch nameservers.

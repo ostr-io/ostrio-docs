@@ -19,7 +19,7 @@ ostr.io offers three plan types — **Hobby**, **Pro**, and **Business** — eac
 | No-delay first request | Not available | Yes | Yes |
 | Signals API / webhooks | Not available | Yes | Yes |
 | WebSec check cadence | 2 times per day | 4 times per day | 6 times per day |
-| Personalized invoicing | Not available | Not available | Yes |
+| Personalized invoicing | Not available | Not available | Not available |
 
 ### Metered Volumes (×1 base bundles)
 

@@ -31,7 +31,7 @@ Use __any__ standard or custom status codes:
 <meta name="response:status-code" content="514"> <!-- non-standard -->
 ```
 
-Through the ostr.io Cloudflare Worker examples (2026-09-09 and later), a rendered status is passed to the crawler unchanged; only the gateway's own error responses fall back to your origin.
+Through the ostr.io Cloudflare Worker examples (2026-09-09 and later), a rendered status is passed to the crawler unchanged; only the gateway's own error responses, and a 5xx from the infrastructure in front of it, fall back to your origin.
 
 ## Set Genuine Response Code via HTML Comment
 

@@ -117,6 +117,17 @@ const isGatewayError = async (response) => {
   }
 };
 
+// ANYTHING IN FRONT OF THE ostr.io GATEWAY (ITS EDGE PROXY WHILE THE GATEWAY IS DOWN, A CLOUDFLARE
+// 52x/1xxx ERROR PAGE) ANSWERS WITHOUT A SINGLE `X-Prerender-*` HEADER, BECAUSE THE REQUEST NEVER
+// REACHED ostr.io CODE. A RENDERED PAGE ALWAYS CARRIES `X-Prerender-Id` (AND `X-Prerender-Cache`),
+// WHATEVER STATUS IT DECLARES. A 5xx WITH NEITHER IS NOT A RENDER: FALL BACK TO YOUR ORIGIN.
+// 4xx IS DELIBERATELY NOT COVERED — A RENDERED 404/410/451 MUST REACH THE CRAWLER
+const isFrontError = (response) => (
+  response.status >= 500 &&
+  !response.headers.get('X-Prerender-Id') &&
+  !response.headers.get('X-Prerender-Cache')
+);
+
 const withFallbackMarker = async (request, marker) => {
   const originResponse = await fetch(request);
   const responseWithHeader = new Response(originResponse.body, {
@@ -172,8 +183,9 @@ export default {
         return response;
       }
 
-      if (await isGatewayError(response)) {
-        console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway error', response.status, ', falling back to origin');
+      const fallbackCause = isFrontError(response) ? 'Edge error (no ostr.io headers)' : ((await isGatewayError(response)) ? 'Gateway error' : null);
+      if (fallbackCause) {
+        console.warn('[CloudFlare Worker] [pre-rendering] [fetch]', fallbackCause, response.status, ', falling back to origin');
         return withFallbackMarker(request, `worker-fallback-${response.status}`);
       }
 

@@ -317,6 +317,20 @@ const isGatewayError = async (response) => {
   }
 };
 
+/*
+ * Gap fix (2026-09-09). Anything in FRONT of the gateway answers without a single `X-Prerender-*`
+ * header, because the request never reached ostr.io code: HAProxy's own 503 while the gateway is
+ * down, a Cloudflare 52x/1xxx error page on the ostr.io zone. A rendered page always carries
+ * `X-Prerender-Id` (and `X-Prerender-Cache`), whatever status it declares. So a 5xx that carries
+ * neither is not a render — fall back to the origin, as every Worker did before C-1.
+ * 4xx is deliberately NOT covered: a rendered 404/410/451 must reach the crawler.
+ */
+const isFrontError = (response) => (
+  response.status >= 500 &&
+  !response.headers.get('X-Prerender-Id') &&
+  !response.headers.get('X-Prerender-Cache')
+);
+
 const withFallbackMarker = async (request, marker) => {
   const originResponse = await fetch(request);
   const responseWithHeader = new Response(originResponse.body, {
@@ -380,8 +394,9 @@ export default {
         return response;
       }
 
-      if (await isGatewayError(response)) {
-        console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway error', response.status, ', falling back to origin');
+      const fallbackCause = isFrontError(response) ? 'Edge error (no ostr.io headers)' : ((await isGatewayError(response)) ? 'Gateway error' : null);
+      if (fallbackCause) {
+        console.warn('[CloudFlare Worker] [pre-rendering] [fetch]', fallbackCause, response.status, ', falling back to origin');
         return withFallbackMarker(request, `worker-fallback-${response.status}`);
       }
 

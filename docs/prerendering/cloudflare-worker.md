@@ -100,19 +100,20 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 
 ## How it handles errors
 
-The Worker forwards crawler requests to the ostr.io rendering gateway. The gateway's response is returned to the crawler; if the gateway is unreachable or identifies an error, the Worker falls back to your origin server, ensuring your site remains visible to search engines even during gateway outages.
+The Worker forwards crawler requests to the ostr.io rendering gateway and returns the gateway's response to the crawler. It falls back to your origin server — so your site stays visible to search engines — whenever ostr.io could not answer: the gateway is unreachable, the gateway reports an error of its own, or a 5xx comes from the infrastructure in front of the gateway (an ostr.io outage). Only a status your page declared itself is passed through.
 
-- Gateway response 2xx/3xx → returned as-is to the crawler (success, redirects preserved)
-- Gateway-identified error (reason header or gateway error body) → falls back to origin with marker
-- Rendered page with genuine 4xx/5xx status → returned as-is to the crawler (no fallback or marker)
-- Gateway fetch failure (network error, timeout) → falls back to origin with marker
+- Gateway response 2xx/3xx → returned as-is to the crawler (redirects preserved)
+- Gateway-identified error (ostr.io reason header, or the gateway's plain-text error body) → falls back to origin, with marker
+- 5xx carrying no ostr.io header at all (an ostr.io edge or outage error that never reached the gateway) → falls back to origin, with marker
+- Rendered page with a genuine 4xx/5xx status → returned as-is to the crawler (no fallback, no marker)
+- Gateway fetch failure (network error, timeout) → falls back to origin, with marker
 
-When the Worker identifies a gateway error and falls back, it attaches a marker header so external verification tools can distinguish "the gateway refused this route" from "the origin is down and never reached the gateway":
+When the Worker falls back, it attaches a marker header so verification tools (including ostr.io's own connection check) can tell "the Worker ran and fell back to the origin" from "no ostr.io header at all", which means the Worker never ran for this request or never reached ostr.io:
 
-- On gateway error status: `X-Prerender-Reason: worker-fallback-<status>` (e.g. `worker-fallback-403`, `worker-fallback-429`)
-- On gateway fetch failure (network error, timeout): `X-Prerender-Reason: worker-fallback-error`
+- On an error status: `X-Prerender-Reason: worker-fallback-<status>` (e.g. `worker-fallback-403` when the gateway refused the credentials, `worker-fallback-503` during an ostr.io outage)
+- On a gateway fetch failure (network error, timeout): `X-Prerender-Reason: worker-fallback-error`
 
-The origin's response body, status, and other headers pass through completely unmodified. For rendered pages that declare their own status via the pre-rendering engine, the marker is not added since the response came from a successful render, not a fallback.
+The origin's response body, status, and other headers pass through completely unmodified. A rendered page that declares its own status is not a fallback, so it carries no marker. One case is deliberately not covered: a 4xx emitted in front of the gateway (for example a challenge page on the ostr.io zone) is returned as-is, because falling back on 4xx would hide a rendered 404/410/451 from the crawler.
 
 ## How to set it up
 

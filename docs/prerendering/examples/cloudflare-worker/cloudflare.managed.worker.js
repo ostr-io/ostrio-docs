@@ -284,6 +284,50 @@ const shouldPrerender = (request, url, userAgent, botAgentsRe, rule) => {
   return true;
 };
 
+/*
+ * C-1 (2026-09-09). A gateway status outside 2xx/3xx is NOT by itself a reason to fall back:
+ * the gateway forwards a page's own `<meta name="response:status-code">` verbatim, so a rendered
+ * 404/410/451/5xx is the genuine answer the crawler must see. Fall back ONLY when the response is
+ * gateway-identified — it carries the gateway's own `X-Prerender-Reason`, or its body is the
+ * gateway's frozen text/plain error shape ending in a bracketed four-digit reason code.
+ */
+const GATEWAY_ERROR_RE = /^(Bad request!|Unauthorized!|Not permitted for this domain\. Wrong domain\.|Internal server error!|Origin is unreachable!|Origin timed out!)[\s\S]*\[\d{4}\]$/;
+const GATEWAY_ERROR_MAX_BYTES = 512;
+
+const isGatewayError = async (response) => {
+  if (response.headers.get('X-Prerender-Reason')) {
+    return true;
+  }
+
+  const contentType = (response.headers.get('Content-Type') || '').toLowerCase();
+  if (!contentType.startsWith('text/plain')) {
+    return false;
+  }
+
+  const length = parseInt(response.headers.get('Content-Length') || '0', 10);
+  if (length > GATEWAY_ERROR_MAX_BYTES) {
+    return false;
+  }
+
+  try {
+    const text = (await response.clone().text()).trim();
+    return text.length <= GATEWAY_ERROR_MAX_BYTES && GATEWAY_ERROR_RE.test(text);
+  } catch (readError) {
+    return false;
+  }
+};
+
+const withFallbackMarker = async (request, marker) => {
+  const originResponse = await fetch(request);
+  const responseWithHeader = new Response(originResponse.body, {
+    status: originResponse.status,
+    statusText: originResponse.statusText,
+    headers: new Headers(originResponse.headers)
+  });
+  responseWithHeader.headers.set('X-Prerender-Reason', marker);
+  return responseWithHeader;
+};
+
 export default {
   async fetch(request, env) {
     const AUTH_HEADER = env.OSTR_AUTH || BASIC_TOKEN || DICT.service.testAuth;
@@ -332,30 +376,20 @@ export default {
         redirect: DICT.manual,
       }));
 
-      // Fall back to origin on non-2xx/non-3xx responses; 3xx redirects intentionally pass through
       if (response.status >= 200 && response.status < 400) {
         return response;
       }
 
-      console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway returned', response.status, ', falling back to origin');
-      const originResponse = await fetch(request);
-      const responseWithHeader = new Response(originResponse.body, {
-        status: originResponse.status,
-        statusText: originResponse.statusText,
-        headers: new Headers(originResponse.headers)
-      });
-      responseWithHeader.headers.set('X-Prerender-Reason', `worker-fallback-${response.status}`);
-      return responseWithHeader;
+      if (await isGatewayError(response)) {
+        console.warn('[CloudFlare Worker] [pre-rendering] [fetch] Gateway error', response.status, ', falling back to origin');
+        return withFallbackMarker(request, `worker-fallback-${response.status}`);
+      }
+
+      // A rendered page with a genuine non-2xx status: the crawler gets exactly what was rendered
+      return response;
     } catch (fetchError) {
       console.warn('[CloudFlare Worker] [pre-rendering] [fetch] REDIRECT TO ostr.io FAILED WITH fetchError:', fetchError);
-      const originResponse = await fetch(request);
-      const responseWithHeader = new Response(originResponse.body, {
-        status: originResponse.status,
-        statusText: originResponse.statusText,
-        headers: new Headers(originResponse.headers)
-      });
-      responseWithHeader.headers.set('X-Prerender-Reason', 'worker-fallback-error');
-      return responseWithHeader;
+      return withFallbackMarker(request, 'worker-fallback-error');
     }
   }
 };

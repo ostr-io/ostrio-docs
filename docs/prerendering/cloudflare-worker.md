@@ -100,7 +100,7 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 
 ## How it handles errors
 
-The Worker forwards crawler requests to the ostr.io rendering gateway and returns the gateway's response to the crawler. It falls back to your origin server — so your site stays visible to search engines — whenever ostr.io could not answer: the gateway is unreachable, the gateway reports an error of its own, or a 5xx comes from the infrastructure in front of the gateway (an ostr.io outage). Only a status your page declared itself is passed through.
+The Worker forwards crawler requests to the ostr.io rendering gateway and returns the gateway's response to the crawler. It falls back to your origin server — so your site stays visible to search engines — whenever ostr.io could not answer: the gateway is unreachable, the gateway reports an error of its own, or a 5xx comes from the infrastructure in front of the gateway (an ostr.io outage). A status your page declared itself is passed through unchanged; the one exception, described below, is a 4xx emitted in front of the gateway.
 
 - Gateway response 2xx/3xx → returned as-is to the crawler (redirects preserved)
 - Gateway-identified error (ostr.io reason header, or the gateway's plain-text error body) → falls back to origin, with marker

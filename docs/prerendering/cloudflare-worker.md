@@ -100,17 +100,19 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 
 ## How it handles errors
 
-The Worker forwards crawler requests to the ostr.io rendering gateway. If the gateway is unavailable or returns an error (HTTP 4xx/5xx), the Worker automatically falls back to the origin server, ensuring your site remains visible to search engines even during gateway outages or authentication issues.
+The Worker forwards crawler requests to the ostr.io rendering gateway. The gateway's response is returned to the crawler; if the gateway is unreachable or identifies an error, the Worker falls back to your origin server, ensuring your site remains visible to search engines even during gateway outages.
 
 - Gateway response 2xx/3xx → returned as-is to the crawler (success, redirects preserved)
-- Gateway response 4xx/5xx or fetch timeout → origin server is queried instead
+- Gateway-identified error (reason header or gateway error body) → falls back to origin with marker
+- Rendered page with genuine 4xx/5xx status → returned as-is to the crawler (no fallback or marker)
+- Gateway fetch failure (network error, timeout) → falls back to origin with marker
 
-When falling back to the origin, the Worker attaches a marker header to the response so external verification tools can distinguish "gateway refused this route" from "this route is completely broken and never reached ostr.io":
+When the Worker identifies a gateway error and falls back, it attaches a marker header so external verification tools can distinguish "the gateway refused this route" from "the origin is down and never reached the gateway":
 
-- On gateway error status (4xx/5xx): `X-Prerender-Reason: worker-fallback-<status>` (e.g. `worker-fallback-403`, `worker-fallback-429`)
+- On gateway error status: `X-Prerender-Reason: worker-fallback-<status>` (e.g. `worker-fallback-403`, `worker-fallback-429`)
 - On gateway fetch failure (network error, timeout): `X-Prerender-Reason: worker-fallback-error`
 
-The origin's response body, status, and other headers pass through completely unmodified — only this marker header is added to signal that the Worker executed and attempted to reach the gateway.
+The origin's response body, status, and other headers pass through completely unmodified. For rendered pages that declare their own status via the pre-rendering engine, the marker is not added since the response came from a successful render, not a fallback.
 
 ## How to set it up
 

@@ -97,6 +97,7 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 - [Shopify-tailored Worker](shopify-seo-integration.md#seo-middleware-worker-for-shopify) — dedicated guide for Shopify stores.
 - *Modern and recommended:* [ES Module Worker](examples/cloudflare-worker/cloudflare.worker.js)
 - *Legacy:* [Event Listener Worker](examples/cloudflare-worker/cloudflare-listener.worker.js)
+- *Managed:* [ostr.io-managed Worker](examples/cloudflare-worker/cloudflare.managed.worker.js) — the body ostr.io uploads when you connect Cloudflare from the dashboard. Only this body has the `OSTR_VERIFY` binding and the `/__ostrio-prerender/health` endpoint it gates; the two examples above have neither.
 
 ## How it handles errors
 

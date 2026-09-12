@@ -2,7 +2,7 @@
 // Runs every case against all four distinct Worker bodies (the ostrio mirror is asserted
 // byte-identical to the managed body, so it is covered by the managed run).
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
+import { createHash, webcrypto } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -16,6 +16,11 @@ const MIRROR = '/Users/drdimitru/Sites/ostrio-workspace/ostrio/private/cloudflar
 const SKILL = '/Users/drdimitru/Sites/ostrio-workspace/ostrio-agent-skills/skills/ostrio-prerendering/templates/cloudflare.worker.js';
 const sha = (p) => createHash('sha256').update(readFileSync(p)).digest('hex');
 assert.equal(sha(MANAGED), sha(MIRROR), 'managed body must be byte-identical to the ostrio mirror');
+
+// Workers expose WebCrypto as the global `crypto`; Node 16 has it only as `crypto.webcrypto`
+if (!globalThis.crypto) {
+  globalThis.crypto = webcrypto;
+}
 
 // `boris_git` has no `package.json`, so importing a `.js` path directly loads it as CommonJS and
 // `export default` throws. The same bytes are imported under an `.mjs` name.
@@ -169,6 +174,84 @@ const cases = async (worker) => {
   return count;
 };
 
+/*
+ * Health endpoint (W7.1) — the managed body only; the example and template bodies have no
+ * `OSTR_VERIFY` binding. The fingerprint is pinned to a LITERAL, and ostrio guardrail (w) pins the
+ * same literal against `hosts.js` `bindingsFingerprint`, so both runtimes are held to one constant
+ * rather than to each other.
+ */
+const FINGERPRINT_WIRE = '{"OSTR_AUTH":true,"OSTR_VERIFY":true,"OSTR_EXTRA_BOT_UAS":"[]","OSTR_PATH_RULES":"[]"}';
+const FINGERPRINT_VECTOR = 'c3570680fc714bc6';
+const HEALTH_ENV = { OSTR_AUTH: 'x', OSTR_VERIFY: 's', OSTR_EXTRA_BOT_UAS: '[]', OSTR_PATH_RULES: '[]' };
+
+const healthCases = async (worker, source) => {
+  let count = 0;
+  const template = (/const TEMPLATE_VERSION = '([^']+)'/.exec(source) || [])[1];
+  assert.ok(template, 'managed body declares TEMPLATE_VERSION');
+  assert.equal(createHash('sha256').update(FINGERPRINT_WIRE, 'utf8').digest('hex').slice(0, 16), FINGERPRINT_VECTOR, 'pinned fingerprint vector');
+
+  const run = async ({ path = '/__ostrio-prerender/health', headers = {}, env = HEALTH_ENV } = {}) => {
+    count++;
+    const calls = [];
+    globalThis.fetch = async (input) => {
+      const url = typeof input === 'string' ? input : input.url;
+      calls.push(url);
+      if (url.startsWith('https://render')) {
+        return new Response('<html>rendered</html>', { status: 200, headers: { 'content-type': 'text/html', 'x-prerender-id': 'aBcDeFgHiJkLmNoP' } });
+      }
+      return new Response('<html>origin</html>', { status: 200, headers: { 'content-type': 'text/html' } });
+    };
+    const res = await worker.fetch(new Request(`https://example.com${path}`, { headers }), env);
+    return { res, calls };
+  };
+
+  // (n) the matching secret answers the JSON, from the Worker itself, never cached
+  {
+    const { res, calls } = await run({ headers: { 'x-ostrio-verify': 's' } });
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get('content-type'), 'application/json');
+    assert.equal(res.headers.get('cache-control'), 'no-store');
+    assert.deepEqual(await res.json(), { template, bindings: FINGERPRINT_VECTOR });
+    assert.equal(calls.length, 0, 'health answered without a subrequest');
+  }
+  // (o) a wrong secret of the same length falls through to the origin, no JSON
+  {
+    const { res, calls } = await run({ headers: { 'x-ostrio-verify': 't' } });
+    assert.equal(await res.text(), '<html>origin</html>');
+    assert.deepEqual(calls, ['https://example.com/__ostrio-prerender/health']);
+  }
+  // (p) no header, and a longer wrong one, fall through the same way
+  for (const headers of [{}, { 'x-ostrio-verify': 'ss' }]) {
+    const { res, calls } = await run({ headers });
+    assert.equal(await res.text(), '<html>origin</html>');
+    assert.equal(calls.length, 1);
+  }
+  // (q) with OSTR_VERIFY unbound, no header value can open the endpoint — not even an empty one
+  for (const value of ['s', '', 'undefined']) {
+    const { res, calls } = await run({ headers: { 'x-ostrio-verify': value }, env: { OSTR_AUTH: 'x' } });
+    assert.equal(await res.text(), '<html>origin</html>');
+    assert.equal(calls.length, 1);
+  }
+  // (r) without the secret the health path is an ordinary path: a crawler on it is pre-rendered
+  {
+    const { res, calls } = await run({ headers: { 'user-agent': 'Googlebot/2.1' } });
+    assert.equal(await res.text(), '<html>rendered</html>');
+    assert.ok(calls[0].startsWith('https://render.ostr.io/'), 'gateway called');
+  }
+  // (s) the secret on any other path changes nothing
+  {
+    const { res, calls } = await run({ path: '/page', headers: { 'x-ostrio-verify': 's' } });
+    assert.equal(await res.text(), '<html>origin</html>');
+    assert.equal(calls.length, 1);
+  }
+  // (t) the digest follows the bindings: a path-rule edit moves it
+  {
+    const { res } = await run({ headers: { 'x-ostrio-verify': 's' }, env: Object.assign({}, HEALTH_ENV, { OSTR_PATH_RULES: '[{"match":"/a"}]' }) });
+    assert.notEqual((await res.json()).bindings, FINGERPRINT_VECTOR);
+  }
+  return count;
+};
+
 let total = 0;
 for (const body of BODIES) {
   const worker = await body.load();
@@ -176,4 +259,8 @@ for (const body of BODIES) {
   console.log(`check-worker-fallback: ${body.name} ${n}/${n}`);
   total += n;
 }
-console.log(`check-worker-fallback: OK (${total} checks, ${BODIES.length} bodies × ${total / BODIES.length} cases)`);
+const fallbackCases = total / BODIES.length;
+const health = await healthCases(await BODIES[0].load(), readFileSync(MANAGED, 'utf8'));
+console.log(`check-worker-fallback: cloudflare.managed.worker.js health ${health}/${health}`);
+total += health;
+console.log(`check-worker-fallback: OK (${total} checks, ${BODIES.length} bodies × ${fallbackCases} fallback cases + ${health} health cases)`);

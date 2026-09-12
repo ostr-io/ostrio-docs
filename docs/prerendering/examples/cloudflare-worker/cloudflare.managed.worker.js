@@ -10,12 +10,24 @@
 //   OSTR_AUTH            secret_text  `Basic <base64 prerenderId:password>` gateway auth
 //   OSTR_EXTRA_BOT_UAS   plain_text   JSON array of extra lowercase UA substrings
 //   OSTR_PATH_RULES      plain_text   JSON array of per-path rules, first match wins
+//   OSTR_VERIFY          secret_text  the domain's renderer verification secret; gates the
+//                                     health endpoint below and nothing else
+//
+// Health endpoint: `GET /__ostrio-prerender/health` with `X-Ostrio-Verify: <OSTR_VERIFY>`
+// answers `{"template":"<TEMPLATE_VERSION>","bindings":"<16 hex>"}`. Without the matching
+// header the path is an ordinary path, handled like any other. ostr.io's recurring check reads
+// it to tell a stale body from a current one and a hand-edited binding from the ones it pushed.
 //
 // Derived from the published example
 // (boris_git/docs/prerendering/examples/cloudflare-worker/cloudflare.worker.js); the
 // crawler-UA list and the static-extension list below are carried BYTE-FOR-BYTE from it
 // and from the canonical regex it tracks (`RULES.md` §11). Customer UA entries EXTEND that
 // list, never replace it.
+
+// Bumped by hand on EVERY body change; ostr.io reads it from this file (`install.js` `templateVersion()`)
+const TEMPLATE_VERSION = '2026-09-10.1';
+const HEALTH_PATH = '/__ostrio-prerender/health';
+const VERIFY_HEADER = 'X-Ostrio-Verify';
 
 // Only used when the OSTR_AUTH binding is missing, which for a managed install never happens
 const BASIC_TOKEN = '';
@@ -342,10 +354,50 @@ const withFallbackMarker = async (request, marker) => {
   return responseWithHeader;
 };
 
+const timingSafeEqualStr = (a, b) => {
+  if (typeof a !== DICT.string || typeof b !== DICT.string || a.length !== b.length) {
+    return false;
+  }
+
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+};
+
+const sha256Hex = async (text) => {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, '0')).join('');
+};
+
+/*
+ * MUST equal `hosts.js` `bindingsFingerprint` in ostr.io: same keys, same order, first 16 hex
+ * characters. The two secrets contribute PRESENCE only — a Worker cannot hand a secret's text
+ * back, and ostr.io never stores a digest derived from one.
+ */
+const bindingsFingerprint = async (env) => {
+  return (await sha256Hex(JSON.stringify({
+    OSTR_AUTH: !!env.OSTR_AUTH,
+    OSTR_VERIFY: !!env.OSTR_VERIFY,
+    OSTR_EXTRA_BOT_UAS: `${env.OSTR_EXTRA_BOT_UAS || ''}`,
+    OSTR_PATH_RULES: `${env.OSTR_PATH_RULES || ''}`,
+  }))).slice(0, 16);
+};
+
 export default {
   async fetch(request, env) {
     const AUTH_HEADER = env.OSTR_AUTH || BASIC_TOKEN || DICT.service.testAuth;
     const url = new URL(request.url);
+
+    if (url.pathname === HEALTH_PATH && env.OSTR_VERIFY && timingSafeEqualStr(request.headers.get(VERIFY_HEADER), env.OSTR_VERIFY)) {
+      return new Response(JSON.stringify({ template: TEMPLATE_VERSION, bindings: await bindingsFingerprint(env) }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+      });
+    }
+    // Not discoverable: without the secret the health path falls through as an ordinary path
+
     const userAgent = (request.headers.get(DICT.headers.ua) || DICT.stringEmpty).toLowerCase();
     const hasEscapedFragment = url.searchParams.has(DICT.escapedFragment);
     const botAgentsRe = botAgentsReFor(env.OSTR_EXTRA_BOT_UAS);

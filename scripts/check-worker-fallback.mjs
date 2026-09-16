@@ -12,8 +12,10 @@ const ROOT = new URL('../docs/prerendering/examples/cloudflare-worker/', import.
 const MANAGED = new URL('cloudflare.managed.worker.js', ROOT);
 const EXAMPLE = new URL('cloudflare.worker.js', ROOT);
 const LISTENER = new URL('cloudflare-listener.worker.js', ROOT);
-const MIRROR = '/Users/drdimitru/Sites/ostrio-workspace/ostrio/private/cloudflare/ostrio-prerender.worker.js';
-const SKILL = '/Users/drdimitru/Sites/ostrio-workspace/ostrio-agent-skills/skills/ostrio-prerendering/templates/cloudflare.worker.js';
+// Sibling repositories, resolved relative to this script: both must be checked out next to
+// `ostrio-docs` for this check to run.
+const MIRROR = new URL('../../ostrio/private/cloudflare/ostrio-prerender.worker.js', import.meta.url);
+const SKILL = new URL('../../ostrio-agent-skills/skills/ostrio-prerendering/templates/cloudflare.worker.js', import.meta.url);
 const sha = (p) => createHash('sha256').update(readFileSync(p)).digest('hex');
 assert.equal(sha(MANAGED), sha(MIRROR), 'managed body must be byte-identical to the ostrio mirror');
 

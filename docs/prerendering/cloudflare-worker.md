@@ -6,7 +6,7 @@ Cloudflare Workers are a great alternative to server-specific proxies (Nginx, Ap
 
 - [Pre-rendering overview](README.md)
 - [Rendering endpoints](rendering-endpoints.md)
-- [Step-by-step tutorial](examples/cloudflare-worker/coudflare-worker-guide.md)
+- [Step-by-step tutorial](examples/cloudflare-worker/cloudflare-worker-guide.md)
 - Canonical regex sources — [Crawler User-Agent](shared/crawler-ua-regex.md), [Static-asset extensions](shared/static-extensions-regex.md)
 
 ## Contents
@@ -93,7 +93,7 @@ Because the Worker sits between Cloudflare DNS and the origin, pre-rendering can
 
 ## Worker examples
 
-- [Step-by-step tutorial](examples/cloudflare-worker/coudflare-worker-guide.md) — walks through Cloudflare dashboard, Worker creation, `OSTR_AUTH` secret, and route binding.
+- [Step-by-step tutorial](examples/cloudflare-worker/cloudflare-worker-guide.md) — walks through Cloudflare dashboard, Worker creation, `OSTR_AUTH` secret, and route binding.
 - [Shopify-tailored Worker](shopify-seo-integration.md#seo-middleware-worker-for-shopify) — dedicated guide for Shopify stores.
 - *Modern and recommended:* [ES Module Worker](examples/cloudflare-worker/cloudflare.worker.js)
 - *Legacy:* [Event Listener Worker](examples/cloudflare-worker/cloudflare-listener.worker.js)
@@ -126,7 +126,7 @@ The origin's response body, status, and other headers pass through completely un
 6. Bind the Worker to a route like `https://example.com/*` (or `*example.com/*` for TLD + subdomains on PRO / BUSINESS plans).
 7. Purge the Cloudflare cache once to regenerate snapshots.
 
-See the full [step-by-step tutorial](examples/cloudflare-worker/coudflare-worker-guide.md) with screenshots.
+See the full [step-by-step tutorial](examples/cloudflare-worker/cloudflare-worker-guide.md) with screenshots.
 
 ## Add custom crawlers to the bot list
 
@@ -161,6 +161,7 @@ Custom entries extend the canonical bot list without replacing it. All standard 
 
 ## Related
 
+- [Cloudflare Renderer Verification](cloudflare-renderer-verification.md) — WAF rules and verification header setup
 - [Shopify via Cloudflare Worker](shopify-seo-integration.md) — Shopify-specific variant
 - [AWS Lambda@Edge integration](aws-lambda.md) — CloudFront equivalent when AWS is the CDN layer
 - [Netlify integration](netlify-prerendering.md) — alternative for Netlify-hosted sites

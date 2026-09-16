@@ -70,7 +70,7 @@ Supported integration paths.
 
 Operate at the CDN / worker layer — **no origin, server, or application changes required**. Ideal for hosted/no-code platforms where you cannot deploy middleware yourself.
 
-- **General Cloudflare Worker** — [Cloudflare Worker integration](cloudflare-worker.md). Compatible with Webflow, Framer, Squarespace, Wix, Carrd, Bubble, Ghost(Pro), Substack, Notion-proxied sites, WordPress.com, BigCommerce, Wix Stores, and any origin reachable through Cloudflare's orange-cloud DNS.
+- **General Cloudflare Worker** — [Cloudflare Worker integration](cloudflare-worker.md). Compatible with Webflow, Framer, Squarespace, Wix, Carrd, Bubble, Ghost(Pro), Substack, Notion-proxied sites, WordPress.com, BigCommerce, Wix Stores, and any origin reachable through Cloudflare's orange-cloud DNS. Managed installs also carry a per-domain [renderer verification header](cloudflare-renderer-verification.md), so a Cloudflare WAF rule can let pre-rendering through while the rest of your bot protection stays on.
 - **AWS Lambda@Edge** — [AWS Lambda@Edge integration](aws-lambda.md). CloudFront Function marks crawler cache variants before cache lookup; origin-request Lambda@Edge rewrites matching cache misses to ostr.io.
 - **Shopify** — [Cloudflare Worker for Shopify](shopify-seo-integration.md). Dedicated walkthrough for Shopify domains (including Shopify-managed domains that need to be transferred to Cloudflare first).
 

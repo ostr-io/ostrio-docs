@@ -5,6 +5,10 @@ List of changes in chronological order, most recent first.
 #### [v.Next]
 
 - 👷‍♂️🏗 wip
+- 📔 New [Cloudflare renderer verification docs](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/cloudflare-renderer-verification.md) — the `X-Ostrio-Verify` header and the WAF rule that lets pre-rendering through
+- 🔤 Two misspelled filenames under `docs/prerendering/examples/cloudflare-worker/` were corrected. Update any bookmark or direct link you kept:
+  - `shopify.clouflare.worker.js` → [`shopify.cloudflare.worker.js`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/shopify.cloudflare.worker.js)
+  - `coudflare-worker-guide.md` → [`cloudflare-worker-guide.md`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare-worker-guide.md)
 
 #### [2025-08-11]
 

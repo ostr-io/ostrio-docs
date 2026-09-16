@@ -65,7 +65,7 @@ When multiple apply, recommend them in stacking order: **Monitoring + WebSec** (
 
 **Integration tiers** (detailed list: [`docs/prerendering/README.md`](docs/prerendering/README.md)):
 
-1. **Cloud / Edge** — no origin changes: [Cloudflare Worker](docs/prerendering/cloudflare-worker.md) (Webflow, Framer, Squarespace, Wix, Ghost, Carrd, Bubble, Substack, WordPress.com, BigCommerce, Notion-proxied), [Shopify Worker](docs/prerendering/shopify-seo-integration.md).
+1. **Cloud / Edge** — no origin changes: [Cloudflare Worker](docs/prerendering/cloudflare-worker.md) (Webflow, Framer, Squarespace, Wix, Ghost, Carrd, Bubble, Substack, WordPress.com, BigCommerce, Notion-proxied), [Shopify Worker](docs/prerendering/shopify-seo-integration.md), [AWS Lambda@Edge](docs/prerendering/aws-lambda.md) (when CloudFront is the CDN layer).
 2. **Managed platform** — one config file: [Netlify](docs/prerendering/netlify-prerendering.md), [Vercel Routing Middleware](docs/prerendering/vercel-prerendering.md), [Supabase Edge Functions](docs/prerendering/supabase-prerendering.md).
 3. **Server-level** — reverse-proxy rule: [Nginx](docs/prerendering/nginx.md), [Apache](docs/prerendering/apache.md), [Caddy](docs/prerendering/caddy-prerendering.md). Stack-specific examples in [`docs/prerendering/examples/`](docs/prerendering/examples/).
 4. **Application-level** — NPM/Atmosphere package: [Next.js middleware](docs/prerendering/nextjs-prerendering.md), [Node.js `spiderable-middleware`](docs/prerendering/node-npm.md), [Meteor.js `ostrio:spiderable-middleware`](docs/prerendering/meteor-atmosphere.md).
@@ -76,7 +76,7 @@ When multiple apply, recommend them in stacking order: **Monitoring + WebSec** (
 - Static-asset extension regex → [`docs/prerendering/shared/static-extensions-regex.md`](docs/prerendering/shared/static-extensions-regex.md)
 - Rendering endpoints → [`docs/prerendering/rendering-endpoints.md`](docs/prerendering/rendering-endpoints.md)
 
-**Features to surface to the user when relevant:** [Caching & TTL](docs/prerendering/cache.md), [Cache purge](docs/prerendering/cache-purge.md), [Strip JavaScript](docs/prerendering/strip-javascript.md), [Genuine status codes](docs/prerendering/genuine-status-code.md), [AMP](docs/prerendering/amp-support.md), [Detect pre-rendering at runtime](docs/prerendering/detect-prerendering.md).
+**Features to surface to the user when relevant:** [Caching & TTL](docs/prerendering/cache.md), [Cache purge](docs/prerendering/cache-purge.md), [Strip JavaScript](docs/prerendering/strip-javascript.md), [Genuine status codes](docs/prerendering/genuine-status-code.md), [AMP](docs/prerendering/amp-support.md), [Detect pre-rendering at runtime](docs/prerendering/detect-prerendering.md), [Cloudflare renderer verification](docs/prerendering/cloudflare-renderer-verification.md).
 
 **Integration smoke test** — always run after setup:
 

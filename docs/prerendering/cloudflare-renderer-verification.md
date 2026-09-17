@@ -93,14 +93,14 @@ Click **Rotate key** (labelled **Rotate secret** when no managed rule exists) in
 2. Marks any managed WAF rule stale, because the deployed rule still holds the old value.
 3. Pushes the new secret to the Worker binding, and only if that push reaches Cloudflare, updates the managed rule.
 
-If the Worker push fails, the rule stays marked stale rather than accepting a proof the Worker does not hold. Rotate again once Cloudflare is reachable.
+If the Worker push fails, the rule stays marked stale rather than accepting a proof the Worker does not hold. Once Cloudflare is reachable, click **Update WAF rule** in the same panel to reconcile it. That reapplies the current secret to the live rule without rotating the credential again.
 
 On a manual rule, nothing updates itself. Replace the expression with the new secret immediately after rotating, or pre-rendering traffic is blocked.
 
 ## Security considerations
 
 - Treat the verification secret as a credential. Do not publish it in screenshots, support tickets, or public documentation.
-- After rotating, reconcile the WAF rule immediately.
+- After rotating, reconcile the WAF rule immediately: **Update WAF rule** for a managed rule, a fresh expression for a manual one.
 - The header only reaches requests to the page's own hostname, so it cannot leak to a sibling subdomain through a redirect.
 
 ## Free-plan limitations
@@ -115,11 +115,11 @@ Cloudflare's **Bot Fight Mode** (free tier) cannot be skipped by a custom WAF ru
 
 **The panel says the rule "needs an update"**
 
-The deployed rule holds a secret older than the current one, which happens when a rotation could not reach Cloudflare. Click **Rotate key** to push a fresh secret and reconcile the rule. If the status does not clear, your Cloudflare authorization has probably expired: reconnect the domain in the panel, then rotate again.
+The deployed rule holds a secret older than the current one, which happens when a rotation could not reach Cloudflare. Click **Update WAF rule**, which appears on that row whenever the rule falls behind. If the status does not clear, your Cloudflare authorization has probably expired or lost its WAF permissions: reconnect the domain, then click it again.
 
 **After rotating, pre-rendering requests are blocked**
 
-The WAF rule still contains the old secret. On a manual rule, paste the new expression. On a managed rule, the update follows the Worker push within seconds; refresh the panel, and rotate once more if the rule still reads stale.
+The WAF rule still contains the old secret. On a manual rule, paste the new expression. On a managed rule the update follows the Worker push within seconds; if the row still reads "needs an update" after a refresh, click **Update WAF rule**.
 
 **The manual expression returns a Cloudflare syntax error**
 

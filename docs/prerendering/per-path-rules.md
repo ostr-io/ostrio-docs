@@ -1,10 +1,11 @@
 # Per-Path Rules
 
-Configure pre-rendering behavior on a per-path basis — choose which paths get pre-rendered, strip query parameters, force pre-rendering for non-bot requests, and select the cache mode.
+Configure pre-rendering behavior on a per-path basis: add exceptions while all pages pre-render, or switch the domain to pre-render only listed paths. Rules can also strip query parameters, force pre-rendering for non-crawler requests, and select the cache mode.
 
 ## Contents
 
 - [Overview](#overview)
+- [Modes](#modes)
 - [Rule Semantics](#rule-semantics)
 - [Rule Keys](#rule-keys)
 - [Implementation](#implementation)
@@ -13,14 +14,29 @@ Configure pre-rendering behavior on a per-path basis — choose which paths get 
 
 ## Overview
 
-Per-path rules let you fine-tune pre-rendering on specific URL patterns within your domain. For example:
+Per-path rules let you fine-tune pre-rendering on specific URL patterns within your domain. By default, unmatched pages still pre-render. Rules act as exceptions unless you switch the domain to "Listed paths only."
+
+For example:
 
 - Skip pre-rendering for admin pages or API endpoints.
 - Force pre-rendering for marketing pages even when accessed by browsers.
 - Strip tracking parameters from specific pages.
 - Use aggressive caching for high-traffic product pages and bypass caching for status endpoints.
 
-Rules are **evaluated first match wins** — the first matching rule applies, and later rules are ignored for that request.
+Rules are **evaluated first match wins**: the first matching rule applies, and later rules are ignored for that request.
+
+## Modes
+
+The dashboard's **Pre-rendering scope** setting has two modes:
+
+- **All pages** is the default. A page with no matching rule pre-renders for crawlers. Use `render: false` rules to pass specific paths through to your origin.
+- **Listed paths only** pre-renders only paths matched by a rule whose `render` value is not `false`. Every unmatched path passes through to your origin. Add at least one pre-render rule before switching modes.
+
+In "Listed paths only," ostr.io appends an internal terminal `{"match":"/*","render":false}` rule to the Worker binding. It is not stored in your rule list or shown as a dashboard chip. The dashboard caps your own list at 63 rules in this mode so the terminal rule remains inside the Worker's 64-rule limit.
+
+Always Green scans, cache-expiry refreshes, the signals API, and the **Render whole site** tool follow the same effective rules. Excluded pages are not rendered ahead of time.
+
+For a self-managed Worker, add the terminal `render: false` rule yourself to get equivalent behavior.
 
 ## Rule Semantics
 
@@ -53,9 +69,9 @@ Each rule is an object with the following allowed keys:
 
 ### Cloudflare Worker (Plan 3 OAuth Installs)
 
-If you connected pre-rendering through ostr.io's one-click Cloudflare Worker setup, edit your per-path rules in the **ostr.io dashboard**. Navigate to your domain's pre-rendering settings, locate the "Path rules" editor, and add your rules as JSON.
+If you connected pre-rendering through ostr.io's one-click Cloudflare Worker setup, edit rules in the **ostr.io dashboard**. Open your domain's pre-rendering settings and locate the Cloudflare card. The "Path rules" editor adds one path pattern at a time as either **pre-render** or **pass through**. Use the adjacent **Pre-rendering scope** row to switch between "All pages" and "Listed paths only."
 
-The Worker receives these rules via the `OSTR_PATH_RULES` binding and evaluates them on every request. No Worker code changes are needed.
+The Worker receives the effective rules through the `OSTR_PATH_RULES` binding and evaluates them on every request. No Worker code changes are needed.
 
 ### Manual Cloudflare Worker
 
@@ -72,6 +88,20 @@ For per-path routing in Nginx, Apache, Next.js, and other stacks, follow the can
 For manual integrations not covered by a specific guide, implement per-path rules using the same pattern as the canonical configs: detect the path, check your rule set, and route or transform the request accordingly.
 
 ## Examples
+
+### Pre-render only listed sections
+
+In the dashboard, add `/blog/*` and `/docs/*` as **pre-render**, then switch to **Listed paths only**. The effective Worker list is:
+
+```json
+[
+  {"match": "/blog/*", "render": true},
+  {"match": "/docs/*", "render": true},
+  {"match": "/*", "render": false}
+]
+```
+
+The dashboard synthesizes the final rule. Add it yourself only in a self-managed Worker.
 
 ### Marketing site with tracking params
 
@@ -115,6 +145,8 @@ If a path requires different `loadImages` or `stripJS` behavior, create a separa
 **Query parameters are normalized before caching.** When you use `stripParams`, the normalized URL (with specified parameters removed) becomes the cache key. Two requests with different tracking parameters but the same normalized URL will share a cache entry.
 
 **First match wins.** Once a path matches a rule, no subsequent rules are evaluated for that request. Order your rules from most specific to least specific.
+
+**Unmatched behavior depends on the scope.** In "All pages," an unmatched path pre-renders. In "Listed paths only," an unmatched path passes through without pre-rendering.
 
 ## Related
 

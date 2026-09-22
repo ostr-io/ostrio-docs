@@ -1,6 +1,7 @@
 // Node 16.20.2: `node --experimental-fetch scripts/check-worker-fallback.mjs`
 // Runs every case against all four distinct Worker bodies (the ostrio mirror is asserted
 // byte-identical to the managed body, so it is covered by the managed run).
+// Sibling: scripts/check-worker-path-rules.mjs runs the path-rule vector through the managed body.
 import assert from 'node:assert/strict';
 import { createHash, webcrypto } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';

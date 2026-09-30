@@ -18,22 +18,14 @@ ostr.io offers three plan types — **Hobby**, **Pro**, and **Business** — eac
 | Always Green proactive updates | Not available | Every 24 hours (2 proactive slots) | Every 6 hours (4 proactive slots) |
 | No-delay first request | Not available | Yes | Yes |
 | Signals API / webhooks | Not available | Yes | Yes |
-| WebSec check cadence | 2 times per day | 4 times per day | 6 times per day |
-| Personalized invoicing | Not available | Not available | Not available |
 
-### Metered Volumes (×1 base bundles)
+### Pre-rendering volume (×1 base bundles)
 
-Every plan type includes monthly allowances for five metered services. Sizes scale these volumes linearly.
+Every plan type includes a monthly pre-rendering allowance. Sizes scale it linearly.
 
 | Volume | Free | Hobby ×1 | Pro ×1 | Business ×1 |
 |--------|------|----------|---------|-------------|
 | Pre-rendering (renders) | 2,000 | 5,000 | 30,000 | 150,000 |
-| HTTP Monitoring checks | 1,000 | 3,000 | 4,000 | 8,500 |
-| Web Analytics events | 1,000 | 2,500 | 50,000 | 200,000 |
-| Web-CRON runs | 1,000 | 6,000 | 8,500 | 16,000 |
-| SMS messages | 0 | 10 | 20 | 50 |
-
-**WebSec monitoring** (Whois, DNS, TLS) is not a metered volume — it's a per-plan cadence. Every plan monitors your configured domains at a fixed frequency; you never run out.
 
 ### Size Discounts
 
@@ -67,13 +59,8 @@ Save approximately 8% by paying annually. Annual plans bill at **11 months' wort
 Every new account starts with a **Free** plan for 30 days:
 
 - 2,000 monthly renders
-- 1,000 monitoring checks
-- 1,000 analytics events
-- 1,000 CRON runs
-- 0 SMS messages
-- 1 WebSec check per day
 
-After 30 days, you enter a **14-day grace period**. During grace, your domains keep running at their existing plan level while you decide on a paid plan. After grace ends without a selection, your domains are parked: pre-rendering requests pass through directly to your origin with no rendering or caching, and other metered services skip the metered unit of work.
+After 30 days, you enter a **14-day grace period**. During grace, your domains keep running at their existing plan level while you decide on a paid plan. After grace ends without a selection, your domains are parked: pre-rendering requests pass through directly to your origin with no rendering or caching.
 
 **You are only charged after your domain's connection is confirmed.** During the free trial and grace period, no payment is required. Once you select a paid plan, we charge only after Stripe confirms your payment method and your domain is actively connected.
 
@@ -85,10 +72,7 @@ Every domain is metered separately, so each domain has its own monthly allowance
 
 ## Limit Hit Behavior
 
-When a domain reaches the end of its monthly allowance for a service, what happens depends on the service:
-
-- **Pre-rendering**: Requests pass through directly to your origin (no pre-rendering, no caching).
-- **Monitoring, Analytics, CRON, SMS**: The service skips that metered unit of work until the next billing cycle.
+When a domain reaches the end of its monthly allowance, requests pass through directly to your origin (no pre-rendering, no caching) until the next billing cycle.
 
 If you need to continue service before the cycle resets, you can purchase a new plan at any time. This restarts your billing cycle with a fresh monthly allowance.
 
@@ -103,8 +87,6 @@ The currency is locked to your first subscription or balance credit based on you
 
 **AppSumo Lifetime Licenses**: If you purchased an ostr.io lifetime license through AppSumo, you can opt in to migrate to a frozen Lifetime plan (Lifetime Hobby or Lifetime Pro) during onboarding. Once migrated, your monthly allowance does not change when the paid-plan pricing updates and you are not charged. Accounts that have not opted in remain on the legacy pre-paid model.
 
-**WebSec Check Frequency Note**: Customers converting from legacy Hobby/Pro plans to the new pricing model should be aware that WebSec check frequency may decrease: legacy Hobby/Pro plans included 6 checks per day, while the new Hobby plan includes 2 checks per day and the new Pro plan includes 4 checks per day. Lifetime plans retain the legacy cadence of 6 checks per day.
-
 ## Changing Plans
 
 You can upgrade, downgrade, or change the size of your plan at any time. Plan changes take effect immediately and adjust your charges mid-cycle (adding or removing headroom) without resetting your billing cycle. A fresh billing cycle only begins after your domain exhausts its monthly allowance and you purchase a new plan to restart service.
@@ -112,9 +94,5 @@ You can upgrade, downgrade, or change the size of your plan at any time. Plan ch
 ## Related
 
 - [Account Basics](README.md)
-- [Web Analytics](../analytics/README.md)
 - [Pre-rendering](../prerendering/README.md)
-- [Monitoring](../monitoring/README.md)
-- [Web-CRON](../web-cron/README.md)
-- [WebSec](../websec/README.md)
 - [Support](../SUPPORT.md)

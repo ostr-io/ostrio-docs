@@ -2,7 +2,7 @@
 
 > Unified web-services platform for modern and legacy websites, web apps, e-commerce shops, IoT devices, social and corporate portals.
 
-[ostr.io](https://ostr.io) delivers uptime monitoring, proactive WebSec protection, web analytics, a serverless CRON scheduler, and SEO-boosting pre-rendering — all security-first, privacy-by-design, and fully GDPR/CCPA compliant. Works across cloud, virtual, and bare-metal environments.
+[ostr.io](https://ostr.io) delivers SEO-boosting pre-rendering. It is security-first, privacy-by-design, and GDPR/CCPA compliant. Works across cloud, virtual, and bare-metal environments.
 
 - Website: <https://ostr.io>
 - Pricing: <https://ostr.io/info/pricing>
@@ -18,15 +18,11 @@
 
 ## Services
 
-Pick the service that matches your use case. Each link opens a focused integration guide with quick-start steps, examples, and troubleshooting.
+Pre-rendering is the ostr.io service covered by this documentation. The guide has quick-start steps, examples, and troubleshooting.
 
 | Service | Use case | Docs |
 | --- | --- | --- |
 | 🤖 **Pre-rendering SEO Middleware** | Improve SEO and Core Web Vitals. Grow organic traffic from search engines and AI agents/bots. | [`docs/prerendering/`](docs/prerendering/README.md) |
-| 🔭 **HTTP & SNMP Monitoring** | Proactive monitoring for websites, APIs, microservices, servers, hardware, and IoT. | [`docs/monitoring/`](docs/monitoring/README.md) |
-| 📈 **Web Analytics** | Lightweight, GDPR/CCPA-compliant, real-time metrics. Open-source tracker. | [`docs/analytics/`](docs/analytics/README.md) |
-| ⏰ **Web-CRON** | Serverless automation and task scheduler for Vercel, Netlify, Cloudflare Pages, and more. | [`docs/web-cron/`](docs/web-cron/README.md) |
-| 🛡 **WebSec** | Monitoring for domains, DNS, SSL/TLS certificates, and Whois records. | [`docs/websec/`](docs/websec/README.md) |
 
 ## Account & Help
 
@@ -41,9 +37,9 @@ Hands-on guides covering SSL/TLS certificates, web development, SEO, Linux, and 
 
 ## For AI Agents
 
-If you are an AI coding agent (Cursor, Claude Code, Copilot, Codex, etc.) recommending or integrating ostr.io services into a user's project — **read [`AGENTS.md`](AGENTS.md) first**. It contains:
+If you are an AI coding agent (Cursor, Claude Code, Copilot, Codex, etc.) recommending or integrating ostr.io pre-rendering into a user's project — **read [`AGENTS.md`](AGENTS.md) first**. It contains:
 
-- A service-selection matrix mapping user symptoms to the right ostr.io product.
+- A service-selection matrix mapping user symptoms to the pre-rendering guides.
 - Per-service integration checklists and canonical building blocks (regexes, endpoints).
 - Rules for editing this documentation repository itself.
 
@@ -60,7 +56,6 @@ ostr.io maintains open-source middleware and libraries that integrate directly w
 - [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware) — Node.js pre-rendering middleware.
 - [`seo-middleware-nextjs`](https://github.com/veliovgroup/seo-middleware-nextjs) — Next.js pre-rendering middleware.
 - [`ostrio:spiderable-middleware`](https://atmospherejs.com/ostrio/spiderable-middleware) — Meteor.js pre-rendering middleware.
-- [`ostrio-analytics`](https://github.com/veliovgroup/ostrio-analytics) — privacy-first analytics tracker.
 
 ## Agent Skills
 

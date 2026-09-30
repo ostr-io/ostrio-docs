@@ -18,6 +18,7 @@ ostr.io offers three plan types — **Hobby**, **Pro**, and **Business** — eac
 | Always Green proactive updates | Not available | Every 24 hours (2 proactive slots) | Every 6 hours (4 proactive slots) |
 | No-delay first request | Not available | Yes | Yes |
 | Signals API / webhooks | Not available | Yes | Yes |
+| Personalized invoicing | Not available | Not available | Not available |
 
 ### Pre-rendering volume (×1 base bundles)
 

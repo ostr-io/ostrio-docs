@@ -2,7 +2,7 @@
 
 - [Direct link to account panel](https://ostr.io/account)
 
-__Important notice__: All account data, all personal data, __including all items (emails, messages, payments) in communication and billing history__. All collected data for all services including servers, domains, hostnames, email addresses, phone numbers, SMS history, notifications, email history, purchase history, billing history, communication emails, cart items, pending and sent emails. All services will be terminated immediately, including — newsletter, pre-rendering, web-CRON, web-analytics, monitoring, and domain protection.
+__Important notice__: All account data, all personal data, __including all items (emails, messages, payments) in communication and billing history__. All collected data for all services on your account, including domains, hostnames, email addresses, notifications, email history, purchase history, billing history, communication emails, cart items, pending and sent emails. All services on your account, including pre-rendering and the newsletter, will be terminated immediately, along with all related data.
 
 > As per our [GDPR](https://ostr.io/info/gdpr#therighttobeforgotten) and our beliefs in digital freedom — you have the right to be [permanently forgotten](https://ostr.io/info/gdpr#therighttobeforgotten).
 

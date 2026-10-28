@@ -58,7 +58,7 @@ List of changes in chronological order, most recent first.
 - 🖥️ Refactored "My account" UI for better UX
 - 🖥️ Refactored "Login" form UI for better UX
 - 🖥️ Refactored "Sign up" form UI for better UX
-- 🔭 Monitoring: Reference ["JSON" and "XML" custom data monitoring examples](https://github.com/ostr-io/ostrio-docs/blob/master/docs/monitoring/basics.md#custom-data-monitoring)
+- 🔭 Monitoring: Reference ["JSON" and "XML" custom data monitoring examples](https://github.com/ostr-io/ostrio-docs/blob/master/archived/docs/monitoring/basics.md#custom-data-monitoring)
 - ⚠️ Change grace period between changing pricing plans to 24 hours (*was 3 minutes*)
 
 #### [2025-07-16]
@@ -377,8 +377,8 @@ We're listening you carefully, thank you all for contributions, suggestions, and
 - 🕸 Prerendering - "Cache browser", browse and edit currently cached pages;
 - 🕸 Prerendering - Internal analytics for better SEO and service setup;
 - 🕸 Prerendering - [Support for Accelerated Mobile Pages (APM)](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/amp-support.md)
-- 🛑📈 Analytics - [Detect and Track __AdBlock__ usage](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/detect-adblock.md);
-- 📈 Analytics - [Track Accelerated Mobile Pages (AMP) and other static pages](https://github.com/ostr-io/ostrio-docs/blob/master/docs/analytics/track-amp.md)
+- 🛑📈 Analytics - [Detect and Track __AdBlock__ usage](https://github.com/ostr-io/ostrio-docs/blob/master/archived/docs/analytics/detect-adblock.md);
+- 📈 Analytics - [Track Accelerated Mobile Pages (AMP) and other static pages](https://github.com/ostr-io/ostrio-docs/blob/master/archived/docs/analytics/track-amp.md)
 - 📈 Analytics - Fix displayed dates (*for some users charts had wrong month title*);
 - 📈 Analytics - Referrers now grouped by the domain name;
 - 📈 Analytics - "Development" mode for localhost testing. See [this suggestion](https://github.com/veliovgroup/ostrio-analytics/issues/2), thanks to @nicooprat;

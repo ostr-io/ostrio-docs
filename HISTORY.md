@@ -9,6 +9,9 @@ List of changes in chronological order, most recent first.
 - 🔤 Two misspelled filenames under `docs/prerendering/examples/cloudflare-worker/` were corrected. Update any bookmark or direct link you kept:
   - `shopify.clouflare.worker.js` → [`shopify.cloudflare.worker.js`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/shopify.cloudflare.worker.js)
   - `coudflare-worker-guide.md` → [`cloudflare-worker-guide.md`](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/examples/cloudflare-worker/cloudflare-worker-guide.md)
+- 📦 Released [`spiderable-middleware@2.4.0` for NPM and Meteor.js](https://www.npmjs.com/package/spiderable-middleware/v/2.4.0): the instance is a middleware function (`app.use(spiderable)`, `WebApp.handlers.use(spiderable)` on Meteor 3), new `logger` and `retries` options, `OSTR_AUTH` env var support, `/.well-known/` paths and ostr.io hosts skipped, `http://` service URLs, fallback to `next()` on render failures, and TypeScript types including `meteor/ostrio:spiderable-middleware`
+- 📦 Released [`spiderable-middleware@2.4.1` for NPM and Meteor.js](https://www.npmjs.com/package/spiderable-middleware/v/2.4.1): `auth` and `OSTR_AUTH` accept either `user:pass` or the ready `Basic xxx` value from the ostr.io panel
+- 📔 Updated [Meteor.js](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/meteor-atmosphere.md) and [Node.js](https://github.com/ostr-io/ostrio-docs/blob/master/docs/prerendering/node-npm.md) pre-rendering integration docs for `spiderable-middleware@2.4`
 
 #### [2025-08-11]
 

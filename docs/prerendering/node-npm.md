@@ -6,7 +6,7 @@
 - [Rendering endpoints](rendering-endpoints.md)
 - 📦 [`spiderable-middleware` on NPM](https://www.npmjs.com/package/spiderable-middleware)
 - 🐙 [`spiderable-middleware` repository](https://github.com/veliovgroup/spiderable-middleware) — installation, API, options
-- 📚 [Framework-specific examples](https://github.com/veliovgroup/spiderable-middleware/tree/master/examples) — Express, Connect, Koa, Fastify, vanilla `http`, and more
+- 📚 [Framework-specific examples](https://github.com/veliovgroup/spiderable-middleware/tree/master/examples) — Express, Connect, Meteor.js, vanilla `http`, plus Nginx, Apache and Cloudflare configs
 - ℹ️ [What is pre-rendering and why you need it](https://ostr.io/info/prerendering)
 
 ## What it does
@@ -19,7 +19,7 @@ As of 2.4.0 the `Spiderable` instance is a middleware function. Pass it to `app.
 
 - You run a Node.js app and prefer an **in-process** integration over a reverse-proxy or edge solution.
 - You want pre-rendering decisions to live in your app code alongside other request handling.
-- You need compatibility with any of the Node middleware signatures — Express, Connect, Koa, Fastify (via adapter), NestJS, h3, or a vanilla [`http` server](https://nodejs.org/api/http.html).
+- You run Express, Connect, NestJS (Express platform), or a vanilla [`http` server](https://nodejs.org/api/http.html), or a framework with a Connect adapter: Koa via `koa-connect`, Fastify via `@fastify/middie`, h3 v1 (Nuxt, Nitro) via `fromNodeMiddleware` (needs 2.4.2 or newer). See [Other frameworks](https://github.com/veliovgroup/spiderable-middleware?tab=readme-ov-file#other-frameworks).
 
 For infrastructure-level alternatives that do not require editing application code, see [Related](#related) below.
 

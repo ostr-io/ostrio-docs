@@ -10,7 +10,28 @@
 
 ## What it does
 
-The package plugs into `WebApp.connectHandlers` and inspects every incoming request. When the User-Agent matches a known crawler, social previewer, or AI fetcher, the request is transparently proxied to the ostr.io [rendering endpoint](rendering-endpoints.md) with your `Basic` auth credentials. Regular browser traffic is passed through to Meteor, untouched.
+The package registers as middleware on Meteor's `WebApp` and inspects every incoming request. When the User-Agent matches a known crawler, social previewer, or AI fetcher, the request is transparently proxied to the ostr.io [rendering endpoint](rendering-endpoints.md) with your `Basic` auth credentials. Regular browser traffic is passed through to Meteor, untouched.
+
+## Register the middleware
+
+The `Spiderable` instance is a middleware function. Pass it to `WebApp.handlers` on Meteor 3, or to `WebApp.connectHandlers` on Meteor 2 and older:
+
+```javascript
+import { WebApp } from 'meteor/webapp';
+import Spiderable from 'meteor/ostrio:spiderable-middleware';
+
+const spiderable = new Spiderable({ auth: 'username:password' });
+
+// Meteor 3
+WebApp.handlers.use(spiderable);
+
+// Meteor 2 and older
+// WebApp.connectHandlers.use(spiderable);
+```
+
+Passing the instance itself to `WebApp.handlers` needs `ostrio:spiderable-middleware` 2.4.0 or newer. Older releases on Meteor 3 must pass `spiderable.handle` instead.
+
+When `auth` is not set, the package reads the `SPIDERABLE_SERVICE_AUTH`, `PRERENDER_SERVICE_AUTH`, then `OSTR_AUTH` environment variable. As of 2.4.1, the value can be `user:pass` or the ready `Basic xxx` value from the [ostr.io pre-rendering panel](https://ostr.io/service/prerender). Version 2.4.0 accepts only `user:pass`.
 
 ## When to use
 
@@ -42,12 +63,12 @@ In your app's server code, pass custom User-Agent substrings to the middleware i
 
 ```javascript
 import { WebApp } from 'meteor/webapp';
-import Spiderable from 'ostrio:spiderable-middleware';
+import Spiderable from 'meteor/ostrio:spiderable-middleware';
 
-new Spiderable({
+WebApp.handlers.use(new Spiderable({
   auth: 'username:password',
   botsUA: ['mycompany-crawler', 'internal-spider', 'audit-bot']
-});
+}));
 ```
 
 Use plain-text substrings, not regex patterns. The middleware applies case-insensitive matching. Custom entries extend the canonical bot list without replacing it. All standard crawlers remain detected.

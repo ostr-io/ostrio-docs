@@ -97,7 +97,7 @@ Application-specific integrations via NPM / Atmosphere packages.
 - [**Next.js — self-managed `middleware.ts`**](nextjs-prerendering.md#option-1--self-managed-middlewarets) — copy one file into the project, no extra dependency.
 - [**Next.js — `seo-middleware-nextjs` NPM package**](nextjs-prerendering.md#option-2--seo-middleware-nextjs-npm-package) — maintained package, one-line import.
 - [**Node.js — `spiderable-middleware` NPM package**](node-npm.md) — works with Express, Connect, Koa, Fastify (via adapter), vanilla `http`, and any Node middleware signature.
-- [**Meteor.js — `ostrio:spiderable-middleware` Atmosphere package**](meteor-atmosphere.md) — plugs into `WebApp.connectHandlers`.
+- [**Meteor.js — `ostrio:spiderable-middleware` Atmosphere package**](meteor-atmosphere.md) — registers with `WebApp.handlers` on Meteor 3 (package 2.4.0+) or `WebApp.connectHandlers` on Meteor 2.
 
 ## Features and how-tos
 

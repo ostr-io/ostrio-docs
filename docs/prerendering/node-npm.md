@@ -13,6 +13,8 @@
 
 `spiderable-middleware` inspects incoming requests in your Node.js app. When the request comes from a known crawler, social previewer, or AI fetcher, it is transparently proxied to the ostr.io [rendering endpoint](rendering-endpoints.md) with your `Basic` auth credentials. Regular browser traffic continues straight to your application, untouched.
 
+As of 2.4.0 the `Spiderable` instance is a middleware function. Pass it to `app.use(spiderable)` in Express or Connect, or call `spiderable.handle(req, res, next)` from a plain Node.js `http` server. When `auth` is not set, the package reads the `SPIDERABLE_SERVICE_AUTH`, `PRERENDER_SERVICE_AUTH`, then `OSTR_AUTH` environment variable. As of 2.4.1, the value can be `user:pass` or the ready `Basic xxx` value from the [ostr.io pre-rendering panel](https://ostr.io/service/prerender). Version 2.4.0 accepts only `user:pass`.
+
 ## When to use
 
 - You run a Node.js app and prefer an **in-process** integration over a reverse-proxy or edge solution.
@@ -42,7 +44,7 @@ To treat additional crawlers as bots, use the `botsUA` option when initializing 
 Pass custom User-Agent substrings to the constructor:
 
 ```javascript
-const Spiderable = require('spiderable-middleware').default;
+const Spiderable = require('spiderable-middleware');
 
 app.use(new Spiderable({
   auth: 'username:password',

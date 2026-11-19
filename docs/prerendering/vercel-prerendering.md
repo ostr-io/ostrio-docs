@@ -1,6 +1,6 @@
 # Vercel Integration
 
-Self-managed [Vercel Routing Middleware](https://vercel.com/docs/routing-middleware) that routes bot traffic to the ostr.io pre-rendering CDN. One file, zero config, works with any framework deployed to Vercel.
+Self-managed [Vercel Routing Middleware](https://vercel.com/docs/routing-middleware) that routes bot traffic to the ostr.io pre-rendering CDN. One file, for frameworks deployed to Vercel that don't build their own routing middleware.
 
 - [Pre-rendering overview](README.md)
 - [Rendering endpoints](rendering-endpoints.md)
@@ -20,21 +20,20 @@ Self-managed [Vercel Routing Middleware](https://vercel.com/docs/routing-middlew
 ## When to use
 
 - You deploy to Vercel and want pre-rendering without touching your framework code.
-- You want edge-level routing — middleware runs before the CDN cache.
-- You use a framework that does not expose its own middleware hook, or you want a single integration that is independent of the framework (Astro, SvelteKit, Nuxt, Remix, plain static, etc.).
+- You want routing before the CDN cache — Routing Middleware runs before it.
+- You use a framework that does not build its own routing middleware (SvelteKit, Nuxt, plain static, etc.).
 
-For Next.js specifically, the dedicated [Next.js middleware / NPM package](nextjs-prerendering.md) is another good option and runs in the same runtime.
+For Next.js, use the [Next.js integration](nextjs-prerendering.md) instead.
 
 ## Framework compatibility
 
-The middleware is framework-agnostic. Works with any framework deployed to Vercel:
+Vercel's docs say Routing Middleware can't be used with Next.js or Astro, which build their own routing middleware ([Vercel docs](https://vercel.com/docs/routing-middleware#creating-routing-middleware)). Use it with frameworks that don't, such as:
 
-- Astro
-- Next.js *(also see the [Next.js-specific integration](nextjs-prerendering.md))*
 - SvelteKit
 - Nuxt
-- Remix
 - Plain static sites
+
+Next.js: use the [Next.js integration](nextjs-prerendering.md). Astro: use Astro's own middleware.
 
 ## Setup
 
@@ -42,7 +41,7 @@ The complete drop-in middleware, env-var reference, and deploy steps live in [`e
 
 1. Copy [`examples/vercel/middleware.js`](examples/vercel/middleware.js) to your project root.
 2. Install `@vercel/functions`.
-3. Set `OSTR_AUTH` (from the [ostr.io pre-rendering panel](https://ostr.io/service/prerender)) and, if needed, `ROOT_URL` as Vercel environment variables.
+3. Set `OSTR_AUTH` (the `Basic xxx` value from the [ostr.io pre-rendering panel](https://ostr.io/service/prerender), or `user:pass`) and, if needed, `OSTR_SITE_ORIGIN` (alias `ROOT_URL`) and `OSTR_TIMEOUT` as Vercel environment variables.
 4. Deploy.
 
 See the [example README](examples/vercel/README.md) for full details.
@@ -62,7 +61,7 @@ const BOT_AGENTS = [
   'internal-spider',
   'audit-bot'
 ];
-const BOT_AGENTS_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
+const BOT_RE = new RegExp(BOT_AGENTS.join('|'), 'i');
 ```
 
 Use plain-text substrings, not regex patterns. The `RegExp(..., 'i')` flag applies case-insensitive matching. If your custom substrings contain regex special characters like `.`, `+`, or `(`, escape them with `\\`:

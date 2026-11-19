@@ -37,7 +37,7 @@ No extra npm dependency is required — the middleware uses only `NextRequest` /
 
 ## Option 2 — `seo-middleware-nextjs` NPM package
 
-Maintained Next.js wrapper around [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware). One-line import into your `middleware.ts`; bot list, renderer routing, and configuration defaults are kept up to date upstream.
+Maintained, standalone Next.js package. It calls the renderer with `fetch` and does not depend on [`spiderable-middleware`](https://github.com/veliovgroup/spiderable-middleware). One-line import into your `middleware.ts`; bot list, renderer routing, and configuration defaults are kept up to date upstream.
 
 - 📦 [`seo-middleware-nextjs` on NPM](https://www.npmjs.com/package/seo-middleware-nextjs)
 - 🐙 [`veliovgroup/seo-middleware-nextjs`](https://github.com/veliovgroup/seo-middleware-nextjs?tab=readme-ov-file#seo-middleware-for-nextjs) — installation, API, matcher configuration, and options
